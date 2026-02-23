@@ -1,3 +1,9 @@
+## [1.12.3](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.12.2...v1.12.3) (2026-02-23)
+
+### Bug Fixes
+
+* **ci:** handle race condition in readme badge sync ([cef16e8](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/cef16e8e74ccdbc2451380129172945448356b9c))
+
 ## [1.12.3](https://github.com/DevXGroup/devx-web/compare/v1.12.2...v1.12.3) (2026-02-01)
 
 ### Bug Fixes
