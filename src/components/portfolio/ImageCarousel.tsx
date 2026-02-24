@@ -267,7 +267,7 @@ const ImageCarousel = ({
 
         {/* Progress Dots */}
         {validScreenshots.length > 1 && (
-          <div className="hidden md:flex justify-center gap-2 mt-4 flex-wrap px-4">
+          <div className="flex justify-center gap-2 mt-4 flex-wrap px-4">
             {validScreenshots.map((_, index) => (
               <motion.button
                 key={index}

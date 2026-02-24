@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
 import {
   ExternalLink,
+  Github,
   Star,
   Users,
   Award,
@@ -247,27 +248,44 @@ const EnhancedProjectCard = ({ project, index }: EnhancedProjectCardProps) => {
 
             {/* Action Buttons */}
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pt-4">
-              {isCurrentProject ? (
-                <a
-                  href={project.visitUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Visit ${project.title} website`}
-                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300 font-semibold shadow-lg h-11 w-full lg:w-auto focus:outline-none focus:ring-2 focus:ring-white/30"
-                >
-                  <span className="text-sm font-bold whitespace-nowrap">Visit Website</span>
-                  <ExternalLink size={14} aria-hidden="true" />
-                </a>
-              ) : (
+              <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+                {isCurrentProject && (
+                  <a
+                    href={project.visitUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Visit ${project.title} website`}
+                    className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300 font-semibold shadow-lg h-11 focus:outline-none focus:ring-2 focus:ring-white/30"
+                  >
+                    <span className="text-sm font-bold whitespace-nowrap">Visit Website</span>
+                    <ExternalLink size={14} aria-hidden="true" />
+                  </a>
+                )}
                 <Link
                   href={detailHref}
                   aria-label={`View details for ${project.title}`}
-                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300 font-semibold shadow-lg h-11 w-full lg:w-auto focus:outline-none focus:ring-2 focus:ring-white/30"
+                  className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-all duration-300 font-semibold shadow-lg h-11 focus:outline-none focus:ring-2 focus:ring-white/30 ${
+                    isCurrentProject
+                      ? 'bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/30 text-white/80 hover:text-white'
+                      : 'bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 border-2 border-white/30 hover:border-white/50 text-white'
+                  }`}
                 >
                   <span className="text-sm font-bold whitespace-nowrap">View Details</span>
                   <ExternalLink size={14} aria-hidden="true" />
                 </Link>
-              )}
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label={`${project.title} GitHub repository`}
+                    className="flex items-center justify-center p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-zinc-400 hover:text-white transition-all duration-200 h-11 w-11 flex-shrink-0"
+                  >
+                    <Github size={16} aria-hidden="true" />
+                  </a>
+                )}
+              </div>
 
               {/* Platform Support Section */}
               <div className="flex flex-col gap-3 items-start lg:items-end text-left lg:text-right w-full lg:w-auto">
