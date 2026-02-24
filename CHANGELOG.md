@@ -1,3 +1,9 @@
+## [1.13.3](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.13.2...v1.13.3) (2026-02-24)
+
+### Bug Fixes
+
+* **analytics:** replace Partytown with afterInteractive GTM to eliminate deprecated API warnings ([5f5417f](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/5f5417f2d49b7e021cb2cbf9f4df8f67b815b937))
+
 ## [1.13.2](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.13.1...v1.13.2) (2026-02-24)
 
 ### Bug Fixes
