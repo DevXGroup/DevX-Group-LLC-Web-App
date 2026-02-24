@@ -1,3 +1,9 @@
+## [1.15.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.14.0...v1.15.0) (2026-02-24)
+
+### Features
+
+* **portfolio:** update miremadi description, fix detail page flicker, clean up card buttons ([3446b39](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/3446b39822f10a6c0272b97ff30d6d45c57a413d))
+
 ## [1.14.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.13.3...v1.14.0) (2026-02-24)
 
 ### Features
