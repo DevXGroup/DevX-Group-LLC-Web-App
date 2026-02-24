@@ -14,6 +14,7 @@ import StructuredData from '@/components/seo/StructuredData'
 import { DeferredStyles } from '@/components/layout/DeferredStyles'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Partytown } from '@qwik.dev/partytown/react'
 import clsx from 'clsx'
 import { IBM_Plex_Mono, IBM_Plex_Sans, Inter, Pacifico, Playfair_Display } from 'next/font/google'
@@ -40,6 +41,10 @@ const defaultTwitterImage = createTwitterImageUrl(
 const enableVercelAnalytics =
   process.env.NODE_ENV === 'production' &&
   process.env.NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS === 'true'
+
+// SpeedInsights is safe to enable in all production builds — the SDK
+// only sends data when the app runs on Vercel infrastructure (no-op otherwise)
+const enableSpeedInsights = process.env.NODE_ENV === 'production'
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -455,6 +460,8 @@ gtag('config', '${gaId}', {
         </ErrorBoundary>
         {/* Load Vercel Analytics only when explicitly enabled to avoid local 404s */}
         {enableVercelAnalytics && <Analytics />}
+        {/* SpeedInsights is always on in production — SDK is a no-op outside Vercel */}
+        {enableSpeedInsights && <SpeedInsights />}
         <DeferredStyles />
       </body>
     </html>
