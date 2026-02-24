@@ -1,3 +1,11 @@
+## [1.13.1](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.13.0...v1.13.1) (2026-02-24)
+
+### Bug Fixes
+
+* **analytics:** add SpeedInsights component to restore Vercel performance data ([4af8953](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/4af89531c9d0956b78e580ba74d6fcb33b185244))
+* **portfolio:** fix modal exit animation, CSP directives, and mobile touch flicker ([32a510e](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/32a510ecff9a63c98bbdfc35eb09041eff4cc379))
+* **portfolio:** restore category badge, color images with object-top, fix modal mobile scroll ([7a31440](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/7a3144070578d449da8a1569a7e40b069bca5874))
+
 ## [1.13.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.12.3...v1.13.0) (2026-02-24)
 
 ### Features
