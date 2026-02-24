@@ -37,6 +37,8 @@ export interface ProjectData {
   caseStudyUrl?: string
   awards?: string[]
   highlights?: string[]
+  githubUrl?: string
+  isFeatured?: boolean
 }
 
 export const portfolioProjects: ProjectData[] = [
@@ -46,26 +48,46 @@ export const portfolioProjects: ProjectData[] = [
     shortDescription:
       'Modern, conversion-focused clinic website highlighting services, trust signals, and appointment flow.',
     detailedDescription:
-      'A premium dermatology clinic website designed to build patient confidence with clear service pathways, physician credibility, and streamlined appointment booking.',
+      'A premium dermatology clinic website with a full-featured PWA, e-commerce shop powered by Stripe, admin dashboard for product management, blog engine, internationalization (i18next), dark/light mode, glassmorphism UI, and real-time data via Supabase. Designed to build patient confidence with clear service pathways, physician credibility, and streamlined appointment booking.',
     category: 'Healthcare',
     services: ['Web Design', 'Web Development', 'Brand Experience', 'SEO'],
-    technologies: ['Next.js', 'React', 'Tailwind CSS', 'Vercel'],
-    platforms: ['Website'],
+    technologies: [
+      'Vite',
+      'React 19',
+      'TypeScript',
+      'Tailwind CSS v4',
+      'Supabase',
+      'Stripe',
+      'Framer Motion',
+      'React Three Fiber',
+      'PWA',
+      'i18next',
+      'Google Analytics 4',
+      'Zustand',
+      'React Router',
+    ],
+    platforms: ['Website', 'PWA'],
     keyFeatures: [
       'Service-led navigation for fast patient discovery',
       'Physician-led trust signals and credentials',
       'Conversion-ready CTA placement',
       'Mobile-first performance',
+      'PWA support (installable on mobile)',
+      'E-commerce shop with Stripe checkout',
+      'Admin dashboard (product management)',
+      'Blog engine',
+      'Internationalization (i18next)',
+      'Dark/light mode',
+      'Glassmorphism UI design',
+      'Real-time data with Supabase',
     ],
     images: {
-      banner: '/images/portfolio/banners/miremadi-banner.jpg',
-      preview: '/images/portfolio/banners/miremadi-banner.jpg',
+      banner: '/images/portfolio/banners/miremadi-hero-showcase.webp',
+      preview: '/images/portfolio/banners/miremadi-hero-showcase.webp',
       bannerAlt:
         'Miremadi Dermatology Medical Clinic website showcasing services and doctor profile',
       previewAlt: 'Miremadi Dermatology Medical Clinic homepage preview',
     },
-    videoUrl: '/videos/portfolio/miremadi-demo.mp4',
-    videoPoster: '/images/portfolio/banners/miremadi-banner.jpg',
     currentNote: 'E-commerce coming soon',
     metrics: {
       users: 'Patient-first UX',
@@ -77,6 +99,8 @@ export const portfolioProjects: ProjectData[] = [
     teamSize: '3 specialists',
     visitUrl: 'https://drmiremadi.com',
     isCurrentProject: true,
+    githubUrl: 'https://github.com/DevXGroup/Miremadi-Dermatology-Web',
+    isFeatured: true,
     highlights: ['Premium medical brand presentation', 'Conversion-focused booking flow'],
   },
   {
@@ -631,6 +655,144 @@ export const portfolioProjects: ProjectData[] = [
       'Community-driven development approach',
     ],
   },
+  {
+    id: 'interview-prep',
+    title: 'Engineering Manager Interview Prep',
+    shortDescription:
+      'Free, open-source interview prep platform for FAANG/MAANG engineering manager and senior engineer roles.',
+    detailedDescription:
+      'A comprehensive, open-source platform covering behavioral interviews (STAR format), system design patterns, algorithm visualizations, and company-specific guides for Meta, Amazon, Apple, Netflix, Google, and Microsoft. Features an 8-week study roadmap, interactive quizzes, progress tracking, and AI-assisted preparation modules.',
+    category: 'AI/Education',
+    services: ['Web Development', 'AI & Machine Learning', 'Custom Software Development'],
+    technologies: [
+      'Next.js 14',
+      'TypeScript',
+      'Tailwind CSS',
+      'Framer Motion',
+      'Zustand',
+      'D3.js',
+      'Recharts',
+      'Radix UI',
+      'Prism.js',
+    ],
+    platforms: ['Web'],
+    keyFeatures: [
+      'STAR format behavioral examples for 50+ scenarios',
+      'System design patterns with interactive diagrams',
+      'Algorithm visualizations with D3.js',
+      'Company-specific guides (FAANG/MAANG)',
+      '8-week structured study roadmap',
+      'Interactive quizzes with progress tracking',
+      'AI interview prep modules',
+      'Dark mode, fully accessible (Radix UI)',
+    ],
+    images: {
+      banner: '/images/portfolio/banners/interview-prep-platform-hero.webp',
+      preview: '/images/portfolio/banners/interview-prep-platform-hero.webp',
+      bannerAlt:
+        'Engineering Manager Interview Prep platform hero screen showing study roadmap and category navigation',
+      previewAlt: 'Interview Prep dashboard with behavioral, system design, and coding sections',
+      screenshots: [
+        '/images/portfolio/screenshots/interview-prep/screen-1.png',
+        '/images/portfolio/screenshots/interview-prep/screen-2.png',
+        '/images/portfolio/screenshots/interview-prep/screen-3.png',
+      ],
+      screenshotAlts: [
+        'Study roadmap overview with 8-week timeline and topic categories',
+        'System design interview patterns with interactive architecture diagrams',
+        'Behavioral interview STAR format examples and scoring rubrics',
+      ],
+    },
+    metrics: {
+      marketPosition: 'Open Source',
+      performance: 'Next.js 14 App Router',
+    },
+    businessImpact:
+      'Helps software engineers and engineering managers land roles at top tech companies through structured, comprehensive interview preparation — fully free and open source.',
+    completionYear: '2025',
+    teamSize: '1',
+    visitUrl: 'https://interviewprep.devxgroup.io/',
+    githubUrl: 'https://github.com/DevXGroup/Software-Engineer-Manager-Interviw-Prep',
+    isCurrentProject: true,
+    isFeatured: true,
+    highlights: [
+      'FAANG/MAANG company-specific guides',
+      'Open source & free forever',
+      'Interactive algorithm visualizations',
+      'AI-assisted prep modules',
+    ],
+  },
+  {
+    id: 'flight-tracker',
+    title: 'Max Live Flight Tracker',
+    shortDescription:
+      'Real-time flight tracking with interactive maps, millisecond-accurate delay updates, and live arrival/departure data.',
+    detailedDescription:
+      'A real-time flight tracking web application featuring an interactive Leaflet map with live flight paths, 30-second position updates, timezone-aware time display, and accurate distance/progress calculations. Integrates OpenSky Network, AviationStack, and Amadeus APIs for comprehensive flight data. Built with a glassmorphism UI and 3D visualizations.',
+    category: 'Web App/Travel',
+    services: ['Web Development', 'Custom Software Development', 'API Development'],
+    technologies: [
+      'Next.js 16',
+      'React 19',
+      'TypeScript',
+      'Tailwind CSS v4',
+      'Leaflet',
+      'React Leaflet',
+      'Three.js',
+      'Framer Motion',
+      'date-fns',
+      'OpenSky Network API',
+      'AviationStack API',
+      'Amadeus API',
+    ],
+    platforms: ['Web'],
+    keyFeatures: [
+      'Interactive real-time map with live flight paths',
+      'Live position updates every 30 seconds',
+      'Millisecond-accurate arrival/departure times with delays',
+      'Timezone-aware time display',
+      'Accurate distance and progress calculations',
+      'Glassmorphism UI design',
+      '3D data visualizations with Three.js',
+      'Multiple aviation data API integrations',
+    ],
+    images: {
+      banner: '/images/portfolio/banners/flight-tracker-hero-search.webp',
+      preview: '/images/portfolio/banners/flight-tracker-hero-search.webp',
+      bannerAlt:
+        'Max Live Flight Tracker showing interactive world map with real-time flight paths and glassmorphism UI',
+      previewAlt:
+        'Flight tracker dashboard with live flight positions on an interactive Leaflet map',
+      screenshots: [
+        '/images/portfolio/banners/flight-tracker-hero-search.webp',
+        '/images/portfolio/banners/flight-tracker-details-panel.webp',
+        '/images/portfolio/banners/flight-tracker-interactive-map.webp',
+      ],
+      screenshotAlts: [
+        'Flight Tracker hero interface with search functionality for tracking flights in real-time',
+        'Flight detail panel showing real-time arrival/departure times and delay information',
+        'Interactive world map with live flight paths and position markers',
+      ],
+    },
+    metrics: {
+      performance: 'Real-time, 30s updates',
+      marketPosition: 'Open Source',
+    },
+    businessImpact:
+      'Demonstrates real-time data integration, interactive mapping, and multi-API orchestration — showcasing capability for complex, data-intensive web applications.',
+    completionYear: '2025',
+    teamSize: '1',
+    visitUrl: 'https://flight.devxgroup.io',
+    githubUrl: 'https://github.com/DevXGroup/Max-Live-Flight-Tracker',
+    isCurrentProject: true,
+    isFeatured: true,
+    highlights: [
+      'Real-time live flight positions',
+      'Interactive Leaflet map with flight paths',
+      '3 aviation API integrations',
+      'Millisecond-accurate delay tracking',
+    ],
+  },
 ]
 
 // Service mapping for portfolio filtering
@@ -668,4 +830,6 @@ export const categoryColors = {
   'Health/Fitness': '#9d4edd',
   'Gaming/Entertainment': '#ff6b6b',
   Healthcare: '#67E8F9',
+  'AI/Education': '#00D2FF',
+  'Web App/Travel': '#4CD787',
 }
