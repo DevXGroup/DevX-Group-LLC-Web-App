@@ -194,6 +194,7 @@ export default function ContactPage() {
   const [confettiReady, setConfettiReady] = useState(false)
   const [showOrb, setShowOrb] = useState(false)
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
+  const [calendlyLoading, setCalendlyLoading] = useState(true)
   const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const shouldReduceMotion = useReducedMotion()
   const formRef = useRef(null)
@@ -276,6 +277,7 @@ export default function ContactPage() {
       }
 
       if (data.event === 'calendly.page_height') {
+        setCalendlyLoading(false)
         const payload = data.payload
         if (!payload) {
           return
@@ -1217,6 +1219,26 @@ export default function ContactPage() {
 
           <div className="bg-transparent p-0 md:p-0 rounded-2xl border border-transparent shadow-none overflow-hidden">
             <div className="relative rounded-xl">
+              {calendlyLoading && (
+                <div
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-6 z-10 rounded-xl"
+                  style={{ backgroundColor: '#050505', minHeight: 420 }}
+                >
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="w-10 h-10 rounded-full border-2 border-[#4CD787]/30 border-t-[#4CD787] animate-spin" />
+                    <p className="text-body-small text-slate-400">Loading scheduler&hellip;</p>
+                  </div>
+                  <div className="w-full max-w-sm space-y-3 px-8 opacity-30">
+                    <div className="h-3 bg-white/10 rounded animate-pulse" />
+                    <div className="h-3 bg-white/10 rounded animate-pulse w-4/5" />
+                    <div className="grid grid-cols-7 gap-2 mt-4">
+                      {Array.from({ length: 35 }).map((_, i) => (
+                        <div key={i} className="h-8 bg-white/10 rounded animate-pulse" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
               <div
                 ref={calendlyContainerRef}
                 className="w-full rounded-xl overflow-hidden"
@@ -1235,108 +1257,112 @@ export default function ContactPage() {
       {/* FAQ Section */}
       <section className="py-20 relative z-[5000]">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-3xl mx-auto mb-16"
-          >
-            <BlurText
-              text="Frequently Asked Questions"
-              className="justify-center heading-section text-white mb-6 font-editorial"
-              delay={50}
-              startDelay={150}
-              stepDuration={0.4}
-              once={true}
-            />
-            <p className="subtitle-lg mt-6">
-              Find quick answers to common questions about our services and process.
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="max-w-3xl mx-auto space-y-4"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {[
-              {
-                question: 'What is your typical response time?',
-                answer:
-                  'We typically respond to all inquiries within 24 hours during business days. For urgent matters, we prioritize faster response times.',
-              },
-              {
-                question: 'Do you work with international clients?',
-                answer:
-                  'Yes, we work with clients worldwide. Our team is experienced in remote collaboration and can accommodate different time zones.',
-              },
-              {
-                question: 'What information should I provide for a quote?',
-                answer:
-                  'To provide an accurate quote, we need details about your project scope, timeline, technical requirements, and any specific features you need.',
-              },
-              {
-                question: 'How do you handle project revisions?',
-                answer:
-                  "We include revision rounds in our project plans. The number of revisions depends on your package, but we're always flexible to ensure your satisfaction.",
-              },
-            ].map((faq, index) => (
-              <motion.div
-                key={index}
-                variants={fadeInUpVariants}
-                className="border border-white/10 rounded-xl overflow-hidden bg-black/30 backdrop-blur-sm"
-              >
-                <button
-                  onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
-                  className="w-full flex items-center justify-between px-6 py-5 text-left cursor-pointer group"
-                  aria-expanded={openFaqIndex === index}
-                  aria-controls={`faq-answer-${index}`}
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-12 lg:gap-20 max-w-6xl mx-auto items-start">
+            {/* Left column: sticky title + description */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="lg:sticky lg:top-32"
+            >
+              <h2 className="heading-section text-white font-editorial leading-[1.1] mb-6">
+                Frequently
+                <br />
+                Asked
+                <br />
+                Questions
+              </h2>
+              <p className="text-body text-slate-400 leading-relaxed">
+                Everything you need to know about our services and process. Can&apos;t find an
+                answer?{' '}
+                <a
+                  href="#contact-form"
+                  className="text-slate-200 underline underline-offset-2 hover:text-white transition-colors"
                 >
-                  <h3 className="heading-subsection text-slate-200 pr-4 transition-colors duration-300 group-hover:text-slate-100">
-                    {faq.question}
-                  </h3>
-                  <motion.span
-                    className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full border border-white/20 text-white/70 group-hover:border-white/40 group-hover:text-white transition-colors duration-300"
-                    animate={{ rotate: openFaqIndex === index ? 45 : 0 }}
-                    transition={{ duration: 0.2 }}
+                  Reach out directly.
+                </a>
+              </p>
+            </motion.div>
+
+            {/* Right column: accordion with dividers */}
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              {[
+                {
+                  question: 'What is your typical response time?',
+                  answer:
+                    'We typically respond to all inquiries within 24 hours during business days. For urgent matters, we prioritize faster response times.',
+                },
+                {
+                  question: 'Do you work with international clients?',
+                  answer:
+                    'Yes, we work with clients worldwide. Our team is experienced in remote collaboration and can accommodate different time zones.',
+                },
+                {
+                  question: 'What information should I provide for a quote?',
+                  answer:
+                    'To provide an accurate quote, we need details about your project scope, timeline, technical requirements, and any specific features you need.',
+                },
+                {
+                  question: 'How do you handle project revisions?',
+                  answer:
+                    "We include revision rounds in our project plans. The number of revisions depends on your package, but we're always flexible to ensure your satisfaction.",
+                },
+                {
+                  question: 'What technologies do you specialise in?',
+                  answer:
+                    'Our team works across the modern stack — React, Next.js, Node.js, Python, and cloud platforms like AWS and Vercel. We select the best tool for each project rather than forcing a single opinionated stack.',
+                },
+                {
+                  question: 'How long does a typical project take?',
+                  answer:
+                    'Timelines vary based on scope. A focused MVP typically takes 4–8 weeks; larger products 3–6 months. We share a detailed timeline after our discovery call.',
+                },
+              ].map((faq, index) => (
+                <motion.div
+                  key={index}
+                  variants={fadeInUpVariants}
+                  className="border-b border-white/10 last:border-b-0"
+                >
+                  <button
+                    onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
+                    className="w-full flex items-center justify-between py-6 text-left group"
+                    aria-expanded={openFaqIndex === index}
+                    aria-controls={`faq-answer-${index}`}
                   >
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7 1V13M1 7H13"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </motion.span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {openFaqIndex === index && (
-                    <motion.div
-                      id={`faq-answer-${index}`}
-                      role="region"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                      className="overflow-hidden"
-                    >
-                      <p className="text-body text-slate-200 px-6 pb-5">{faq.answer}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
-          </motion.div>
+                    <h3 className="heading-subsection text-slate-200 pr-8 transition-colors duration-300 group-hover:text-white">
+                      {faq.question}
+                    </h3>
+                    <span className="flex-shrink-0 text-2xl font-extralight text-slate-400 group-hover:text-white transition-colors duration-300 select-none leading-none">
+                      {openFaqIndex === index ? '×' : '+'}
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {openFaqIndex === index && (
+                      <motion.div
+                        id={`faq-answer-${index}`}
+                        role="region"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <p className="text-body text-slate-400 pb-6 leading-relaxed">
+                          {faq.answer}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </section>
 
