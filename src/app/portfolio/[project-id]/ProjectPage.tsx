@@ -20,22 +20,8 @@ import { ProjectData, categoryColors } from '@/data/portfolioProjects'
 import ImageCarousel from '@/components/portfolio/ImageCarousel'
 import SingleImageDisplay from '@/components/portfolio/SingleImageDisplay'
 
-const T_QUICK = { duration: 0.2, ease: 'easeOut' } as const
-const T_STD = { duration: 0.3, ease: 'easeOut' } as const
-const T_SMOOTH = { duration: 0.4, ease: 'easeOut' } as const
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0 },
-}
-
-const stagger = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-}
+const T_STD = { duration: 0.35, ease: 'easeOut' } as const
+const T_SMOOTH = { duration: 0.45, ease: 'easeOut' } as const
 
 export default function ProjectPage({ project }: { project: ProjectData }) {
   const categoryColor = categoryColors[project.category as keyof typeof categoryColors] || '#4CD787'
@@ -43,6 +29,11 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
   const screenshots = project.images.screenshots ?? []
   const hasMultiple = screenshots.length > 1
   const hasSingle = screenshots.length === 1
+
+  // Render detailedDescription as paragraphs, respecting \n\n line breaks
+  const descriptionParagraphs = project.detailedDescription
+    .split('\n\n')
+    .filter((p) => p.trim() !== '')
 
   return (
     <div className="min-h-screen bg-black text-white pt-16 sm:pt-20">
@@ -57,11 +48,10 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
         </Link>
       </div>
 
-      {/* Hero */}
+      {/* Hero — animates on mount, not on scroll */}
       <motion.section
-        initial="hidden"
-        animate="visible"
-        variants={fadeInUp}
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={T_SMOOTH}
         className="relative w-full"
       >
@@ -91,44 +81,31 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
 
       {/* Content */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-16 relative z-10">
-        {/* Category + Title + Description */}
+        {/* Category + Title + Description — animates on mount */}
         <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={stagger}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...T_STD, delay: 0.1 }}
           className="space-y-4 mb-8"
         >
-          <motion.span
-            variants={fadeInUp}
-            transition={T_QUICK}
+          <span
             className="inline-block px-3 py-1 rounded-full text-xs font-medium"
             style={{ backgroundColor: `${categoryColor}20`, color: categoryColor }}
           >
             {project.category}
-          </motion.span>
+          </span>
 
-          <motion.h1
-            variants={fadeInUp}
-            transition={T_STD}
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight"
-          >
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
             {project.title}
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            variants={fadeInUp}
-            transition={T_STD}
-            className="text-lg text-white/70 max-w-3xl"
-          >
-            {project.shortDescription}
-          </motion.p>
+          <p className="text-lg text-white/70 max-w-3xl">{project.shortDescription}</p>
         </motion.div>
 
-        {/* Action Buttons */}
+        {/* Action Buttons — animates on mount */}
         <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeInUp}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ ...T_STD, delay: 0.2 }}
           className="flex flex-wrap gap-3 mb-12"
         >
@@ -168,15 +145,8 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
           )}
         </motion.div>
 
-        {/* Screenshots */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={fadeInUp}
-          transition={T_SMOOTH}
-          className="mb-16"
-        >
+        {/* Screenshots — no scroll animation, renders immediately */}
+        <section className="mb-16">
           {hasMultiple && (
             <ImageCarousel
               screenshots={screenshots}
@@ -201,60 +171,39 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
               imageAlt={project.images.bannerAlt}
             />
           )}
-        </motion.section>
+        </section>
 
         {/* Project Overview */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={fadeInUp}
-          transition={T_SMOOTH}
-          className="mb-16"
-        >
+        <section className="mb-16">
           <h2 className="text-2xl font-bold mb-4">Project Overview</h2>
-          <p className="text-white/70 leading-relaxed text-lg">{project.detailedDescription}</p>
-        </motion.section>
+          <div className="space-y-4">
+            {descriptionParagraphs.map((para, i) => (
+              <p key={i} className="text-white/70 leading-relaxed text-lg">
+                {para}
+              </p>
+            ))}
+          </div>
+        </section>
 
         {/* Key Features */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={stagger}
-          className="mb-16"
-        >
-          <motion.h2 variants={fadeInUp} transition={T_QUICK} className="text-2xl font-bold mb-6">
-            Key Features
-          </motion.h2>
+        <section className="mb-16">
+          <h2 className="text-2xl font-bold mb-6">Key Features</h2>
           <ul className="grid gap-3 sm:grid-cols-2">
             {project.keyFeatures.map((feature, i) => (
-              <motion.li
-                key={i}
-                variants={fadeInUp}
-                transition={T_QUICK}
-                className="flex items-start gap-3 text-white/80"
-              >
+              <li key={i} className="flex items-start gap-3 text-white/80">
                 <CheckCircle
                   size={18}
                   className="mt-0.5 flex-shrink-0"
                   style={{ color: categoryColor }}
                 />
                 <span>{feature}</span>
-              </motion.li>
+              </li>
             ))}
           </ul>
-        </motion.section>
+        </section>
 
         {/* Tech Stack */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={fadeInUp}
-          transition={T_SMOOTH}
-          className="mb-16"
-        >
+        <section className="mb-16">
           <h2 className="text-2xl font-bold mb-6">Tech Stack</h2>
           <div className="flex flex-wrap gap-2">
             {project.technologies.map((tech) => (
@@ -266,17 +215,10 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
               </span>
             ))}
           </div>
-        </motion.section>
+        </section>
 
         {/* Platforms */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={fadeInUp}
-          transition={T_SMOOTH}
-          className="mb-16"
-        >
+        <section className="mb-16">
           <h2 className="text-2xl font-bold mb-6">Platforms</h2>
           <div className="flex flex-wrap gap-2">
             {project.platforms.map((platform) => (
@@ -293,18 +235,11 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
               </span>
             ))}
           </div>
-        </motion.section>
+        </section>
 
         {/* Project Details Grid */}
         {(project.completionYear ?? project.projectDuration ?? project.teamSize) && (
-          <motion.section
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={fadeInUp}
-            transition={T_SMOOTH}
-            className="mb-16"
-          >
+          <section className="mb-16">
             <h2 className="text-2xl font-bold mb-6">Project Details</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {project.completionYear && (
@@ -335,26 +270,16 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
                 </div>
               )}
             </div>
-          </motion.section>
+          </section>
         )}
 
         {/* Metrics */}
         {project.metrics && (
-          <motion.section
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={stagger}
-            className="mb-16"
-          >
-            <motion.h2 variants={fadeInUp} transition={T_QUICK} className="text-2xl font-bold mb-6">
-              Metrics
-            </motion.h2>
+          <section className="mb-16">
+            <h2 className="text-2xl font-bold mb-6">Metrics</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {project.metrics.users && (
-                <motion.div
-                  variants={fadeInUp}
-                  transition={T_QUICK}
+                <div
                   className="p-5 rounded-xl border"
                   style={{
                     borderColor: `${categoryColor}30`,
@@ -366,12 +291,10 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
                     <span className="text-xs uppercase tracking-wider font-medium">Users</span>
                   </div>
                   <p className="text-lg font-semibold text-white">{project.metrics.users}</p>
-                </motion.div>
+                </div>
               )}
               {project.metrics.performance && (
-                <motion.div
-                  variants={fadeInUp}
-                  transition={T_QUICK}
+                <div
                   className="p-5 rounded-xl border"
                   style={{
                     borderColor: `${categoryColor}30`,
@@ -385,12 +308,10 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
                     </span>
                   </div>
                   <p className="text-lg font-semibold text-white">{project.metrics.performance}</p>
-                </motion.div>
+                </div>
               )}
               {project.metrics.marketPosition && (
-                <motion.div
-                  variants={fadeInUp}
-                  transition={T_QUICK}
+                <div
                   className="p-5 rounded-xl border"
                   style={{
                     borderColor: `${categoryColor}30`,
@@ -406,22 +327,15 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
                   <p className="text-lg font-semibold text-white">
                     {project.metrics.marketPosition}
                   </p>
-                </motion.div>
+                </div>
               )}
             </div>
-          </motion.section>
+          </section>
         )}
 
         {/* Business Impact */}
         {project.businessImpact && (
-          <motion.section
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={fadeInUp}
-            transition={T_SMOOTH}
-            className="mb-16"
-          >
+          <section className="mb-16">
             <div
               className="p-6 sm:p-8 rounded-2xl border"
               style={{
@@ -434,18 +348,11 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
               </h2>
               <p className="text-white/80 text-lg leading-relaxed">{project.businessImpact}</p>
             </div>
-          </motion.section>
+          </section>
         )}
 
         {/* CTA */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={fadeInUp}
-          transition={T_SMOOTH}
-          className="pb-20 text-center"
-        >
+        <section className="pb-20 text-center">
           <div className="p-8 sm:p-12 rounded-2xl bg-white/5 border border-white/10">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">
               Interested in a Similar Project?
@@ -471,7 +378,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
               </Link>
             </div>
           </div>
-        </motion.section>
+        </section>
       </div>
     </div>
   )

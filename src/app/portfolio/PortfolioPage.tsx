@@ -28,7 +28,6 @@ import DotGrid from '@sections/DotGrid'
 import TextPressure from '@animations/TextPressure'
 import LetterGlitch from '@animations/LetterGlitch'
 import GridAnimation from '@animations/GridAnimation'
-import Waves from '@animations/Waves'
 import BlurText from '@animations/BlurText'
 import EnhancedProjectCard from '@/components/portfolio/EnhancedProjectCard'
 import { portfolioProjects } from '@/data/portfolioProjects'
@@ -680,52 +679,88 @@ export default function PortfolioPage() {
                   </div>
                 </motion.div>
 
-                {/* Right Outer Square - Waves (110x110px) - Tablet and up */}
+                {/* Right Outer Square - Typography Specimen (110x110px) - Tablet and up */}
                 <motion.div
                   className="hidden sm:block absolute
                     top-1/2 -translate-y-1/2 right-[8%]
                     backdrop-blur-md overflow-hidden
-                    w-[110px] h-[110px] cursor-pointer group"
+                    w-[110px] h-[110px] cursor-default group"
                   initial={{ opacity: 0, rotate: 8 }}
                   animate={{ opacity: 1, rotate: 8 }}
                   whileHover={{ scale: 1.08, rotate: 0 }}
                   transition={{ delay: 0.6, duration: 0.6, ease: 'easeOut' }}
                   style={{
+                    border: '2px solid rgba(76,215,135,0.6)',
                     borderRadius: '12px',
+                    backgroundColor: 'rgba(0,0,0,0.5)',
                     zIndex: 11,
                   }}
                 >
-                  <div className="absolute inset-0 border-2 border-[rgba(76,215,135,0.6)] rounded-xl group-hover:border-[rgba(76,215,135,1)] group-hover:shadow-[0_0_20px_rgba(76,215,135,0.4)] transition-all duration-300" />
-                  <div className="absolute inset-0 bg-[rgba(0,0,0,0.5)] group-hover:bg-[rgba(0,0,0,0.3)] transition-all duration-300" />
-
-                  {/* Hover dot indicator */}
-                  <motion.div
-                    className="absolute w-2 h-2 bg-[#4CD787] rounded-full pointer-events-none"
-                    style={{
-                      top: '50%',
-                      left: '50%',
-                      x: '-50%',
-                      y: '-50%',
-                    }}
-                    initial={{ opacity: 0, scale: 0 }}
-                    whileHover={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.2 }}
+                  {/* Hover inner glow */}
+                  <div
+                    className="absolute inset-0 rounded-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                    style={{ boxShadow: 'inset 0 0 28px rgba(76,215,135,0.22)' }}
+                    aria-hidden="true"
                   />
 
-                  <div className="w-full h-full relative z-10 overflow-hidden">
-                    <Waves
-                      lineColor="#4CD787"
-                      backgroundColor="transparent"
-                      waveSpeedX={0.008}
-                      waveSpeedY={0.004}
-                      waveAmpX={15}
-                      waveAmpY={8}
-                      xGap={6}
-                      yGap={10}
-                      friction={0.95}
-                      tension={0.005}
-                      maxCursorMove={40}
-                    />
+                  {/* Large "A" — cropped by overflow-hidden like a design artboard */}
+                  <div
+                    className="absolute select-none leading-none"
+                    style={{
+                      fontFamily: 'var(--font-playfair-display)',
+                      fontSize: '102px',
+                      fontWeight: 700,
+                      color: '#4CD787',
+                      opacity: 0.88,
+                      top: '-6px',
+                      left: '3px',
+                    }}
+                    aria-hidden="true"
+                  >
+                    A
+                  </div>
+
+                  {/* Cap-height guide line */}
+                  <div
+                    className="absolute pointer-events-none"
+                    style={{
+                      top: '16px',
+                      left: '8px',
+                      right: '8px',
+                      height: '1px',
+                      backgroundColor: 'rgba(76,215,135,0.18)',
+                    }}
+                    aria-hidden="true"
+                  />
+
+                  {/* Baseline guide line */}
+                  <div
+                    className="absolute pointer-events-none"
+                    style={{
+                      bottom: '32px',
+                      left: '8px',
+                      right: '8px',
+                      height: '1px',
+                      backgroundColor: 'rgba(76,215,135,0.32)',
+                    }}
+                    aria-hidden="true"
+                  />
+
+                  {/* Small italic "a" — bottom-right corner */}
+                  <div
+                    className="absolute select-none leading-none"
+                    style={{
+                      fontFamily: 'var(--font-playfair-display)',
+                      fontSize: '28px',
+                      fontWeight: 400,
+                      fontStyle: 'italic',
+                      color: 'rgba(76,215,135,0.42)',
+                      bottom: '6px',
+                      right: '8px',
+                    }}
+                    aria-hidden="true"
+                  >
+                    a
                   </div>
                 </motion.div>
               </div>
