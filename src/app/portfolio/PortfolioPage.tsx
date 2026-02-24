@@ -31,8 +31,7 @@ import GridAnimation from '@animations/GridAnimation'
 import Waves from '@animations/Waves'
 import BlurText from '@animations/BlurText'
 import EnhancedProjectCard from '@/components/portfolio/EnhancedProjectCard'
-import ProjectDetailModal from '@/components/portfolio/ProjectDetailModal'
-import { portfolioProjects, ProjectData } from '@/data/portfolioProjects'
+import { portfolioProjects } from '@/data/portfolioProjects'
 import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
 import StarBorder from '@/components/animations/StarBorder'
@@ -350,8 +349,6 @@ export default function PortfolioPage() {
   const [selectedService, setSelectedService] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 })
-  const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null)
-  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false)
   const [portfolioTitle, setPortfolioTitle] = useState('  \u00a0Portfolio\u00a0  ')
   const [asciiSettings, setAsciiSettings] = useState({
     containerHeight: 330,
@@ -413,16 +410,6 @@ export default function PortfolioPage() {
     setIsModalOpen(false)
     setSelectedService(null)
     setTimeout(() => setClickPosition({ x: 0, y: 0 }), 100)
-  }
-
-  const handleViewProjectDetails = (project: ProjectData) => {
-    setSelectedProject(project)
-    setIsProjectModalOpen(true)
-  }
-
-  const handleCloseProjectModal = () => {
-    setIsProjectModalOpen(false)
-    setTimeout(() => setSelectedProject(null), 300)
   }
 
   return (
@@ -787,11 +774,7 @@ export default function PortfolioPage() {
                   viewport={{ once: true, amount: 0.2 }}
                   custom={index}
                 >
-                  <EnhancedProjectCard
-                    project={project}
-                    index={index}
-                    onViewDetails={handleViewProjectDetails}
-                  />
+                  <EnhancedProjectCard project={project} index={index} />
                 </motion.div>
               ))}
             </motion.div>
@@ -849,11 +832,7 @@ export default function PortfolioPage() {
                 viewport={{ once: true, amount: 0.2 }}
                 custom={index}
               >
-                <EnhancedProjectCard
-                  project={project}
-                  index={index}
-                  onViewDetails={handleViewProjectDetails}
-                />
+                <EnhancedProjectCard project={project} index={index} />
               </motion.div>
             ))}
           </motion.div>
@@ -961,13 +940,6 @@ export default function PortfolioPage() {
           </motion.div>
         </div>
       </section>
-
-      {/* Project Detail Modal */}
-      <ProjectDetailModal
-        project={selectedProject}
-        isOpen={isProjectModalOpen}
-        onClose={handleCloseProjectModal}
-      />
     </div>
   )
 }

@@ -10,6 +10,11 @@ const Hero = dynamic(() => import('@sections/Hero'), {
   loading: () => <div className="min-h-screen min-h-[100vh] bg-black" />,
 })
 
+const FeaturedProjects = dynamic(() => import('@sections/FeaturedProjects'), {
+  ssr: false,
+  loading: () => <div className="h-96" />,
+})
+
 const FeaturesSection = dynamic(() => import('@sections/Features'), {
   ssr: false,
   loading: () => <div className="h-96" />,
@@ -114,6 +119,7 @@ export default function HomePageClient() {
       }
     >
       <Hero />
+      <FeaturedProjects />
       <FeaturesSection />
       <ProcessSection />
       <DevelopmentToolsSection />
