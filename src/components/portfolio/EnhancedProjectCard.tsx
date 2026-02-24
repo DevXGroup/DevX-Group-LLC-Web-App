@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
 import {
   ExternalLink,
@@ -16,16 +15,16 @@ import {
   Target,
   Smartphone,
   Monitor,
-  Github,
 } from 'lucide-react'
 import { ProjectData, categoryColors } from '@/data/portfolioProjects'
 
 interface EnhancedProjectCardProps {
   project: ProjectData
   index: number
+  onViewDetails?: (project: ProjectData) => void
 }
 
-const EnhancedProjectCard = ({ project, index }: EnhancedProjectCardProps) => {
+const EnhancedProjectCard = ({ project, index, onViewDetails }: EnhancedProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   // Disable hover-only effects on touch devices to avoid flashing/repaints
@@ -49,8 +48,33 @@ const EnhancedProjectCard = ({ project, index }: EnhancedProjectCardProps) => {
     if (allowHover) setIsHovered(false)
   }
 
-  // Focus handlers for keyboard navigation
-  const handleFocus = () => setIsHovered(true)
+  const isCurrentProject = Boolean(project.isCurrentProject && project.visitUrl)
+
+  const openProjectLink = () => {
+    if (!project.visitUrl) return
+    window.open(project.visitUrl, '_blank', 'noopener,noreferrer')
+  }
+
+  const handlePrimaryAction = () => {
+    if (isCurrentProject) {
+      openProjectLink()
+      return
+    }
+    onViewDetails?.(project)
+  }
+
+  // Keyboard navigation for accessibility
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      handlePrimaryAction()
+    }
+  }
+
+  // Focus handlers for keyboard navigation (only activate hover state on real pointer devices)
+  const handleFocus = () => {
+    if (allowHover) setIsHovered(true)
+  }
   const handleBlur = () => setIsHovered(false)
 
   // Only animate border lines when actually visible and in viewport
@@ -66,8 +90,10 @@ const EnhancedProjectCard = ({ project, index }: EnhancedProjectCardProps) => {
       aria-label={`${project.title} - ${project.category}. ${project.shortDescription}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onKeyDown={handleKeyDown}
       onFocus={handleFocus}
       onBlur={handleBlur}
+      onClick={isCurrentProject ? openProjectLink : undefined}
       className="relative group cursor-pointer overflow-hidden
         bg-black/40 backdrop-blur-md border border-white/10
         rounded-2xl hover:border-white/20 focus:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all duration-300
@@ -122,39 +148,6 @@ const EnhancedProjectCard = ({ project, index }: EnhancedProjectCardProps) => {
 
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20" />
-
-            {/* Category Badge - Enhanced Visibility */}
-            <div className="absolute top-4 left-4 z-10">
-              <div
-                className="px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-md border-2 shadow-lg text-white transition-transform duration-200"
-                style={{
-                  backgroundColor: `${categoryColor}40`,
-                  borderColor: `${categoryColor}80`,
-                  textShadow: '0 1px 3px rgba(0,0,0,0.8)',
-                }}
-              >
-                {project.category}
-              </div>
-            </div>
-
-            {/* Project Highlights Floating Elements */}
-            {project.highlights && isHovered && isMounted && (
-              <div className="absolute inset-0 overflow-hidden">
-                {project.highlights.slice(0, 2).map((highlight, i) => (
-                  <div
-                    key={i}
-                    className={`absolute text-xs font-medium text-white/80 px-2 py-1 rounded-md bg-black/40 backdrop-blur-sm border border-white/20 transition-opacity duration-200 ${
-                      i === 0 ? 'top-16 right-6' : 'bottom-16 left-6'
-                    }`}
-                  >
-                    <div className="flex items-center gap-1">
-                      <Zap size={10} className="text-yellow-400" />
-                      {highlight}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
@@ -259,41 +252,23 @@ const EnhancedProjectCard = ({ project, index }: EnhancedProjectCardProps) => {
 
             {/* Action Buttons */}
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pt-4">
-              <div className="flex items-center gap-2 w-full lg:w-auto">
-                <Link
-                  href={`/portfolio/${project.id}`}
-                  onClick={(e) => e.stopPropagation()}
-                  aria-label={`View details for ${project.title}`}
-                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300 font-semibold shadow-lg h-11 flex-1 lg:flex-none focus:outline-none focus:ring-2 focus:ring-white/30"
-                >
-                  <span className="text-sm font-bold whitespace-nowrap">View Details</span>
-                  <ExternalLink size={14} aria-hidden="true" />
-                </Link>
-                {project.githubUrl && (
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    aria-label={`${project.title} GitHub repository`}
-                    className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-zinc-400 hover:text-white transition-all duration-200 h-11 w-11 flex items-center justify-center flex-shrink-0"
-                  >
-                    <Github size={16} />
-                  </a>
-                )}
-                {(project.visitUrl || project.demoUrl) && (
-                  <a
-                    href={project.visitUrl ?? project.demoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    aria-label={`Visit ${project.title} live site`}
-                    className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-zinc-400 hover:text-white transition-all duration-200 h-11 w-11 flex items-center justify-center flex-shrink-0"
-                  >
-                    <Globe size={16} />
-                  </a>
-                )}
-              </div>
+              <button
+                onClick={(event) => {
+                  event.stopPropagation()
+                  handlePrimaryAction()
+                }}
+                aria-label={
+                  isCurrentProject
+                    ? `Visit ${project.title} website`
+                    : `View details for ${project.title}`
+                }
+                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300 font-semibold shadow-lg h-11 w-full lg:w-auto focus:outline-none focus:ring-2 focus:ring-white/30"
+              >
+                <span className="text-sm font-bold whitespace-nowrap">
+                  {isCurrentProject ? 'Visit Website' : 'View Details'}
+                </span>
+                <ExternalLink size={14} aria-hidden="true" />
+              </button>
 
               {/* Platform Support Section */}
               <div className="flex flex-col gap-3 items-start lg:items-end text-left lg:text-right w-full lg:w-auto">

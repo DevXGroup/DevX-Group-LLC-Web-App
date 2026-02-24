@@ -64,16 +64,18 @@ const ProjectDetailModal = ({ project, isOpen, onClose }: ProjectDetailModalProp
     }
   }, [isOpen, onClose, isMounted])
 
-  // Now we can do conditional returns after all hooks are called
-  if (!project || !isOpen || !isMounted) return null
+  // Only block render until mounted (prevents hydration issues)
+  if (!isMounted) return null
 
-  const categoryColor = categoryColors[project.category as keyof typeof categoryColors] || '#4CD787'
+  const categoryColor = project
+    ? categoryColors[project.category as keyof typeof categoryColors] || '#4CD787'
+    : '#4CD787'
 
   const modalVariants = {
     hidden: {
       opacity: 0,
-      scale: 0.8,
-      y: 100,
+      scale: 0.95,
+      y: 40,
     },
     visible: {
       opacity: 1,
@@ -82,8 +84,8 @@ const ProjectDetailModal = ({ project, isOpen, onClose }: ProjectDetailModalProp
     },
     exit: {
       opacity: 0,
-      scale: 0.8,
-      y: 100,
+      scale: 0.95,
+      y: 40,
     },
   }
 
@@ -101,8 +103,8 @@ const ProjectDetailModal = ({ project, isOpen, onClose }: ProjectDetailModalProp
   }
 
   return (
-    <AnimatePresence>
-      {isOpen && (
+    <AnimatePresence mode="wait">
+      {isOpen && project && (
         <>
           {/* Backdrop - Enhanced Dismiss */}
           <motion.div
