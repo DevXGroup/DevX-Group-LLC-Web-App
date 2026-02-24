@@ -1,3 +1,14 @@
+## [1.14.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.13.3...v1.14.0) (2026-02-24)
+
+### Features
+
+* **portfolio:** add View Details and GitHub links to current project cards ([a13271a](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/a13271a8b7109704196763544b778bce9a85b3f3))
+
+### Bug Fixes
+
+* **contact:** add Calendly loading skeleton while embed initializes ([8d5c34e](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/8d5c34eab6f11fdd0ac9ec6e0aedd43b7df3f590))
+* **seo:** re-add services/creative-animation to sitemap ([a41752c](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/a41752cf7645249c2a2b43570e4a8b70409ee2b3))
+
 ## [1.13.3](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.13.2...v1.13.3) (2026-02-24)
 
 ### Bug Fixes

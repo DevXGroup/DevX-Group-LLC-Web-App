@@ -1,6 +1,6 @@
 {
   "name": "devx-group-web-app",
-  "version": "1.13.3",
+  "version": "1.14.0",
   "private": true,
   "type": "module",
   "sideEffects": [
