@@ -2,14 +2,13 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
 import {
   ExternalLink,
   Star,
-  TrendingUp,
   Users,
   Award,
-  Zap,
   Globe,
   Calendar,
   Target,
@@ -24,7 +23,7 @@ interface EnhancedProjectCardProps {
   onViewDetails?: (project: ProjectData) => void
 }
 
-const EnhancedProjectCard = ({ project, index, onViewDetails }: EnhancedProjectCardProps) => {
+const EnhancedProjectCard = ({ project, index }: EnhancedProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   // Disable hover-only effects on touch devices to avoid flashing/repaints
@@ -49,26 +48,11 @@ const EnhancedProjectCard = ({ project, index, onViewDetails }: EnhancedProjectC
   }
 
   const isCurrentProject = Boolean(project.isCurrentProject && project.visitUrl)
+  const detailHref = `/portfolio/${project.id}`
 
   const openProjectLink = () => {
     if (!project.visitUrl) return
     window.open(project.visitUrl, '_blank', 'noopener,noreferrer')
-  }
-
-  const handlePrimaryAction = () => {
-    if (isCurrentProject) {
-      openProjectLink()
-      return
-    }
-    onViewDetails?.(project)
-  }
-
-  // Keyboard navigation for accessibility
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      handlePrimaryAction()
-    }
   }
 
   // Focus handlers for keyboard navigation (only activate hover state on real pointer devices)
@@ -85,18 +69,15 @@ const EnhancedProjectCard = ({ project, index, onViewDetails }: EnhancedProjectC
   return (
     <div
       ref={cardRef}
-      tabIndex={0}
       role="article"
       aria-label={`${project.title} - ${project.category}. ${project.shortDescription}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onKeyDown={handleKeyDown}
       onFocus={handleFocus}
       onBlur={handleBlur}
-      onClick={isCurrentProject ? openProjectLink : undefined}
-      className="relative group cursor-pointer overflow-hidden
+      className="relative group overflow-hidden
         bg-black/40 backdrop-blur-md border border-white/10
-        rounded-2xl hover:border-white/20 focus:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all duration-300
+        rounded-2xl hover:border-white/20 transition-all duration-300
         h-full min-h-[520px] sm:min-h-[540px] md:min-h-[600px] lg:min-h-[660px] xl:min-h-[680px]"
     >
       {/* Subtle Glow Effect - optimized for performance */}
@@ -266,23 +247,27 @@ const EnhancedProjectCard = ({ project, index, onViewDetails }: EnhancedProjectC
 
             {/* Action Buttons */}
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pt-4">
-              <button
-                onClick={(event) => {
-                  event.stopPropagation()
-                  handlePrimaryAction()
-                }}
-                aria-label={
-                  isCurrentProject
-                    ? `Visit ${project.title} website`
-                    : `View details for ${project.title}`
-                }
-                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300 font-semibold shadow-lg h-11 w-full lg:w-auto focus:outline-none focus:ring-2 focus:ring-white/30"
-              >
-                <span className="text-sm font-bold whitespace-nowrap">
-                  {isCurrentProject ? 'Visit Website' : 'View Details'}
-                </span>
-                <ExternalLink size={14} aria-hidden="true" />
-              </button>
+              {isCurrentProject ? (
+                <a
+                  href={project.visitUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Visit ${project.title} website`}
+                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300 font-semibold shadow-lg h-11 w-full lg:w-auto focus:outline-none focus:ring-2 focus:ring-white/30"
+                >
+                  <span className="text-sm font-bold whitespace-nowrap">Visit Website</span>
+                  <ExternalLink size={14} aria-hidden="true" />
+                </a>
+              ) : (
+                <Link
+                  href={detailHref}
+                  aria-label={`View details for ${project.title}`}
+                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 border-2 border-white/30 hover:border-white/50 text-white transition-all duration-300 font-semibold shadow-lg h-11 w-full lg:w-auto focus:outline-none focus:ring-2 focus:ring-white/30"
+                >
+                  <span className="text-sm font-bold whitespace-nowrap">View Details</span>
+                  <ExternalLink size={14} aria-hidden="true" />
+                </Link>
+              )}
 
               {/* Platform Support Section */}
               <div className="flex flex-col gap-3 items-start lg:items-end text-left lg:text-right w-full lg:w-auto">

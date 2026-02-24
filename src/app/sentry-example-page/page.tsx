@@ -1,5 +1,13 @@
-// Force dynamic rendering to avoid context issues during static generation
+import { Metadata } from 'next'
+
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 
 // Minimal test page - uses no external components
 export default function SentryExamplePage() {

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { portfolioProjects } from '@/data/portfolioProjects'
+import { getSiteUrl } from '@/lib/og'
 import ProjectPage from './ProjectPage'
 
 export async function generateStaticParams() {
@@ -15,6 +16,8 @@ export async function generateMetadata({
   const resolvedParams = await params
   const project = portfolioProjects.find((p) => p.id === resolvedParams['project-id'])
   if (!project) return {}
+  const siteUrl = getSiteUrl()
+  const pageUrl = `${siteUrl}/portfolio/${project.id}`
   return {
     title: `${project.title} | DevX Group Portfolio`,
     description: project.shortDescription,
@@ -22,7 +25,10 @@ export async function generateMetadata({
       title: project.title,
       description: project.shortDescription,
       images: [{ url: project.images.banner }],
-      url: `/portfolio/${project.id}`,
+      url: pageUrl,
+    },
+    alternates: {
+      canonical: pageUrl,
     },
   }
 }

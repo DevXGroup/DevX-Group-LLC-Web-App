@@ -45,18 +45,16 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
   const hasSingle = screenshots.length === 1
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Sticky Back Button */}
-      <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <Link
-            href="/portfolio"
-            className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
-          >
-            <ArrowLeft size={16} />
-            Back to Portfolio
-          </Link>
-        </div>
+    <div className="min-h-screen bg-black text-white pt-16 sm:pt-20">
+      {/* Back Button */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <Link
+          href="/portfolio"
+          className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
+        >
+          <ArrowLeft size={16} />
+          Back to Portfolio
+        </Link>
       </div>
 
       {/* Hero */}
@@ -77,12 +75,12 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
             />
           </div>
         ) : (
-          <div className="relative w-full aspect-[21/9] max-h-[60vh]">
+          <div className="relative w-full aspect-[4/3] sm:aspect-video lg:aspect-[21/9] max-h-[70vh]">
             <Image
               src={project.images.banner}
               alt={project.images.bannerAlt ?? `${project.title} banner`}
               fill
-              className="object-cover"
+              className="object-cover object-top"
               priority
               sizes="100vw"
             />
@@ -92,7 +90,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
       </motion.section>
 
       {/* Content */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-16 relative z-10">
         {/* Category + Title + Description */}
         <motion.div
           initial="hidden"
