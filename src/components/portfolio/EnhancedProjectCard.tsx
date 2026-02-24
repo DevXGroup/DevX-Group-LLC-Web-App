@@ -141,13 +141,27 @@ const EnhancedProjectCard = ({ project, index, onViewDetails }: EnhancedProjectC
                   `${project.title} - ${project.category} project by DevX Group`
                 }
                 fill
-                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                className="object-cover object-top"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             )}
 
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20" />
+
+            {/* Category Badge */}
+            <div className="absolute top-4 left-4 z-10">
+              <div
+                className="px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-md border-2 shadow-lg text-white"
+                style={{
+                  backgroundColor: `${categoryColor}40`,
+                  borderColor: `${categoryColor}80`,
+                  textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                }}
+              >
+                {project.category}
+              </div>
+            </div>
           </div>
         </div>
 
