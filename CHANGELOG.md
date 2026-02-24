@@ -1,3 +1,9 @@
+## [1.13.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.12.3...v1.13.0) (2026-02-24)
+
+### Features
+
+* portfolio expansion with individual project pages and featured section ([#64](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/issues/64)) ([bb41b2f](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/bb41b2f43b9ddd350c3dbd5503bf29c79b27ace2))
+
 ## [1.12.3](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.12.2...v1.12.3) (2026-02-23)
 
 ### Bug Fixes
