@@ -1,3 +1,9 @@
+## [1.13.2](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.13.1...v1.13.2) (2026-02-24)
+
+### Bug Fixes
+
+* **portfolio:** restore detail page navigation and fix mobile layout ([d9b3fb7](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/d9b3fb7089e96acded5b3c87359dcd2d5cf82fae))
+
 ## [1.13.1](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.13.0...v1.13.1) (2026-02-24)
 
 ### Bug Fixes
