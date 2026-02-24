@@ -15,7 +15,7 @@ import { DeferredStyles } from '@/components/layout/DeferredStyles'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { Partytown } from '@qwik.dev/partytown/react'
+
 import clsx from 'clsx'
 import { IBM_Plex_Mono, IBM_Plex_Sans, Inter, Pacifico, Playfair_Display } from 'next/font/google'
 import { createOgImageUrl, createTwitterImageUrl, getSiteUrl } from '@/lib/og'
@@ -399,19 +399,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </noscript>
         {/* End Google Tag Manager (noscript) */}
 
-        {/* Partytown for offloading third-party scripts - Load after hydration */}
-        <Partytown debug={false} forward={['dataLayer.push', 'gtag']} />
-
-        {/* Structured Data - Load after hydration */}
+        {/* Structured Data */}
         <StructuredData type="organization" />
         <StructuredData type="localBusiness" />
         <StructuredData type="website" />
 
-        {/* Google Tag Manager - Run in web worker via Partytown */}
+        {/* Google Tag Manager - deferred after hydration */}
         <Script
           id="gtm-script"
-          type="text/partytown"
-          strategy="worker"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
 (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -422,33 +418,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             `.trim(),
           }}
         />
-
-        {/* Google Analytics 4 - Run in web worker via Partytown
-            NOTE: Commmented out to prevent double-firing if GTM is already handling GA4.
-            Uncomment if GA4 is NOT configured in GTM.
-        <Script
-          id="ga-script"
-          type="text/partytown"
-          strategy="worker"
-          src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-        />
-        <Script
-          id="ga-config"
-          type="text/partytown"
-          strategy="worker"
-          dangerouslySetInnerHTML={{
-            __html: `
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${gaId}', {
-  page_path: window.location.pathname,
-  send_page_view: true
-});
-            `.trim(),
-          }}
-        />
-        */}
 
         <DevToolsErrorSuppressor />
         <BrowserCompatibilityDetector />

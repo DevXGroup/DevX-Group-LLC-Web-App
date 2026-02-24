@@ -69,7 +69,8 @@ export const metadata: Metadata = {
     images: [twitterImage],
   },
   alternates: {
-    canonical: pageUrl,
+    // Point to root domain — Google indexes devxgroup.io, not /home, as the canonical home page
+    canonical: siteUrl,
   },
 }
 
