@@ -70,13 +70,13 @@ export default function FooterClient({ version }: FooterClientProps) {
               </p>
               <div className="flex space-x-4 mt-auto">
                 <Link
-                  href="https://www.youtube.com/channel/UC6Zqx3Bhwbberq_MEmlgpIw"
+                  href="https://github.com/DevXGroup"
                   className="text-zinc-400 hover:text-[#4CD787] transition-colors p-2 hover:bg-white/5 rounded-md"
-                  aria-label="YouTube"
+                  aria-label="GitHub"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Youtube className="w-5 h-5" />
+                  <Github className="w-5 h-5" />
                 </Link>
                 <Link
                   href="https://www.linkedin.com/company/devx-group-llc/"
@@ -88,13 +88,13 @@ export default function FooterClient({ version }: FooterClientProps) {
                   <Linkedin className="w-5 h-5" />
                 </Link>
                 <Link
-                  href="https://github.com/DevXGroup"
+                  href="#"
                   className="text-zinc-400 hover:text-[#4CD787] transition-colors p-2 hover:bg-white/5 rounded-md"
-                  aria-label="GitHub"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  aria-label="X"
                 >
-                  <Github className="w-5 h-5" />
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
                 </Link>
                 <Link
                   href="https://www.instagram.com/devx_group/"
@@ -106,13 +106,13 @@ export default function FooterClient({ version }: FooterClientProps) {
                   <Instagram className="w-5 h-5" />
                 </Link>
                 <Link
-                  href="#"
+                  href="https://www.youtube.com/channel/UC6Zqx3Bhwbberq_MEmlgpIw"
                   className="text-zinc-400 hover:text-[#4CD787] transition-colors p-2 hover:bg-white/5 rounded-md"
-                  aria-label="X"
+                  aria-label="YouTube"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
+                  <Youtube className="w-5 h-5" />
                 </Link>
               </div>
             </div>
