@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useRef } from 'react'
 import { Github, ExternalLink, ArrowRight, Star } from 'lucide-react'
 import { portfolioProjects, categoryColors } from '@/data/portfolioProjects'
+import BlurText from '@animations/BlurText'
 
 const featured = portfolioProjects.filter((p) => p.isFeatured)
 
@@ -50,7 +51,16 @@ export default function FeaturedProjects() {
             <Star size={12} className="fill-[#4CD787]" />
             Featured Work
           </div>
-          <h2 className="heading-section text-white mb-4">Open-source &amp; client projects</h2>
+          <h2 className="text-white mb-4 section-title-hero font-editorial">
+            <BlurText
+              text="Open-source & client projects"
+              className="justify-center text-center"
+              delay={50}
+              startDelay={150}
+              stepDuration={0.4}
+              once={true}
+            />
+          </h2>
           <p className="subtitle text-white/60 max-w-xl mx-auto">
             Built by DevX Group — shipped products demonstrating our depth across AI, web, mobile,
             and real-time systems.

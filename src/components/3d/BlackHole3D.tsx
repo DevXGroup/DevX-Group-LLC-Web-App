@@ -115,10 +115,31 @@ export default function BlackHole3D({ enabled = true }: BlackHole3DProps) {
 
   // Ref-based scroll rotation avoids re-renders while still driving Three.js
   const scrollRotation = useRef(0)
+  const scrollTarget = useRef(0)
   const visibilityExitPosition = useRef<number | null>(null)
   const scrollEffectDisabled = useRef(false)
+  const lerpRafId = useRef<number | null>(null)
 
-  // Connect scroll position to orbit rotation
+  // Smoothly interpolate scroll rotation toward target each frame
+  useEffect(() => {
+    const lerpFactor = 0.06 // Lower = smoother/slower easing
+
+    const tick = () => {
+      const diff = scrollTarget.current - scrollRotation.current
+      if (Math.abs(diff) > 0.0001) {
+        scrollRotation.current += diff * lerpFactor
+        invalidate()
+      }
+      lerpRafId.current = requestAnimationFrame(tick)
+    }
+    lerpRafId.current = requestAnimationFrame(tick)
+
+    return () => {
+      if (lerpRafId.current !== null) cancelAnimationFrame(lerpRafId.current)
+    }
+  }, [])
+
+  // Connect scroll position to target rotation
   useEffect(() => {
     const handleScroll = () => {
       // Disable scroll effect 500px past the hero exits view for performance
@@ -126,8 +147,7 @@ export default function BlackHole3D({ enabled = true }: BlackHole3DProps) {
 
       const vh = window.innerHeight || 800
       // Full rotation every ~70% of viewport height scrolled
-      scrollRotation.current = (window.scrollY / (vh * 0.7)) * Math.PI * 2
-      invalidate()
+      scrollTarget.current = (window.scrollY / (vh * 0.7)) * Math.PI * 2
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
