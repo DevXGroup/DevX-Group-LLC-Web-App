@@ -29,8 +29,24 @@ export default function FooterClient({ version }: FooterClientProps) {
 
   return (
     <>
-      <footer className="bg-[#121212] border-t border-white/5 text-foreground relative overflow-hidden z-[10]">
-        {/* Removed gradient for solid professional look */}
+      <footer className="bg-[#0a0a0b] border-t border-white/[0.06] text-foreground relative overflow-hidden z-[10]">
+        {/* Subtle radial glow for depth */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 60%)',
+          }}
+        />
+        {/* Fine grain noise overlay for premium texture */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.035]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '128px 128px',
+          }}
+        />
 
         <div className="container mx-auto relative z-10 max-w-full px-4 sm:px-6 lg:px-8 pt-8 pb-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 lg:gap-12">
