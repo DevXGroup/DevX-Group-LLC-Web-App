@@ -9,10 +9,15 @@ type BlackHole3DProps = {
   enabled?: boolean
 }
 
-function AccretionDisk({ isVisible }: { isVisible: boolean }) {
+function AccretionDisk({
+  isVisible,
+  scrollRotation,
+}: {
+  isVisible: boolean
+  scrollRotation: React.MutableRefObject<number>
+}) {
   const pointsRef = useRef<THREE.Points>(null)
 
-  // Reduced particle count for better performance (was 3200)
   const particles = useMemo(() => {
     const count = 1800
     const positions = new Float32Array(count * 3)
@@ -27,8 +32,9 @@ function AccretionDisk({ isVisible }: { isVisible: boolean }) {
       const r = 1.5 + Math.random() * 3.5 + Math.random() * 1.5
       const angle = Math.random() * Math.PI * 2
 
+      // Tighter disk — less vertical spread for a cleaner, flatter orbit
       positions[i3] = Math.cos(angle) * r
-      positions[i3 + 1] = (Math.random() - 0.5) * 0.15 * (r * 0.5)
+      positions[i3 + 1] = (Math.random() - 0.5) * 0.1 * (r * 0.35)
       positions[i3 + 2] = Math.sin(angle) * r
 
       const mixedColor = new THREE.Color()
@@ -49,8 +55,10 @@ function AccretionDisk({ isVisible }: { isVisible: boolean }) {
   useFrame((state) => {
     if (!pointsRef.current || !isVisible) return
     const time = state.clock.getElapsedTime()
-    pointsRef.current.rotation.y = time * 0.02
-    // Request next frame only when visible
+    // Very slow ambient drift + scroll-driven rotation
+    // Ambient: ~0.86°/s so barely perceptible when still
+    // Scroll: one full rotation per 70% of viewport height scrolled
+    pointsRef.current.rotation.y = time * 0.015 + scrollRotation.current
     invalidate()
   })
 
@@ -85,21 +93,17 @@ function AccretionDisk({ isVisible }: { isVisible: boolean }) {
   )
 }
 
-function Scene({ isVisible }: { isVisible: boolean }) {
-  const groupRef = useRef<THREE.Group>(null)
-
-  useFrame((state) => {
-    if (!groupRef.current || !isVisible) return
-    const time = state.clock.getElapsedTime()
-
-    groupRef.current.rotation.x = 0.4 + Math.sin(time * 0.18) * 0.04
-    groupRef.current.rotation.y = 0
-    groupRef.current.position.y = -0.5 + Math.sin(time * 0.12) * 0.1
-  })
-
+// Static scene — no position bobbing or rotation wobble
+function Scene({
+  isVisible,
+  scrollRotation,
+}: {
+  isVisible: boolean
+  scrollRotation: React.MutableRefObject<number>
+}) {
   return (
-    <group ref={groupRef} rotation={[0.4, 0, 0]}>
-      <AccretionDisk isVisible={isVisible} />
+    <group position={[0, -0.5, 0]} rotation={[0.42, 0, 0]}>
+      <AccretionDisk isVisible={isVisible} scrollRotation={scrollRotation} />
     </group>
   )
 }
@@ -109,14 +113,56 @@ export default function BlackHole3D({ enabled = true }: BlackHole3DProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
 
-  // Visibility detection - pause animation when off-screen
+  // Ref-based scroll rotation avoids re-renders while still driving Three.js
+  const scrollRotation = useRef(0)
+  const visibilityExitPosition = useRef<number | null>(null)
+  const scrollEffectDisabled = useRef(false)
+
+  // Connect scroll position to orbit rotation
+  useEffect(() => {
+    const handleScroll = () => {
+      // Disable scroll effect 500px past the hero exits view for performance
+      if (scrollEffectDisabled.current) return
+
+      const vh = window.innerHeight || 800
+      // Full rotation every ~70% of viewport height scrolled
+      scrollRotation.current = (window.scrollY / (vh * 0.7)) * Math.PI * 2
+      invalidate()
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Pause rendering when off-screen and disable scroll effect after 500px past exit
   useEffect(() => {
     if (!containerRef.current) return
 
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0]
-        setIsVisible(!!entry?.isIntersecting)
+        const isCurrentlyInView = !!entry?.isIntersecting
+
+        setIsVisible(isCurrentlyInView)
+
+        // Track when section exits view
+        if (!isCurrentlyInView && visibilityExitPosition.current === null) {
+          visibilityExitPosition.current = window.scrollY
+        }
+
+        // Re-enable tracking if scrolling back up into view
+        if (isCurrentlyInView) {
+          visibilityExitPosition.current = null
+          scrollEffectDisabled.current = false
+        }
+
+        // Disable scroll effect 500px past exit point
+        if (
+          !isCurrentlyInView &&
+          visibilityExitPosition.current !== null &&
+          window.scrollY > visibilityExitPosition.current + 500
+        ) {
+          scrollEffectDisabled.current = true
+        }
       },
       { threshold: 0.1 }
     )
@@ -135,7 +181,6 @@ export default function BlackHole3D({ enabled = true }: BlackHole3DProps) {
     )
   }
 
-  // Reduced DPR for better performance
   const dpr: [number, number] = isSlowCpu || isLowPower ? [1, 1] : [1, 1.2]
 
   return (
@@ -153,7 +198,7 @@ export default function BlackHole3D({ enabled = true }: BlackHole3DProps) {
       >
         <ambientLight intensity={0.4} />
         <pointLight position={[2, 3, 3]} intensity={1.4} color="#fef3c7" />
-        <Scene isVisible={isVisible} />
+        <Scene isVisible={isVisible} scrollRotation={scrollRotation} />
       </Canvas>
     </div>
   )
