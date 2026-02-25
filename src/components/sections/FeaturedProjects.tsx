@@ -51,16 +51,14 @@ export default function FeaturedProjects() {
             <Star size={12} className="fill-[#4CD787]" />
             Featured Work
           </div>
-          <h2 className="text-white mb-4 section-title-hero font-editorial">
-            <BlurText
-              text="Open-source & client projects"
-              className="justify-center text-center"
-              delay={50}
-              startDelay={150}
-              stepDuration={0.4}
-              once={true}
-            />
-          </h2>
+          <BlurText
+            text="Open-source & client projects"
+            className="justify-center text-center text-white mb-4 section-title-hero font-editorial"
+            delay={50}
+            startDelay={150}
+            stepDuration={0.4}
+            once={true}
+          />
           <p className="subtitle text-white/60 max-w-xl mx-auto">
             Built by DevX Group — shipped products demonstrating our depth across AI, web, mobile,
             and real-time systems.
