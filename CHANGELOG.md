@@ -1,3 +1,9 @@
+## [1.16.1](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.16.0...v1.16.1) (2026-03-07)
+
+### Bug Fixes
+
+* **portfolio:** convert CortexFlow images to WebP format ([e5305cb](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/e5305cb620c60591a01507184ad0f05aed336763))
+
 ## [1.16.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.15.0...v1.16.0) (2026-03-07)
 
 ### Features
