@@ -699,16 +699,16 @@ export const portfolioProjects: ProjectData[] = [
       'White-label options and API access for enterprise',
     ],
     images: {
-      banner: '/images/portfolio/banners/cortexflow-banner.png',
-      preview: '/images/portfolio/banners/cortexflow-banner.png',
+      banner: '/images/portfolio/banners/cortexflow-banner.webp',
+      preview: '/images/portfolio/banners/cortexflow-banner.webp',
       bannerAlt:
         'CortexFlow AI content repurposing platform homepage showing headline Turn Any Content Into Viral Social Media',
       previewAlt:
         'CortexFlow dashboard preview with AI-powered video and article generation interface',
       screenshots: [
-        '/images/portfolio/screenshots/cortexflow/screen-1.png',
-        '/images/portfolio/screenshots/cortexflow/screen-2.png',
-        '/images/portfolio/screenshots/cortexflow/screen-3.png',
+        '/images/portfolio/screenshots/cortexflow/screen-1.webp',
+        '/images/portfolio/screenshots/cortexflow/screen-2.webp',
+        '/images/portfolio/screenshots/cortexflow/screen-3.webp',
       ],
       screenshotAlts: [
         'CortexFlow homepage with hero section and social proof from 2,000+ creators',
