@@ -663,6 +663,79 @@ export const portfolioProjects: ProjectData[] = [
     ],
   },
   {
+    id: 'cortexflow',
+    title: 'CortexFlow - AI Content Repurposing Platform',
+    shortDescription:
+      'AI-powered SaaS that turns any content into scroll-stopping short-form videos and long-form articles, then publishes everywhere in one click.',
+    detailedDescription:
+      'CortexFlow is an AI-powered content repurposing platform built for creators and marketers. Upload a video, article, or any text and CortexFlow generates scroll-stopping short-form videos and long-form articles using Google Gemini AI, then publishes them across all major social platforms in one click.\n\nThe platform features a freemium credit-based model with four pricing tiers (Free, Starter, Pro, Max), Google OAuth and email authentication, HD and 4K video export, premium voice library, custom branding, white-label options, and API access for enterprise users. Trusted by 2,000+ creators and marketers.',
+    category: 'AI/SaaS',
+    services: [
+      'AI & Machine Learning',
+      'Web Development',
+      'Custom Software Development',
+      'Cloud Solutions',
+    ],
+    technologies: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'Google Gemini AI',
+      'Supabase',
+      'Stripe',
+      'FFmpeg',
+      'Vercel',
+    ],
+    platforms: ['Web', 'API'],
+    keyFeatures: [
+      'AI-powered video generation from any content',
+      'Long-form article generation with Gemini AI',
+      'One-click multi-platform publishing',
+      'HD and 4K video export',
+      'Premium voice library and custom branding',
+      'Credit-based freemium pricing model',
+      'Google OAuth and email authentication',
+      'White-label options and API access for enterprise',
+    ],
+    images: {
+      banner: '/images/portfolio/banners/cortexflow-banner.png',
+      preview: '/images/portfolio/banners/cortexflow-banner.png',
+      bannerAlt:
+        'CortexFlow AI content repurposing platform homepage showing headline Turn Any Content Into Viral Social Media',
+      previewAlt:
+        'CortexFlow dashboard preview with AI-powered video and article generation interface',
+      screenshots: [
+        '/images/portfolio/screenshots/cortexflow/screen-1.png',
+        '/images/portfolio/screenshots/cortexflow/screen-2.png',
+        '/images/portfolio/screenshots/cortexflow/screen-3.png',
+      ],
+      screenshotAlts: [
+        'CortexFlow homepage with hero section and social proof from 2,000+ creators',
+        'CortexFlow pricing page with Free, Starter, Pro, and Max tiers',
+        'CortexFlow account creation page with Google OAuth and email signup',
+      ],
+    },
+    metrics: {
+      users: '2,000+ Creators & Marketers',
+      performance: 'Gemini AI-Powered Generation',
+      marketPosition: 'AI Content Repurposing SaaS',
+    },
+    businessImpact:
+      'Enables creators and marketers to repurpose content across platforms in minutes instead of hours, with AI-generated videos and articles published in one click.',
+    completionYear: '2025',
+    projectDuration: '3 months',
+    teamSize: '3 specialists',
+    visitUrl: 'https://cortexflow.devxgroup.io',
+    isCurrentProject: true,
+    highlights: [
+      'Google Gemini AI integration',
+      '2,000+ active creators and marketers',
+      'One-click multi-platform publishing',
+      'Freemium SaaS with 4 pricing tiers',
+    ],
+  },
+  {
     id: 'interview-prep',
     title: 'Engineering Manager Interview Prep',
     shortDescription:
@@ -804,8 +877,15 @@ export const portfolioProjects: ProjectData[] = [
 
 // Service mapping for portfolio filtering
 export const serviceMapping = {
-  'Custom Software Development': ['chatfly', 'joyful', 'zahra-farm', 'chayyel'],
-  'AI & Machine Learning': ['chatfly', 'joyjoy', 'joyful', 'letspass', 'i-love-food-ilf'],
+  'Custom Software Development': ['chatfly', 'joyful', 'zahra-farm', 'chayyel', 'cortexflow'],
+  'AI & Machine Learning': [
+    'chatfly',
+    'joyjoy',
+    'joyful',
+    'letspass',
+    'i-love-food-ilf',
+    'cortexflow',
+  ],
   'Mobile App Development': [
     'chatfly',
     'joyjoy',
@@ -816,8 +896,16 @@ export const serviceMapping = {
     'i-love-food-ilf',
     'chayyel',
   ],
-  'Web Development': ['chatfly', 'lawazm', 'joyful', 'lazurd', 'letspass', 'zahra-farm'],
-  'Cloud Solutions': ['lawazm', 'letspass', 'chayyel'],
+  'Web Development': [
+    'chatfly',
+    'lawazm',
+    'joyful',
+    'lazurd',
+    'letspass',
+    'zahra-farm',
+    'cortexflow',
+  ],
+  'Cloud Solutions': ['lawazm', 'letspass', 'chayyel', 'cortexflow'],
   'Database Solutions': ['lawazm', 'letspass', 'i-love-food-ilf'],
   'IoT Hardware & Edge Computing': ['zahra-farm'],
   DevOps: ['lawazm'],
@@ -839,4 +927,5 @@ export const categoryColors = {
   Healthcare: '#67E8F9',
   'AI/Education': '#00D2FF',
   'Web App/Travel': '#4CD787',
+  'AI/SaaS': '#7C3AED',
 }
