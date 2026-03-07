@@ -1,3 +1,20 @@
+## [1.16.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.15.0...v1.16.0) (2026-03-07)
+
+### Features
+
+* **portfolio:** add CortexFlow AI content repurposing platform ([9b4b6ad](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/9b4b6ada142ad2847c1293b31485a4a91e9ad51d))
+* smooth orbital star scroll rotation + featured section heading consistency ([b7713ad](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/b7713adddc3479bef7f55f0ac95c83c332f4069b))
+
+### Bug Fixes
+
+* apply font classes directly on BlurText for featured section title ([5450199](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/54501997fc2ed85ca206b0e01c405ac4035c2777))
+* **deps:** resolve all 5 audit vulnerabilities via pnpm overrides and direct webpack dep ([3108cd3](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/3108cd3ec57d8773c4fd87774cf68ab0b442943f))
+* **deps:** resolve ESLint crash from ajv version mismatch ([4d235ac](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/4d235acf994d12c8e59da1f5e6b3195c14295571))
+
+### Performance Improvements
+
+* disable orbital stars scroll effect after hero exit for better performance ([e51ac4a](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/e51ac4a647c5edf517b4b1f7616cf13cb49786b1))
+
 ## [1.15.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.14.0...v1.15.0) (2026-02-24)
 
 ### Features
