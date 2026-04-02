@@ -30,6 +30,21 @@ const DevelopmentToolsSection = dynamic(() => import('@sections/DevelopmentTools
   loading: () => <div className="h-96" />, // Placeholder to prevent layout shift
 })
 
+const TrustedBySection = dynamic(() => import('@sections/TrustedBy'), {
+  ssr: false,
+  loading: () => <div className="h-24" />,
+})
+
+const HomeTestimonialsSection = dynamic(() => import('@sections/HomeTestimonials'), {
+  ssr: false,
+  loading: () => <div className="h-96" />,
+})
+
+const NewsletterSignupSection = dynamic(() => import('@sections/NewsletterSignup'), {
+  ssr: false,
+  loading: () => <div className="h-48" />,
+})
+
 export default function HomePageClient() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [navbarReady, setNavbarReady] = useState(false)
@@ -119,10 +134,13 @@ export default function HomePageClient() {
       }
     >
       <Hero />
+      <TrustedBySection />
       <FeaturedProjects />
+      <HomeTestimonialsSection />
       <FeaturesSection />
       <ProcessSection />
       <DevelopmentToolsSection />
+      <NewsletterSignupSection />
     </motion.main>
   )
 }

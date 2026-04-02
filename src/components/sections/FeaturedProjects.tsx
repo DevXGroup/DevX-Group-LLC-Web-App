@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRef } from 'react'
-import { Github, ExternalLink, ArrowRight, Star } from 'lucide-react'
+import { Github, ExternalLink, ArrowRight, Star, Smartphone } from 'lucide-react'
 import { portfolioProjects, categoryColors } from '@/data/portfolioProjects'
 import BlurText from '@animations/BlurText'
 
@@ -122,14 +122,35 @@ export default function FeaturedProjects() {
                     </span>
                   </div>
 
-                  {/* Open source badge */}
-                  {project.githubUrl && (
-                    <div className="absolute top-3 right-3">
+                  {/* Top-right badge: Open Source or iOS */}
+                  <div className="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
+                    {project.githubUrl && (
                       <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-md border border-white/20 bg-black/40 text-white/80">
                         Open Source
                       </span>
-                    </div>
-                  )}
+                    )}
+                    {project.platforms?.includes('iOS') &&
+                      !project.platforms?.includes('Android') && (
+                        <span
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-md border"
+                          style={{
+                            backgroundColor: `${categoryColor}25`,
+                            borderColor: `${categoryColor}50`,
+                            color: categoryColor,
+                          }}
+                        >
+                          <Smartphone size={9} />
+                          iOS First
+                        </span>
+                      )}
+                    {project.currentNote && (
+                      <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-md border border-amber-400/30 bg-amber-400/10 text-amber-300">
+                        {project.currentNote.includes('App Store')
+                          ? '🍎 Coming to App Store'
+                          : project.currentNote}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Card content */}
@@ -185,6 +206,22 @@ export default function FeaturedProjects() {
 
                     {/* Labeled action buttons — matching style */}
                     <div className="flex items-center gap-2">
+                      {project.appStoreUrl && !project.visitUrl && (
+                        <a
+                          href={project.appStoreUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          aria-label={`${project.title} on App Store`}
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg
+                            bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/25
+                            text-zinc-300 hover:text-white text-xs font-semibold
+                            transition-all duration-200 whitespace-nowrap"
+                        >
+                          <Smartphone size={12} aria-hidden="true" />
+                          App Store
+                        </a>
+                      )}
                       {project.visitUrl && (
                         <a
                           href={project.visitUrl}

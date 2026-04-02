@@ -15,6 +15,7 @@ import {
   BarChart3,
   Zap,
   TrendingUp,
+  Smartphone,
 } from 'lucide-react'
 import { ProjectData, categoryColors } from '@/data/portfolioProjects'
 import ImageCarousel from '@/components/portfolio/ImageCarousel'
@@ -142,6 +143,33 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
               <Play size={16} />
               Live Demo
             </a>
+          )}
+          {project.appStoreUrl && (
+            <a
+              href={project.appStoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/10 text-sm font-medium text-white hover:bg-white/20 transition-colors border border-white/10"
+            >
+              <Smartphone size={16} />
+              App Store
+            </a>
+          )}
+          {project.playStoreUrl && (
+            <a
+              href={project.playStoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/10 text-sm font-medium text-white hover:bg-white/20 transition-colors border border-white/10"
+            >
+              <Smartphone size={16} />
+              Google Play
+            </a>
+          )}
+          {project.currentNote && (
+            <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-amber-400/30 bg-amber-400/8 text-amber-300 text-sm font-medium">
+              {project.currentNote}
+            </span>
           )}
         </motion.div>
 
