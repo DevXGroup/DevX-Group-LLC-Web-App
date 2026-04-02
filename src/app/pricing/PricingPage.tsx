@@ -53,7 +53,7 @@ const pricingPlans = [
     subtitle: 'Perfect for MVPs',
     price: '$95',
     priceUnit: '/hour',
-    originalPrice: '$115',
+    originalPrice: '$125',
     description:
       'Ideal for startups and small businesses looking to build their first digital solution',
     icon: Target,
@@ -80,9 +80,9 @@ const pricingPlans = [
   {
     name: 'Professional',
     subtitle: 'Most Popular Choice',
-    price: '$130',
+    price: '$145',
     priceUnit: '/hour',
-    originalPrice: '$150',
+    originalPrice: '$190',
     description:
       'Perfect for growing businesses that need comprehensive solutions and dedicated support',
     icon: Zap,
@@ -113,7 +113,7 @@ const pricingPlans = [
     subtitle: 'Ultimate Solution',
     price: '$175',
     priceUnit: '/hour',
-    originalPrice: '$200',
+    originalPrice: '$230',
     description:
       'For large organizations requiring enterprise-grade solutions with premium support',
     icon: Crown,

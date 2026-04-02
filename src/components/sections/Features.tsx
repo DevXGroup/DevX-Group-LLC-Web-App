@@ -263,16 +263,16 @@ export default function Features() {
       {/* Gradient transition from black to purple */}
       <div className="absolute top-0 left-0 right-0 h-2 md:h-40 bg-gradient-to-b from-black to-transparent z-[1] pointer-events-none" />
 
-      {/* Full-screen Grid Background for entire section - softened for subtlety */}
-      <div className="absolute inset-0 w-full h-full opacity-55 md:opacity-50 z-[0] pointer-events-none">
+      {/* Full-screen Grid Background for entire section - Harmonized with Attio/Linear feel but brighter */}
+      <div className="absolute inset-0 w-full h-full opacity-45 md:opacity-35 z-[0] pointer-events-none">
         <GridAnimation
           direction="diagonal"
           speed={0.3}
           squareSize={36}
           showRadialGradient={false}
-          hoverFillColor="rgba(78, 78, 78, 0.6)"
-          borderColor="rgba(120, 120, 120, 0.5)"
-          flickerColor="rgba(88, 88, 88, 0.5)"
+          hoverFillColor="rgba(71, 71, 71, 0.55)"
+          borderColor="rgba(130, 130, 130, 0.30)"
+          flickerColor="rgba(139, 100, 152, 0.18)"
           randomFlicker={true}
         />
       </div>

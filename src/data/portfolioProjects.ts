@@ -112,11 +112,11 @@ export const portfolioProjects: ProjectData[] = [
   },
   {
     id: 'nutrify-ai',
-    title: 'Nutrify.AI — Personalized Nutrition & Wellness',
+    title: 'Nutrify.AI — The Health App Built on Real Science',
     shortDescription:
-      'iOS-first AI health companion that tracks nutrition, sleep, labs, and exercise — with Gemini-powered coaching and lab document scanning built in.',
+      'Not another calorie counter. Nutrify.AI reads your actual lab results, tracks biomarkers, and synthesizes everything into a daily AI-driven health plan tailored to your biology.',
     detailedDescription:
-      "Nutrify.AI is a comprehensive iOS wellness platform that puts a full-stack health intelligence system in your pocket. The app tracks everything that matters — nutrition with AI-powered photo scan logging, sleep patterns, exercise sessions, and biomarker lab results — then synthesizes it all into a personalized morning health brief and AI action plan generated daily.\n\nUnder the hood, all AI runs server-side via Supabase Edge Functions calling Gemini 2.5 Flash, ensuring no API keys on device and secure, context-aware responses. The AI assistant maintains long-term memory of the user's health journey — medications, allergies, goals, lifestyle preferences — and factors this into every response.\n\nKey differentiators: voice-to-text meal logging, lab document PDF parsing (upload a blood test PDF and get structured biomarker entries), AI supplement recommendations with drug interaction warnings, 7-day AI meal plan generation, and an AI sleep analyzer that correlates sleep quality with lifestyle habits. Built with Flutter on Riverpod state management, the UI uses an emerald/obsidian dark theme with fl_chart for data visualizations.",
+      "Most health apps give you macros and step counts. Nutrify.AI goes deeper — it starts with your actual biology.\n\nUpload a blood test PDF and the app instantly parses your biomarkers, flags anything outside optimal ranges, and builds those findings directly into your daily health plan. Every morning you get a personalized AI brief — not generic tips, but actionable guidance based on what your data says about you right now: your sleep from last night, your labs from last month, your nutrition from yesterday.\n\nThe AI remembers everything. It knows your medications, allergies, dietary restrictions, and long-term goals — and factors all of it into every response, every recommendation, every plan. Log a meal by photographing it or saying it out loud, and the AI immediately sees it in context of your full health picture.\n\nNutrify.AI also tackles what most apps ignore: supplements. It recommends what you're likely deficient in based on your lab data, then cross-checks every suggestion against your medications for interaction risks — a level of safety usually reserved for clinical dietitians.\n\nAll AI runs server-side via Supabase Edge Functions calling Gemini 2.5 Flash — no API keys on device, no privacy tradeoffs, and full context-awareness across every interaction. Built on Flutter with an emerald/obsidian design language that feels as premium as the science behind it.",
     category: 'Health/Fitness (iOS)',
     services: [
       'Mobile App Development',
@@ -137,16 +137,16 @@ export const portfolioProjects: ProjectData[] = [
     ],
     platforms: ['iOS'],
     keyFeatures: [
-      'AI morning health brief — daily personalized action plan',
-      'Photo scan meal logging via Gemini Vision',
-      'Voice-to-text natural language meal logging',
-      'Lab document PDF parsing into structured biomarker data',
-      'AI biomarker trend analysis with reference ranges',
-      'Sleep quality correlation with caffeine, alcohol & exercise habits',
-      'AI supplement recommendations with drug interaction warnings',
-      '7-day AI meal plan generation based on TDEE and diet preferences',
-      'Long-term AI memory — tracks medications, allergies, and health goals',
-      'AI-powered chat assistant with full health context',
+      'Real lab data integration — upload blood test PDFs, get instant biomarker analysis',
+      'Daily AI health brief — personalized morning plan built from your actual data',
+      'AI memory — knows your medications, allergies, goals, and health history',
+      'Photo & voice meal logging — describe or photograph food for instant AI analysis',
+      'Biomarker trend tracking with clinical reference ranges and AI interpretation',
+      'AI supplement recommendations with drug interaction safety checks',
+      'Sleep quality analysis — correlates rest with caffeine, alcohol, and exercise patterns',
+      '7-day AI meal plans tailored to TDEE, biomarkers, and dietary restrictions',
+      'AI nutrition assistant — ask anything, get answers grounded in your own health data',
+      'Secure server-side AI — no API keys on device, full context privacy',
     ],
     images: {
       banner: '/images/portfolio/screenshots/nutrify-ai/today.png',
@@ -181,7 +181,7 @@ export const portfolioProjects: ProjectData[] = [
       marketPosition: 'iOS-first, Android coming',
     },
     businessImpact:
-      "Delivers a full-stack AI health intelligence platform in a mobile app — from biomarker parsing to daily coaching — demonstrating DevX Group's ability to ship production-ready Flutter apps with sophisticated AI backends.",
+      "Built a clinical-grade AI health platform in 3 months — from biomarker parsing and lab PDF analysis to daily personalized coaching — at a fraction of what a dedicated medtech team would cost. Demonstrates DevX Group's ability to ship production Flutter apps with sophisticated, safety-aware AI backends.",
     completionYear: '2025',
     projectDuration: '3 months',
     teamSize: '2 specialists',
@@ -189,10 +189,9 @@ export const portfolioProjects: ProjectData[] = [
     isCurrentProject: true,
     isFeatured: true,
     highlights: [
-      'Full AI health stack: nutrition, sleep, labs, exercise, supplements',
-      'Gemini Vision photo meal logging & lab PDF parsing',
-      'Long-term AI memory across health conversations',
-      'Coming to App Store — iOS-first, Android roadmapped',
+      'Reads real labs — parses blood test PDFs into live biomarker data',
+      'Daily AI brief built from your sleep, nutrition & lab results',
+      'Knows your meds, allergies & goals — remembers everything',
     ],
   },
   {

@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRef } from 'react'
-import { Github, ExternalLink, ArrowRight, Star, Smartphone } from 'lucide-react'
+import { Github, ExternalLink, ArrowRight, Star, Smartphone, Check } from 'lucide-react'
 import { portfolioProjects, categoryColors } from '@/data/portfolioProjects'
 import BlurText from '@animations/BlurText'
 
@@ -164,9 +164,30 @@ export default function FeaturedProjects() {
                   </h3>
 
                   {/* Description */}
-                  <p className="text-zinc-400 text-sm leading-relaxed line-clamp-2 mb-4 flex-1">
+                  <p
+                    className={`text-zinc-400 text-sm leading-relaxed mb-3 ${project.highlights?.length ? 'line-clamp-2' : 'line-clamp-2 flex-1'}`}
+                  >
                     {project.shortDescription}
                   </p>
+
+                  {/* Highlights bullets — shown for projects that have them */}
+                  {project.highlights?.length ? (
+                    <ul className="flex flex-col gap-1.5 mb-4 flex-1">
+                      {project.highlights.slice(0, 3).map((h) => (
+                        <li
+                          key={h}
+                          className="flex items-start gap-2 text-[12px] text-zinc-400 leading-snug"
+                        >
+                          <Check
+                            size={11}
+                            className="mt-0.5 flex-shrink-0"
+                            style={{ color: categoryColor }}
+                          />
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
 
                   {/* Tech pills */}
                   <div className="flex flex-wrap gap-1.5 mb-5">

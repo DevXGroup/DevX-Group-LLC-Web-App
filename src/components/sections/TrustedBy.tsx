@@ -6,6 +6,7 @@ import { useRef } from 'react'
 const clients = [
   { name: 'Lawazm', monogram: 'LW', country: 'Kuwait' },
   { name: 'Lazurd', monogram: 'LZ', country: 'Kuwait' },
+  { name: 'Nutrify.AI', monogram: 'NA', country: 'USA' },
   { name: 'Joyful', monogram: 'JY', country: 'Qatar' },
   { name: 'Chamrosh', monogram: 'CH', country: 'USA' },
   { name: 'Miremadi', monogram: 'MD', country: 'San Diego' },
