@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Quote, Star } from 'lucide-react'
 
@@ -41,9 +41,14 @@ export default function HomeTestimonials() {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
   const [expanded, setExpanded] = useState<number | null>(null)
+  const reducedMotion = useReducedMotion()
 
   return (
-    <section ref={ref} className="relative py-20 sm:py-28 overflow-hidden">
+    <section
+      ref={ref}
+      data-testid="testimonials-section"
+      className="relative py-20 sm:py-28 overflow-hidden"
+    >
       {/* Background glow */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
@@ -53,22 +58,17 @@ export default function HomeTestimonials() {
       <div className="relative z-10 container mx-auto px-5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+          animate={reducedMotion ? { opacity: 1 } : isInView ? { opacity: 1, y: 0 } : {}}
+          transition={reducedMotion ? { duration: 0 } : { duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-14"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#9d4edd]/30 bg-[#9d4edd]/5 text-[#9d4edd] text-xs font-medium tracking-wider uppercase mb-6">
             <Star size={11} className="fill-[#9d4edd]" />
             Client Stories
           </div>
-          <h2
-            className="text-white text-3xl sm:text-4xl font-bold mb-4"
-            style={{ fontFamily: 'var(--font-playfair-display)' }}
-          >
-            What our clients say
-          </h2>
-          <p className="text-zinc-500 text-sm sm:text-base max-w-md mx-auto">
+          <h2 className="heading-subsection text-white mb-4">What our clients say</h2>
+          <p className="subtitle-sm text-zinc-500 max-w-md mx-auto">
             Long-term partnerships with businesses who trust us to build and grow their digital
             products.
           </p>
@@ -79,14 +79,18 @@ export default function HomeTestimonials() {
           {testimonials.map((t, i) => (
             <motion.div
               key={t.author}
-              initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+              animate={reducedMotion ? { opacity: 1 } : isInView ? { opacity: 1, y: 0 } : {}}
+              transition={
+                reducedMotion
+                  ? { duration: 0 }
+                  : { duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }
+              }
               className="group relative flex flex-col rounded-2xl bg-white/[0.03] border border-white/[0.08]
                 hover:bg-white/[0.05] hover:border-white/[0.14] transition-all duration-300 p-6"
             >
               {/* Stars */}
-              <div className="flex gap-0.5 mb-4">
+              <div className="flex gap-0.5 mb-4" aria-label="5 out of 5 stars">
                 {Array.from({ length: 5 }).map((_, s) => (
                   <Star key={s} size={12} className="fill-amber-400 text-amber-400" />
                 ))}
