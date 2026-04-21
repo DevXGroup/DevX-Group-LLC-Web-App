@@ -18,15 +18,8 @@ const STRIDE = CARD_W + CARD_GAP
 const SPEED = 0.036 // px per ms → ~36 px/s
 const LOOP_WIDTH = featured.length * STRIDE
 
-// duplicate for seamless infinite loop
-const loopCards = [...featured, ...featured]
-
-// Clamp x into (-LOOP_WIDTH, 0] — same math used by auto-scroll and drag
-function loopX(v: number): number {
-  let t = v % LOOP_WIDTH
-  if (t > 0) t -= LOOP_WIDTH
-  return t
-}
+// 3 copies: one full set of content on either side of the starting position
+const loopCards = [...featured, ...featured, ...featured]
 
 export default function FeaturedProjects() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -34,13 +27,15 @@ export default function FeaturedProjects() {
   const [paused, setPaused] = useState(false)
   const isDragging = useRef(false)
   const dragStart = useRef<{ clientX: number; originX: number } | null>(null)
-  const x = useMotionValue(0)
+  // Start in the middle copy so there's a full copy-width of content in both directions
+  const x = useMotionValue(-LOOP_WIDTH)
 
   useAnimationFrame((_, delta) => {
     if (paused || isDragging.current || !isInView) return
     const d = Math.min(delta, 80)
     const next = x.get() - d * SPEED
-    x.set(next <= -LOOP_WIDTH ? next + LOOP_WIDTH : next)
+    // Wrap at the end of copy 2 — snaps back to equivalent position in copy 1
+    x.set(next <= -2 * LOOP_WIDTH ? next + LOOP_WIDTH : next)
   })
 
   const onPointerDown = useCallback(
@@ -56,7 +51,9 @@ export default function FeaturedProjects() {
     (e: React.PointerEvent) => {
       if (!isDragging.current || !dragStart.current) return
       const delta = e.clientX - dragStart.current.clientX
-      x.set(loopX(dragStart.current.originX + delta))
+      // Direct delta — no normalization, track has 3 copies so there's
+      // always content within a full copy-width of the start position
+      x.set(dragStart.current.originX + delta)
     },
     [x]
   )
