@@ -61,7 +61,13 @@ export default function FeaturedProjects() {
   const onPointerUp = useCallback(() => {
     isDragging.current = false
     dragStart.current = null
-  }, [])
+    // Re-anchor to the copy-2 range so auto-scroll re-enters the loop immediately.
+    // Copies are identical, so a LOOP_WIDTH shift is visually invisible.
+    let cur = x.get()
+    while (cur > -LOOP_WIDTH) cur -= LOOP_WIDTH
+    while (cur <= -2 * LOOP_WIDTH) cur += LOOP_WIDTH
+    x.set(cur)
+  }, [x])
 
   return (
     <section ref={sectionRef} className="relative py-20 sm:py-28 overflow-hidden">
@@ -119,9 +125,6 @@ export default function FeaturedProjects() {
           <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-20 bg-gradient-to-l from-black to-transparent" />
 
           <motion.div style={{ x }} className="flex select-none">
-            {/* Leading spacer so first card isn't flush with viewport edge */}
-            <div className="flex-shrink-0 w-[max(5vw,20px)]" />
-
             {loopCards.map((project, i) => {
               const categoryColor =
                 categoryColors[project.category as keyof typeof categoryColors] || '#4CD787'
