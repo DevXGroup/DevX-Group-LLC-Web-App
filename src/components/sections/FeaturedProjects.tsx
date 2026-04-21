@@ -3,7 +3,7 @@
 import { motion, useAnimationFrame, useInView, useMotionValue } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRef, useState } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import { ArrowRight, Check, ExternalLink, Github, Smartphone, Star } from 'lucide-react'
 import { categoryColors, portfolioProjects } from '@/data/portfolioProjects'
 import BlurText from '@animations/BlurText'
@@ -21,8 +21,8 @@ const LOOP_WIDTH = featured.length * STRIDE
 // duplicate for seamless infinite loop
 const loopCards = [...featured, ...featured]
 
-// Normalize x into the valid loop range
-function normalizeX(v: number): number {
+// Clamp x into (-LOOP_WIDTH, 0] — same math used by auto-scroll and drag
+function loopX(v: number): number {
   let t = v % LOOP_WIDTH
   if (t > 0) t -= LOOP_WIDTH
   return t
@@ -33,6 +33,7 @@ export default function FeaturedProjects() {
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
   const [paused, setPaused] = useState(false)
   const isDragging = useRef(false)
+  const dragStart = useRef<{ clientX: number; originX: number } | null>(null)
   const x = useMotionValue(0)
 
   useAnimationFrame((_, delta) => {
@@ -41,6 +42,29 @@ export default function FeaturedProjects() {
     const next = x.get() - d * SPEED
     x.set(next <= -LOOP_WIDTH ? next + LOOP_WIDTH : next)
   })
+
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      isDragging.current = true
+      dragStart.current = { clientX: e.clientX, originX: x.get() }
+      ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+    },
+    [x]
+  )
+
+  const onPointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      if (!isDragging.current || !dragStart.current) return
+      const delta = e.clientX - dragStart.current.clientX
+      x.set(loopX(dragStart.current.originX + delta))
+    },
+    [x]
+  )
+
+  const onPointerUp = useCallback(() => {
+    isDragging.current = false
+    dragStart.current = null
+  }, [])
 
   return (
     <section ref={sectionRef} className="relative py-20 sm:py-28 overflow-hidden">
@@ -84,30 +108,20 @@ export default function FeaturedProjects() {
         <div
           className="relative cursor-grab active:cursor-grabbing"
           onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
+          onMouseLeave={() => {
+            setPaused(false)
+            onPointerUp()
+          }}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
         >
           {/* Edge fades */}
           <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 z-20 bg-gradient-to-r from-black to-transparent" />
           <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-20 bg-gradient-to-l from-black to-transparent" />
 
-          <motion.div
-            style={{ x }}
-            className="flex select-none"
-            drag="x"
-            dragConstraints={{ left: -LOOP_WIDTH * 2, right: LOOP_WIDTH }}
-            dragElastic={0.04}
-            dragTransition={{
-              power: 0.15,
-              timeConstant: 220,
-              modifyTarget: (v) => normalizeX(v),
-            }}
-            onDragStart={() => {
-              isDragging.current = true
-            }}
-            onDragEnd={() => {
-              isDragging.current = false
-            }}
-          >
+          <motion.div style={{ x }} className="flex select-none">
             {/* Leading spacer so first card isn't flush with viewport edge */}
             <div className="flex-shrink-0 w-[max(5vw,20px)]" />
 
@@ -266,7 +280,7 @@ export default function FeaturedProjects() {
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
                             aria-label={`${project.title} GitHub repository`}
-                            className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20
                               text-zinc-400 hover:text-white transition-all duration-200"
                           >
                             <Github size={15} />
