@@ -1,7 +1,17 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Star, Zap, Shield, ArrowRight, Sparkles, Target, Crown, Check } from 'lucide-react'
+import {
+  type LucideIcon,
+  Star,
+  Zap,
+  Shield,
+  ArrowRight,
+  Sparkles,
+  Target,
+  Crown,
+  Check,
+} from 'lucide-react'
 import { useState } from 'react'
 import StarBorder from '@animations/StarBorder'
 import TextPressure from '@animations/TextPressure'
@@ -153,7 +163,7 @@ interface PricingPlan {
   priceUnit: string
   originalPrice: string
   description: string
-  icon: any // You might want to define a more specific type for the icon component
+  icon: LucideIcon
   popular: boolean
   color: string
   gradient: string

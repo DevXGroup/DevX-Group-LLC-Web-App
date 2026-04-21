@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 
 // Enable SSR for Hero to improve FCP/LCP - hero content renders immediately
