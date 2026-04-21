@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.turbo/
+.claude/worktrees/
+*.tsbuildinfo
+*.log
+public/videos/
+public/images/
+dist/
+out/
+build/
+.DS_Store
