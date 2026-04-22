@@ -1,3 +1,9 @@
+## [1.17.3](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.17.2...v1.17.3) (2026-04-22)
+
+### Bug Fixes
+
+* **build:** remove type:module to fix Vercel ERR_REQUIRE_ESM on Next 16.2 Turbopack ([546bf91](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/546bf91c9d60f6eceae332d4cc24d61c997759a7))
+
 ## [1.17.2](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.17.1...v1.17.2) (2026-04-22)
 
 ### Bug Fixes
