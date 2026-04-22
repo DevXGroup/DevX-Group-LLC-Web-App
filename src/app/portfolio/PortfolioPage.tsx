@@ -518,7 +518,7 @@ export default function PortfolioPage() {
               </div>
 
               <BlurText
-                text="Explore shipped products that increased revenue, retention, and efficiency across web, mobile, AI, and cloud experiences."
+                text={`${portfolioProjects.length} shipped products that increased revenue, retention, and efficiency across web, mobile, AI, and cloud platforms.`}
                 className="relative z-20 section-subtitle text-zinc-400 max-w-3xl lg:max-w-4xl mx-auto mb-10 -mt-8 justify-center text-center"
                 delay={30}
                 startDelay={200}

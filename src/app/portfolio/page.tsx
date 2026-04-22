@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import PortfolioPage from './PortfolioPage'
 import { createOgImageUrl, createTwitterImageUrl, getSiteUrl } from '@/lib/og'
 import StructuredData from '@/components/seo/StructuredData'
+import { portfolioProjects } from '@/data/portfolioProjects'
 
 // Force dynamic rendering to avoid Framer Motion context issues during static generation
 export const dynamic = 'force-dynamic'
@@ -9,6 +10,7 @@ export const dynamic = 'force-dynamic'
 const siteUrl = getSiteUrl()
 const pagePath = '/portfolio'
 const pageUrl = `${siteUrl}${pagePath}`
+const projectCount = portfolioProjects.length
 const ogImage = createOgImageUrl(
   {
     eyebrow: 'Client Case Studies',
@@ -29,25 +31,21 @@ const twitterImage = createTwitterImageUrl(
 )
 
 export const metadata: Metadata = {
-  title: 'Portfolio | Software Development Projects & Case Studies',
-  description:
-    'Explore our portfolio of successful software development projects including e-commerce platforms, mobile apps, AI solutions, Agentic AI implementations, RAG systems, and digital transformation case studies.',
+  title: `Portfolio | ${projectCount} Shipped Software Projects | DevX Group`,
+  description: `Real projects built by a senior San Diego software team. ${projectCount} shipped products across e-commerce, SaaS, AI tools, and mobile apps. Typical delivery in 4 to 16 weeks.`,
   keywords: [
-    'portfolio',
-    'software development projects',
+    'software development portfolio',
     'case studies',
     'e-commerce platforms',
-    'mobile applications',
-    'ai solutions',
-    'project showcase',
-    'agentic AI projects',
-    'RAG implementation',
-    'AI automation case studies',
+    'SaaS products',
+    'mobile app projects',
+    'AI tool case studies',
+    'shipped software projects',
+    'San Diego development team',
   ],
   openGraph: {
-    title: 'Portfolio | Software Development Projects & Case Studies',
-    description:
-      'Explore our portfolio of successful software development projects including e-commerce platforms, mobile apps, AI solutions, and digital transformation case studies.',
+    title: `Portfolio | ${projectCount} Shipped Software Projects | DevX Group`,
+    description: `Real projects built by a senior San Diego software team. ${projectCount} shipped products across e-commerce, SaaS, AI tools, and mobile apps.`,
     url: pageUrl,
     siteName: 'DevX Group',
     images: [
@@ -63,9 +61,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Portfolio | Software Development Projects',
-    description:
-      'Explore successful software development projects including e-commerce platforms, mobile apps, and AI solutions.',
+    title: `Portfolio | ${projectCount} Shipped Projects | DevX Group`,
+    description: `Real projects shipped by a senior San Diego team. E-commerce, SaaS, AI tools, and mobile apps.`,
     images: [twitterImage],
   },
   alternates: {
