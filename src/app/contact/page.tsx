@@ -28,21 +28,21 @@ const twitterImage = createTwitterImageUrl(
 )
 
 export const metadata: Metadata = {
-  title: 'Contact Us | Get a Free Software Development Consultation',
+  title: 'Contact DevX Group | Free Software Consultation, Reply in 24 Hours',
   description:
-    'Contact DevX Group for your software development needs. Schedule a free consultation, get a custom quote, or discuss your project requirements. Phone: +1 (442) 544-0591',
+    'Talk to a senior San Diego software team about your web, mobile, or AI project. Free consultation, custom quote within 24 hours, direct access to engineers. Call +1 (442) 544-0591.',
   keywords: [
-    'contact devx group',
-    'software development consultation',
-    'free consultation',
-    'custom quote',
-    'san diego software developers',
-    'project requirements',
+    'contact DevX Group',
+    'free software consultation',
+    'custom software quote',
+    'San Diego software developers',
+    'schedule consultation',
+    'hire development team',
   ],
   openGraph: {
-    title: 'Contact Us | Get a Free Software Development Consultation',
+    title: 'Contact DevX Group | Free Software Consultation, Reply in 24 Hours',
     description:
-      'Contact DevX Group for your software development needs. Schedule a free consultation, get a custom quote, or discuss your project requirements.',
+      'Talk to a senior San Diego software team about your web, mobile, or AI project. Free consultation and custom quote within 24 hours.',
     url: pageUrl,
     siteName: 'DevX Group',
     images: [
@@ -58,9 +58,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Contact Us | Free Software Development Consultation',
+    title: 'Contact DevX Group | Free Consultation in 24 Hours',
     description:
-      'Contact DevX Group for your software development needs. Schedule a free consultation or get a custom quote.',
+      'Talk to a senior San Diego team. Free consultation and custom quote within 24 hours.',
     images: [twitterImage],
   },
   alternates: {

@@ -29,21 +29,23 @@ const twitterImage = createTwitterImageUrl(
 )
 
 export const metadata: Metadata = {
-  title: 'Software Development Pricing | Custom Solutions & Enterprise Packages',
+  title: 'Software Development Pricing | MVP, Growth, and Enterprise | DevX Group',
   description:
-    'Transparent pricing for professional software development services. Choose from Rapid MVP, Growth Accelerator, or Enterprise packages. Custom quotes available for complex projects.',
+    'Transparent software development pricing. Rapid MVP packages from 4 weeks, growth engagements, and dedicated squads for enterprise. Custom quotes within 24 hours.',
   keywords: [
     'software development pricing',
-    'custom solutions pricing',
-    'enterprise packages',
-    'mvp development cost',
+    'MVP development cost',
+    'custom software quote',
+    'enterprise software packages',
     'transparent pricing',
-    'software development rates',
+    'dedicated development team',
+    'fractional CTO',
+    'San Diego software rates',
   ],
   openGraph: {
-    title: 'Software Development Pricing | Custom Solutions & Enterprise Packages',
+    title: 'Software Development Pricing | MVP, Growth, and Enterprise | DevX Group',
     description:
-      'Transparent pricing for professional software development services. Choose from Rapid MVP, Growth Accelerator, or Enterprise packages.',
+      'Transparent pricing for software development. Rapid MVP from 4 weeks, growth engagements, and dedicated squads for enterprise.',
     url: pageUrl,
     siteName: 'DevX Group',
     images: [
@@ -59,9 +61,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Software Development Pricing',
+    title: 'Software Development Pricing | DevX Group',
     description:
-      'Transparent pricing for professional software development services. Rapid MVP, Growth Accelerator, and Enterprise packages.',
+      'Transparent pricing. Rapid MVP from 4 weeks, growth engagements, and enterprise squads.',
     images: [twitterImage],
   },
   alternates: {
