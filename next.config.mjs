@@ -37,6 +37,17 @@ const nextConfig = {
   // Disable static optimization to avoid prerendering errors with Framer Motion context
   output: 'standalone',
 
+  // Prevent Turbopack from bundling Node.js-specific packages into the server bundle.
+  // These packages rely on runtime module resolution and fail when inlined.
+  serverExternalPackages: [
+    'nodemailer',
+    'resend',
+    'svix',
+    'postal-mime',
+    '@anthropic-ai/sdk',
+    '@supabase/supabase-js',
+  ],
+
   experimental: {
     optimizePackageImports: [
       'framer-motion',
