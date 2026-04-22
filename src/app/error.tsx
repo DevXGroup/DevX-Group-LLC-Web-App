@@ -17,7 +17,7 @@ export default function Error({
   }, [error])
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center relative overflow-x-hidden overflow-y-auto">
+    <main className="min-h-screen bg-black flex flex-col items-center justify-center relative overflow-x-hidden overflow-y-auto">
       {/* Background particles */}
       <div className="absolute inset-0">
         {[...Array(40)].map((_, i) => (
@@ -136,6 +136,6 @@ export default function Error({
           <div className="w-full h-full bg-gradient-to-b from-transparent via-red-500/5 to-transparent" />
         </motion.div>
       </div>
-    </div>
+    </main>
   )
 }
