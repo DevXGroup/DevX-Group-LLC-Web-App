@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Github, Instagram, Linkedin, Youtube, ChevronDown } from 'lucide-react'
-import Threads from '@animations/Threads'
-import FooterContactForm from '@/components/FooterContactForm'
 
 interface FooterClientProps {
   version: string
@@ -304,9 +302,28 @@ export default function FooterClient({ version }: FooterClientProps) {
               </div>
             </div>
 
-            {/* Contact Form */}
-            <div className="sm:col-span-2 lg:col-span-3 xl:col-span-1">
-              <FooterContactForm />
+            {/* Contact CTA */}
+            <div className="sm:col-span-2 lg:col-span-3 xl:col-span-1 flex flex-col justify-start">
+              <h3 className="text-sm font-semibold uppercase tracking-wider mb-4 lg:mb-6 text-white flex items-end h-8">
+                Get in Touch
+              </h3>
+              <p className="text-sm text-zinc-400 mb-5 leading-relaxed font-light">
+                Have a project in mind? We would love to hear about it.
+              </p>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 bg-[#4CD787] text-black text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-[#3bc874] transition-colors duration-200 mb-3 min-h-[44px]"
+              >
+                Start a Project
+              </Link>
+              <Link
+                href="https://calendly.com/a-sheikhizadeh/devx-group-llc-representative?utm_source=footer"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 border border-white/20 text-zinc-300 text-sm font-medium px-5 py-2.5 rounded-lg hover:border-white/40 hover:text-white transition-colors duration-200 min-h-[44px]"
+              >
+                Book a Call
+              </Link>
             </div>
           </div>
 

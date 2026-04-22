@@ -338,13 +338,53 @@ export default function Hero() {
         className="absolute left-1/2 -translate-x-1/2 z-[100] pointer-events-auto"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 2.3, duration: 0.5, ease: 'easeOut' }}
+        transition={{ delay: 0.8, duration: 0.5, ease: 'easeOut' }}
         style={{
           bottom: 'clamp(50px, 8vh, 120px)',
           pointerEvents: 'auto',
         }}
       >
-        <div className="flex flex-col items-center gap-4 sm:gap-5 relative z-[100]">
+        <div className="flex flex-col items-center gap-3 sm:gap-4 relative z-[100]">
+          {/* Social proof — understated, above CTAs */}
+          {!shouldReduceMotion && (
+            <motion.p
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0, duration: 0.4 }}
+              className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-zinc-400/70 text-center px-2"
+            >
+              Senior engineers with experience from Amazon, Qualcomm, and Viasat
+            </motion.p>
+          )}
+          {shouldReduceMotion && (
+            <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-zinc-400/70 text-center px-2">
+              Senior engineers with experience from Amazon, Qualcomm, and Viasat
+            </p>
+          )}
+          {/* Primary CTA */}
+          <motion.div
+            variants={buttonVariants}
+            initial="rest"
+            whileHover="hover"
+            whileTap="tap"
+            className="w-auto pointer-events-auto cursor-pointer"
+            style={{ cursor: 'pointer', pointerEvents: 'auto' }}
+          >
+            <StarBorder
+              href="https://calendly.com/a-sheikhizadeh/devx-group-llc-representative?utm_source=hero&utm_campaign=cta"
+              target="_blank"
+              rel="noopener noreferrer"
+              color="#ccff00"
+              speed="2s"
+              thickness={1}
+              variant="hero"
+              className={ctaButtonClasses}
+              aria-label="Schedule a free call with DevX Group"
+            >
+              Schedule Free Consultation
+            </StarBorder>
+          </motion.div>
+          {/* Secondary CTA */}
           <motion.div
             variants={buttonVariants}
             initial="rest"
@@ -363,28 +403,6 @@ export default function Hero() {
               aria-label="View DevX Group portfolio"
             >
               See Our Work
-            </StarBorder>
-          </motion.div>
-          <motion.div
-            variants={buttonVariants}
-            initial="rest"
-            whileHover="hover"
-            whileTap="tap"
-            className="w-auto pointer-events-auto cursor-pointer"
-            style={{ cursor: 'pointer', pointerEvents: 'auto' }}
-          >
-            <StarBorder
-              href="https://calendly.com/a-sheikhizadeh/devx-group-llc-representative?month=2025-05"
-              target="_blank"
-              rel="noopener noreferrer"
-              color="#E2E8F0"
-              speed="2s"
-              thickness={1}
-              variant="hero"
-              className={ctaButtonClasses}
-              aria-label="Schedule a free call with DevX Group"
-            >
-              Schedule Free Consultation
             </StarBorder>
           </motion.div>
         </div>

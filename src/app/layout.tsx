@@ -6,6 +6,13 @@ import type { ReactNode } from 'react'
 import './globals.css'
 import type { Metadata } from 'next'
 import ConditionalLayout from '@/components/layout/ConditionalLayout'
+import dynamic from 'next/dynamic'
+
+const StickyMobileCTA = dynamic(
+  () =>
+    import('@/components/layout/StickyMobileCTA').then((mod) => ({ default: mod.StickyMobileCTA })),
+  { ssr: false }
+)
 import { BrowserCompatibilityDetector } from '@/components/layout/BrowserCompatibilityDetector'
 import { DevToolsErrorSuppressor } from '@/components/layout/DevToolsErrorSuppressor'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
@@ -425,6 +432,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div style={{ backgroundColor: '#000000' }} suppressHydrationWarning>
             <ConditionalLayout>{children}</ConditionalLayout>
             <ScrollToTop />
+            <StickyMobileCTA />
           </div>
         </ErrorBoundary>
         {/* Load Vercel Analytics only when explicitly enabled to avoid local 404s */}

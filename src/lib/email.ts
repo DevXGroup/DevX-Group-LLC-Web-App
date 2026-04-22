@@ -5,6 +5,10 @@ interface ContactEmailPayload {
   email: string
   message: string
   source: 'footer' | 'contact-page' | 'unknown'
+  company?: string
+  projectType?: string
+  budget?: string
+  timeline?: string
 }
 
 const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_FORWARD_TO, CONTACT_FROM_EMAIL } =
@@ -69,6 +73,10 @@ export async function sendContactEmail(payload: ContactEmailPayload) {
     `Source: ${payload.source}`,
     payload.name ? `Name: ${payload.name}` : null,
     `Email: ${payload.email}`,
+    payload.company ? `Company: ${payload.company}` : null,
+    payload.projectType ? `Project Type: ${payload.projectType}` : null,
+    payload.budget ? `Budget: ${payload.budget}` : null,
+    payload.timeline ? `Timeline: ${payload.timeline}` : null,
     '',
     'Message:',
     payload.message,
@@ -81,6 +89,10 @@ export async function sendContactEmail(payload: ContactEmailPayload) {
       <p><strong>Source:</strong> ${payload.source}</p>
       ${payload.name ? `<p><strong>Name:</strong> ${escapeHtml(payload.name)}</p>` : ''}
       <p><strong>Email:</strong> ${escapeHtml(payload.email)}</p>
+      ${payload.company ? `<p><strong>Company:</strong> ${escapeHtml(payload.company)}</p>` : ''}
+      ${payload.projectType ? `<p><strong>Project Type:</strong> ${escapeHtml(payload.projectType)}</p>` : ''}
+      ${payload.budget ? `<p><strong>Budget:</strong> ${escapeHtml(payload.budget)}</p>` : ''}
+      ${payload.timeline ? `<p><strong>Timeline:</strong> ${escapeHtml(payload.timeline)}</p>` : ''}
       <p><strong>Message:</strong></p>
       <p style="white-space: pre-wrap;">${escapeHtml(payload.message)}</p>
     </div>

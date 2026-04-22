@@ -60,6 +60,10 @@ const sparkleVariants = {
 const pricingPlans = [
   {
     name: 'Starter',
+    ctaLabel: 'Start Your MVP',
+    ctaHref:
+      'https://calendly.com/a-sheikhizadeh/devx-group-llc-representative?utm_source=pricing&utm_campaign=starter',
+    riskReversal: 'No setup fees. 2 free revision rounds.',
     subtitle: 'Perfect for MVPs',
     price: '$95',
     priceUnit: '/hour',
@@ -89,6 +93,10 @@ const pricingPlans = [
   },
   {
     name: 'Professional',
+    ctaLabel: 'Book a Strategy Call',
+    ctaHref:
+      'https://calendly.com/a-sheikhizadeh/devx-group-llc-representative?utm_source=pricing&utm_campaign=professional',
+    riskReversal: 'Includes 90-day maintenance. Priority support.',
     subtitle: 'Most Popular Choice',
     price: '$145',
     priceUnit: '/hour',
@@ -120,6 +128,10 @@ const pricingPlans = [
   },
   {
     name: 'Enterprise',
+    ctaLabel: 'Talk to Our Team',
+    ctaHref:
+      'https://calendly.com/a-sheikhizadeh/devx-group-llc-representative?utm_source=pricing&utm_campaign=enterprise',
+    riskReversal: 'SLA-backed. Dedicated team.',
     subtitle: 'Ultimate Solution',
     price: '$175',
     priceUnit: '/hour',
@@ -158,6 +170,9 @@ const particleConfigurations = []
 
 interface PricingPlan {
   name: string
+  ctaLabel: string
+  ctaHref: string
+  riskReversal: string
   subtitle: string
   price: string
   priceUnit: string
@@ -307,7 +322,7 @@ function PricingCard({ plan }: PricingCardProps) {
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="mt-auto">
           <StarBorder
             as="a"
-            href="https://calendly.com/a-sheikhizadeh/devx-group-llc-representative?month=2025-05"
+            href={plan.ctaHref}
             target="_blank"
             rel="noopener noreferrer"
             className={`
@@ -324,7 +339,7 @@ function PricingCard({ plan }: PricingCardProps) {
             thickness={1}
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
-              Schedule a Free Consultation
+              {plan.ctaLabel}
               <ArrowRight className="w-4 h-4 group-hover/button:translate-x-1 transition-transform duration-300" />
             </span>
 
@@ -336,6 +351,7 @@ function PricingCard({ plan }: PricingCardProps) {
               transition={{ duration: 0.6 }}
             />
           </StarBorder>
+          <p className="mt-2 text-center text-xs text-zinc-500">{plan.riskReversal}</p>
         </motion.div>
       </div>
     </StarBorder>
@@ -476,7 +492,7 @@ export default function PricingPage() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <StarBorder
                   as="a"
-                  href="https://calendly.com/a-sheikhizadeh/devx-group-llc-representative?month=2025-05"
+                  href="https://calendly.com/a-sheikhizadeh/devx-group-llc-representative?utm_source=pricing&utm_campaign=custom"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-3 bg-zinc-900/50 text-white border border-white/20 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-white/20 transition-all duration-300 relative overflow-hidden group"
