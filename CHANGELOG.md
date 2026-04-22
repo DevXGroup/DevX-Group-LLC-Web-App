@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.17.0...v1.17.1) (2026-04-22)
+
+### Bug Fixes
+
+* **a11y:** add global-error fallback with lang and main landmark ([1b66baf](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/1b66baf36b32873222bf734216c9bdfd27340b9b)), closes [#__next_error__](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/issues/__next_error__)
+* **config:** mark server-only packages as external to prevent bundling crash ([ab1797a](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/ab1797aee4a59a7ed4a5bceef0694f671d969b0e))
+
 ## [1.17.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.16.1...v1.17.0) (2026-04-22)
 
 ### Features
