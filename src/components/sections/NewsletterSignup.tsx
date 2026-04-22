@@ -12,6 +12,7 @@ export default function NewsletterSignup() {
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [alreadySubscribed, setAlreadySubscribed] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -23,17 +24,21 @@ export default function NewsletterSignup() {
     setSubmitting(true)
     setError(null)
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          source: 'newsletter',
-          email: email.trim(),
-          message: 'Newsletter signup — Weekly AI & Dev insights',
-        }),
+        body: JSON.stringify({ email: email.trim() }),
       })
-      if (!res.ok) throw new Error('Failed')
-      setSubmitted(true)
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data?.error ?? 'Failed')
+      }
+      const data = await res.json().catch(() => ({}))
+      if (data?.alreadySubscribed) {
+        setAlreadySubscribed(true)
+      } else {
+        setSubmitted(true)
+      }
       setEmail('')
     } catch {
       setError('Something went wrong. Please try again.')
@@ -129,8 +134,30 @@ export default function NewsletterSignup() {
                   <CheckCircle size={20} className="text-[#4CD787]" />
                 </div>
                 <div>
-                  <p className="text-white font-semibold text-lg">You are in. Welcome aboard.</p>
-                  <p className="text-zinc-500 text-sm mt-1">Your first issue arrives shortly.</p>
+                  <p className="text-white font-semibold text-lg">Check your inbox.</p>
+                  <p className="text-zinc-500 text-sm mt-1">
+                    Click the confirmation link to complete your signup.
+                  </p>
+                </div>
+              </motion.div>
+            ) : alreadySubscribed ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                aria-live="polite"
+                className="flex flex-col items-start gap-4"
+              >
+                <div className="w-11 h-11 rounded-xl bg-zinc-800/60 border border-zinc-700/50 flex items-center justify-center">
+                  <CheckCircle size={20} className="text-zinc-400" />
+                </div>
+                <div>
+                  <p className="text-white font-semibold text-lg">
+                    You&apos;re already on the list.
+                  </p>
+                  <p className="text-zinc-500 text-sm mt-1">
+                    You&apos;ll get the next issue this Friday.
+                  </p>
                 </div>
               </motion.div>
             ) : (
