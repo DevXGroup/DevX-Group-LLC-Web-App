@@ -1,3 +1,9 @@
+## [1.17.2](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.17.1...v1.17.2) (2026-04-22)
+
+### Bug Fixes
+
+* **config:** remove output:standalone — Vercel handles this natively ([334a4f3](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/334a4f33e6c8367b3651e9f8777fc7741af64d52))
+
 ## [1.17.1](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.17.0...v1.17.1) (2026-04-22)
 
 ### Bug Fixes
