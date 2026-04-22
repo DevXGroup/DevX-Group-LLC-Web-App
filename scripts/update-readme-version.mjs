@@ -3,7 +3,7 @@
 /**
  * Script: Update README version from package.json
  * Purpose: Automatically sync version in README badges from package.json
- * Run: node scripts/update-readme-version.js or pnpm update-readme
+ * Run: node scripts/update-readme-version.mjs or pnpm update-readme
  */
 
 import fs from 'fs'

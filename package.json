@@ -2,7 +2,6 @@
   "name": "devx-group-web-app",
   "version": "1.17.2",
   "private": true,
-  "type": "module",
   "sideEffects": [
     "*.css",
     "*.scss",
@@ -30,7 +29,7 @@
     "test:coverage": "pnpm jest --coverage",
     "size": "size-limit --config size-limit.config.cjs",
     "analyze": "ANALYZE=true pnpm next build",
-    "update-readme": "node scripts/update-readme-version.js",
+    "update-readme": "node scripts/update-readme-version.mjs",
     "release": "semantic-release",
     "prepare": "node scripts/husky-prepare.mjs"
   },
