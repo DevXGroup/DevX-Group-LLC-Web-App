@@ -1,0 +1,28 @@
+name: Newsletter Weekly Digest
+
+on:
+  schedule:
+    # Every Friday at 9:00 AM UTC
+    - cron: '0 9 * * 5'
+  workflow_dispatch:
+    # Allow manual trigger from GitHub Actions UI for testing
+
+jobs:
+  send-digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SITE_URL: ${{ secrets.SITE_URL }}
+      CRON_SECRET: ${{ secrets.CRON_SECRET }}
+    steps:
+      - name: Send weekly digest
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "${SITE_URL}/api/newsletter/send" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -H "Content-Type: application/json")
+          echo "Response status: $response"
+          if [ "$response" -ge 400 ]; then
+            echo "Send endpoint returned error: $response"
+            exit 1
+          fi
