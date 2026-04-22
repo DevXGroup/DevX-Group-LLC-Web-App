@@ -946,12 +946,24 @@ export default function EntryPage() {
     return () => clearTimeout(timer)
   }, [])
 
+  // Skip intro animation for returning visitors — they've already seen it
+  useEffect(() => {
+    if (!mounted) return
+    if (typeof window === 'undefined') return
+    const hasSeenIntro = localStorage.getItem('devx_intro_seen') === '1'
+    if (hasSeenIntro) {
+      router.replace('/home')
+    }
+  }, [mounted, router])
+
   useEffect(() => {
     if (animationComplete && mounted) {
       // Start collapse animation immediately - no delay
       // Set flag for smooth home page fade-in
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('fromEntry', 'true')
+        // Mark that this visitor has seen the intro — skip it on future visits
+        localStorage.setItem('devx_intro_seen', '1')
       }
       setIsCollapsing(true)
     }
@@ -964,6 +976,7 @@ export default function EntryPage() {
         // Set flag for smooth home page fade-in
         if (typeof window !== 'undefined') {
           sessionStorage.setItem('fromEntry', 'true')
+          localStorage.setItem('devx_intro_seen', '1')
         }
         router.push('/home')
       }, 1000)

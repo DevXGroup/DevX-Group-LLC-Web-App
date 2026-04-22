@@ -1,36 +1,80 @@
 'use client'
 
-import { motion, useInView } from 'framer-motion'
+import { motion, useAnimationFrame, useInView, useMotionValue } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRef } from 'react'
-import { Github, ExternalLink, ArrowRight, Star } from 'lucide-react'
-import { portfolioProjects, categoryColors } from '@/data/portfolioProjects'
+import { useRef, useState, useCallback } from 'react'
+import { ArrowRight, Check, ExternalLink, Github, Smartphone, Star } from 'lucide-react'
+import { categoryColors, portfolioProjects } from '@/data/portfolioProjects'
 import BlurText from '@animations/BlurText'
+import NutrifyBanner from '@sections/NutrifyBanner'
 
 const featured = portfolioProjects.filter((p) => p.isFeatured)
 
-const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1]
+// carousel constants
+const CARD_W = 400
+const CARD_GAP = 28
+const STRIDE = CARD_W + CARD_GAP
+const SPEED = 0.036 // px per ms → ~36 px/s
+const LOOP_WIDTH = featured.length * STRIDE
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.55,
-      ease: easeOutExpo,
-      delay: i * 0.1,
-    },
-  }),
+// 4 copies: with x wrapped into (-2·LW, -LW], the track's right edge is at
+// least 2·LW (≈3400px) past the viewport origin, covering any reasonable screen.
+// Copies are identical, so shifting x by LW is visually a no-op.
+const loopCards = [...featured, ...featured, ...featured, ...featured]
+
+// Map any x into the canonical (-2·LOOP_WIDTH, -LOOP_WIDTH] range.
+// Safe because all 4 copies are pixel-identical.
+const wrapX = (v: number) => {
+  let n = v
+  while (n > -LOOP_WIDTH) n -= LOOP_WIDTH
+  while (n <= -2 * LOOP_WIDTH) n += LOOP_WIDTH
+  return n
 }
 
 export default function FeaturedProjects() {
   const sectionRef = useRef<HTMLElement>(null)
-  const isInView = useInView(sectionRef, { once: true, amount: 0.15 })
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
+  const [paused, setPaused] = useState(false)
+  const isDragging = useRef(false)
+  const dragStart = useRef<{ clientX: number; originX: number } | null>(null)
+  // Start in the middle copy so there's a full copy-width of content in both directions
+  const x = useMotionValue(-LOOP_WIDTH)
+
+  useAnimationFrame((_, delta) => {
+    if (paused || isDragging.current || !isInView) return
+    const d = Math.min(delta, 80)
+    x.set(wrapX(x.get() - d * SPEED))
+  })
+
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      isDragging.current = true
+      dragStart.current = { clientX: e.clientX, originX: x.get() }
+      ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+    },
+    [x]
+  )
+
+  const onPointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      if (!isDragging.current || !dragStart.current) return
+      const delta = e.clientX - dragStart.current.clientX
+      // Wrap every frame — copies are identical, so the snap is invisible and
+      // keeps the 4-copy buffer anchored around the viewport however far you pull.
+      x.set(wrapX(dragStart.current.originX + delta))
+    },
+    [x]
+  )
+
+  const onPointerUp = useCallback(() => {
+    isDragging.current = false
+    dragStart.current = null
+    x.set(wrapX(x.get()))
+  }, [x])
 
   return (
-    <section ref={sectionRef} className="relative py-20 sm:py-28 overflow-hidden">
+    <section ref={sectionRef} className="relative w-full py-20 sm:py-28 overflow-hidden">
       {/* Ambient background */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -39,213 +83,288 @@ export default function FeaturedProjects() {
         <div className="absolute right-1/4 top-1/3 w-[400px] h-[400px] rounded-full bg-[#9d4edd]/5 blur-[100px]" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+      <div className="relative z-10">
         {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-14 sm:mb-16"
+        <div className="container mx-auto px-5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="text-center mb-14 sm:mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#4CD787]/30 bg-[#4CD787]/5 text-[#4CD787] text-xs font-medium tracking-wider uppercase mb-6">
+              <Star size={12} className="fill-[#4CD787]" />
+              Featured Work
+            </div>
+            <BlurText
+              text="Open-source & client projects"
+              className="justify-center text-center text-white mb-4 section-title-hero font-editorial"
+              delay={50}
+              startDelay={150}
+              stepDuration={0.4}
+              once={true}
+            />
+            <p className="subtitle text-white/60 max-w-xl mx-auto">
+              Built by DevX Group — shipped products demonstrating our depth across AI, web, mobile,
+              and real-time systems.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* ── Scroll track ─────────────────────────────────────────── */}
+        <div
+          className="relative cursor-grab active:cursor-grabbing"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => {
+            setPaused(false)
+            onPointerUp()
+          }}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#4CD787]/30 bg-[#4CD787]/5 text-[#4CD787] text-xs font-medium tracking-wider uppercase mb-6">
-            <Star size={12} className="fill-[#4CD787]" />
-            Featured Work
-          </div>
-          <BlurText
-            text="Open-source & client projects"
-            className="justify-center text-center text-white mb-4 section-title-hero font-editorial"
-            delay={50}
-            startDelay={150}
-            stepDuration={0.4}
-            once={true}
-          />
-          <p className="subtitle text-white/60 max-w-xl mx-auto">
-            Built by DevX Group — shipped products demonstrating our depth across AI, web, mobile,
-            and real-time systems.
-          </p>
-        </motion.div>
+          {/* Edge fades */}
+          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 z-20 bg-gradient-to-r from-black to-transparent" />
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-20 bg-gradient-to-l from-black to-transparent" />
 
-        {/* Cards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {featured.map((project, i) => {
-            const categoryColor =
-              categoryColors[project.category as keyof typeof categoryColors] || '#4CD787'
+          <motion.div style={{ x }} className="flex select-none">
+            {loopCards.map((project, i) => {
+              const categoryColor =
+                categoryColors[project.category as keyof typeof categoryColors] || '#4CD787'
 
-            return (
-              <motion.div
-                key={project.id}
-                custom={i}
-                variants={cardVariants}
-                initial="hidden"
-                animate={isInView ? 'visible' : 'hidden'}
-                className="group relative flex flex-col rounded-2xl bg-white/[0.03] border border-white/10
-                  hover:border-white/20 hover:bg-white/[0.05] transition-all duration-300
-                  overflow-hidden"
-                style={{
-                  boxShadow: '0 0 0 0 transparent',
-                }}
-                whileHover={{
-                  y: -4,
-                  transition: { duration: 0.25, ease: 'easeOut' },
-                }}
-              >
-                {/* Colored glow on hover */}
-                <div
-                  className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
-                  style={{
-                    background: `radial-gradient(500px circle at 50% 0%, ${categoryColor}08, transparent 70%)`,
-                  }}
-                />
-
-                {/* Banner image */}
-                <div className="relative aspect-video overflow-hidden bg-zinc-900">
-                  <Image
-                    src={project.images.banner}
-                    alt={project.images.bannerAlt || `${project.title} banner`}
-                    fill
-                    className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-[1.03]"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              return (
+                <motion.div
+                  key={`${project.id}-${i}`}
+                  className="group relative flex flex-col rounded-2xl bg-white/[0.03] border border-white/10
+                    hover:border-white/20 hover:bg-white/[0.05] transition-all duration-300
+                    overflow-hidden flex-shrink-0"
+                  style={{ width: CARD_W, marginRight: CARD_GAP }}
+                  initial="rest"
+                  whileHover="hover"
+                  animate="rest"
+                >
+                  {/* Category glow on hover */}
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
+                    style={{
+                      background: `radial-gradient(500px circle at 50% 0%, ${categoryColor}08, transparent 70%)`,
+                    }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
 
-                  {/* Category badge */}
-                  <div className="absolute top-3 left-3">
-                    <span
-                      className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-md border"
-                      style={{
-                        backgroundColor: `${categoryColor}25`,
-                        borderColor: `${categoryColor}50`,
-                        color: categoryColor,
-                      }}
-                    >
-                      {project.category}
-                    </span>
-                  </div>
+                  {/* ── Banner ──────────────────────────────────── */}
+                  <div className="relative aspect-video overflow-hidden bg-zinc-900">
+                    {project.id === 'nutrify-ai' ? (
+                      // Framer Motion variant propagates from card → banner for reliable grayscale
+                      <motion.div
+                        className="w-full h-full origin-center"
+                        variants={{
+                          rest: { filter: 'grayscale(100%)', scale: 1 },
+                          hover: { filter: 'grayscale(0%)', scale: 1.03 },
+                        }}
+                        transition={{ duration: 0.5, ease: 'easeOut' }}
+                      >
+                        <NutrifyBanner variant="card" />
+                      </motion.div>
+                    ) : (
+                      <Image
+                        src={project.images.banner}
+                        alt={project.images.bannerAlt || `${project.title} banner`}
+                        fill
+                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-[1.03]"
+                        sizes="400px"
+                      />
+                    )}
 
-                  {/* Open source badge */}
-                  {project.githubUrl && (
-                    <div className="absolute top-3 right-3">
-                      <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-md border border-white/20 bg-black/40 text-white/80">
-                        Open Source
+                    {/* Bottom fade for image cards */}
+                    {project.id !== 'nutrify-ai' && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    )}
+
+                    {/* Top scrim — keeps pills legible */}
+                    <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/70 via-black/30 to-transparent z-10" />
+
+                    {/* Category badge */}
+                    <div className="absolute top-3 left-3 z-20">
+                      <span
+                        className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-xl border"
+                        style={{
+                          backgroundColor: `${categoryColor}30`,
+                          borderColor: `${categoryColor}55`,
+                          color: categoryColor,
+                        }}
+                      >
+                        {project.category}
                       </span>
                     </div>
-                  )}
-                </div>
 
-                {/* Card content */}
-                <div className="flex flex-col flex-1 p-5 sm:p-6">
-                  {/* Title */}
-                  <h3
-                    className="font-bold text-white text-lg leading-tight mb-2 group-hover:text-opacity-90 transition-colors"
-                    style={{ fontFamily: 'var(--font-playfair-display)' }}
-                  >
-                    {project.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-zinc-400 text-sm leading-relaxed line-clamp-2 mb-4 flex-1">
-                    {project.shortDescription}
-                  </p>
-
-                  {/* Tech pills */}
-                  <div className="flex flex-wrap gap-1.5 mb-5">
-                    {project.technologies.slice(0, 3).map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2 py-0.5 text-[11px] rounded-md bg-white/5 border border-white/10 text-zinc-400"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                    {project.technologies.length > 3 && (
-                      <span className="px-2 py-0.5 text-[11px] rounded-md bg-white/5 border border-white/10 text-zinc-500">
-                        +{project.technologies.length - 3}
-                      </span>
-                    )}
+                    {/* Top-right badges */}
+                    <div className="absolute top-3 right-3 flex flex-col gap-1.5 items-end z-20">
+                      {project.githubUrl && (
+                        <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-xl border border-white/25 bg-black/60 text-white/85">
+                          Open Source
+                        </span>
+                      )}
+                      {project.platforms?.includes('iOS') &&
+                        !project.platforms?.includes('Android') && (
+                          <span
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-xl border"
+                            style={{
+                              backgroundColor: `${categoryColor}30`,
+                              borderColor: `${categoryColor}55`,
+                              color: categoryColor,
+                            }}
+                          >
+                            <Smartphone size={9} />
+                            iOS First
+                          </span>
+                        )}
+                      {project.currentNote && (
+                        <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-xl border border-amber-400/40 bg-amber-400/20 text-amber-300">
+                          {project.currentNote.includes('App Store')
+                            ? '🍎 Coming to App Store'
+                            : project.currentNote}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Bottom row: GitHub icon + action buttons */}
-                  <div className="flex items-center justify-between gap-3 pt-4 border-t border-white/8">
-                    {/* GitHub icon-only */}
-                    <div className="flex items-center">
-                      {project.githubUrl && (
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          aria-label={`${project.title} GitHub repository`}
-                          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20
-                            text-zinc-400 hover:text-white transition-all duration-200"
+                  {/* ── Card content ─────────────────────────── */}
+                  <div className="flex flex-col flex-1 p-5">
+                    <h3 className="heading-component text-white leading-tight mb-2">
+                      {project.title}
+                    </h3>
+
+                    <p
+                      className={`text-zinc-400 text-sm leading-relaxed mb-3 ${project.highlights?.length ? 'line-clamp-2' : 'line-clamp-2 flex-1'}`}
+                    >
+                      {project.shortDescription}
+                    </p>
+
+                    {project.highlights?.length ? (
+                      <ul className="flex flex-col gap-1.5 mb-4 flex-1">
+                        {project.highlights.slice(0, 3).map((h) => (
+                          <li
+                            key={h}
+                            className="flex items-start gap-2 text-[12px] text-zinc-400 leading-snug"
+                          >
+                            <Check
+                              size={11}
+                              className="mt-0.5 flex-shrink-0"
+                              style={{ color: categoryColor }}
+                            />
+                            {h}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+
+                    <div className="flex flex-wrap gap-1.5 mb-5">
+                      {project.technologies.slice(0, 3).map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-0.5 text-[11px] rounded-md bg-white/5 border border-white/10 text-zinc-400"
                         >
-                          <Github size={15} />
-                        </a>
+                          {tech}
+                        </span>
+                      ))}
+                      {project.technologies.length > 3 && (
+                        <span className="px-2 py-0.5 text-[11px] rounded-md bg-white/5 border border-white/10 text-zinc-500">
+                          +{project.technologies.length - 3}
+                        </span>
                       )}
                     </div>
 
-                    {/* Labeled action buttons — matching style */}
-                    <div className="flex items-center gap-2">
-                      {project.visitUrl && (
-                        <a
-                          href={project.visitUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                    <div className="flex items-center justify-between gap-3 pt-4 border-t border-white/8">
+                      <div>
+                        {project.githubUrl && (
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            aria-label={`${project.title} GitHub repository`}
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20
+                              text-zinc-400 hover:text-white transition-all duration-200"
+                          >
+                            <Github size={15} />
+                          </a>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {project.appStoreUrl && !project.visitUrl && (
+                          <a
+                            href={project.appStoreUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg
+                              bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/25
+                              text-zinc-300 hover:text-white text-xs font-semibold transition-all duration-200 whitespace-nowrap"
+                          >
+                            <Smartphone size={12} aria-hidden="true" />
+                            App Store
+                          </a>
+                        )}
+                        {project.visitUrl && (
+                          <a
+                            href={project.visitUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg
+                              bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/25
+                              text-zinc-300 hover:text-white text-xs font-semibold transition-all duration-200 whitespace-nowrap"
+                          >
+                            <ExternalLink size={12} aria-hidden="true" />
+                            Website
+                          </a>
+                        )}
+                        <Link
+                          href={`/portfolio/${project.id}`}
                           onClick={(e) => e.stopPropagation()}
-                          aria-label={`Visit ${project.title} live site`}
+                          aria-label={`View details for ${project.title}`}
                           className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg
                             bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/25
-                            text-zinc-300 hover:text-white text-xs font-semibold
-                            transition-all duration-200 whitespace-nowrap"
+                            text-zinc-300 hover:text-white text-xs font-semibold transition-all duration-200 whitespace-nowrap"
                         >
-                          <ExternalLink size={12} aria-hidden="true" />
-                          Website
-                        </a>
-                      )}
-                      <Link
-                        href={`/portfolio/${project.id}`}
-                        aria-label={`View details for ${project.title}`}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg
-                          bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/25
-                          text-zinc-300 hover:text-white text-xs font-semibold
-                          transition-all duration-200 whitespace-nowrap"
-                      >
-                        Details
-                        <ArrowRight
-                          size={12}
-                          aria-hidden="true"
-                          className="transition-transform duration-200 group-hover:translate-x-0.5"
-                        />
-                      </Link>
+                          Details
+                          <ArrowRight size={12} aria-hidden="true" />
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            )
-          })}
+                </motion.div>
+              )
+            })}
+          </motion.div>
         </div>
 
         {/* View all link */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.4, ease: 'easeOut' }}
-          className="flex justify-center mt-12 sm:mt-14"
-        >
-          <Link
-            href="/portfolio"
-            className="group inline-flex items-center gap-2 px-7 py-3 rounded-xl
-              border border-white/15 hover:border-white/30
-              bg-white/5 hover:bg-white/10
-              text-white font-semibold text-sm
-              transition-all duration-300"
+        <div className="container mx-auto px-5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.4, ease: 'easeOut' }}
+            className="flex justify-center mt-12 sm:mt-14"
           >
-            View All Projects
-            <ArrowRight
-              size={16}
-              className="transition-transform duration-300 group-hover:translate-x-1"
-            />
-          </Link>
-        </motion.div>
+            <Link
+              href="/portfolio"
+              className="group inline-flex items-center gap-2 px-7 py-3 rounded-xl
+                border border-white/15 hover:border-white/30
+                bg-white/5 hover:bg-white/10
+                text-white font-semibold text-sm
+                transition-all duration-300"
+            >
+              View All Projects
+              <ArrowRight
+                size={16}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+          </motion.div>
+        </div>
       </div>
     </section>
   )

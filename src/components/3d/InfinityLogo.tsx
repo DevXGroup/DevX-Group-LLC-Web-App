@@ -155,7 +155,7 @@ function InfinityMesh({
   const lastMousePosition = useRef({ x: 0, y: 0 })
   const lastUpdateTime = useRef(0)
   const velocity = useRef({ x: 0, y: 0 })
-  const autoRotateSpeed = useRef({ x: 0, y: 0.02 })
+  const autoRotateSpeed = useRef({ x: 0, y: 0.008 })
   const momentumActive = useRef(false)
 
   // Optimized geometry with lower resolution on mobile
@@ -208,7 +208,7 @@ function InfinityMesh({
 
       // Store the current velocity direction for auto-rotation
       if (Math.abs(velocity.current.y) > 0.01) {
-        autoRotateSpeed.current.y = Math.sign(velocity.current.y) * 0.02
+        autoRotateSpeed.current.y = Math.sign(velocity.current.y) * 0.008
       }
     }
 

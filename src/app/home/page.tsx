@@ -74,9 +74,35 @@ export const metadata: Metadata = {
   },
 }
 
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'DevX Group',
+  url: siteUrl,
+  logo: `${siteUrl}/devxgroup-logo.svg`,
+  description:
+    'Senior software team shipping high-impact web, mobile, and AI projects fast. AI automation, agentic AI solutions, rapid MVP launches, and stunning UI/UX.',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'San Diego',
+    addressRegion: 'CA',
+    addressCountry: 'US',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+1-442-544-0591',
+    contactType: 'customer service',
+  },
+  sameAs: ['https://github.com/DevXGroup'],
+}
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
       {/* SEO Content - Server-rendered for crawlers */}
       <div className="sr-only">
         <h1>DevX Group - Your Vision, Engineered</h1>

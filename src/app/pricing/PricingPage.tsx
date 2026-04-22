@@ -1,7 +1,17 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Star, Zap, Shield, ArrowRight, Sparkles, Target, Crown, Check } from 'lucide-react'
+import {
+  type LucideIcon,
+  Star,
+  Zap,
+  Shield,
+  ArrowRight,
+  Sparkles,
+  Target,
+  Crown,
+  Check,
+} from 'lucide-react'
 import { useState } from 'react'
 import StarBorder from '@animations/StarBorder'
 import TextPressure from '@animations/TextPressure'
@@ -53,7 +63,7 @@ const pricingPlans = [
     subtitle: 'Perfect for MVPs',
     price: '$95',
     priceUnit: '/hour',
-    originalPrice: '$115',
+    originalPrice: '$125',
     description:
       'Ideal for startups and small businesses looking to build their first digital solution',
     icon: Target,
@@ -80,9 +90,9 @@ const pricingPlans = [
   {
     name: 'Professional',
     subtitle: 'Most Popular Choice',
-    price: '$130',
+    price: '$145',
     priceUnit: '/hour',
-    originalPrice: '$150',
+    originalPrice: '$190',
     description:
       'Perfect for growing businesses that need comprehensive solutions and dedicated support',
     icon: Zap,
@@ -113,7 +123,7 @@ const pricingPlans = [
     subtitle: 'Ultimate Solution',
     price: '$175',
     priceUnit: '/hour',
-    originalPrice: '$200',
+    originalPrice: '$230',
     description:
       'For large organizations requiring enterprise-grade solutions with premium support',
     icon: Crown,
@@ -153,7 +163,7 @@ interface PricingPlan {
   priceUnit: string
   originalPrice: string
   description: string
-  icon: any // You might want to define a more specific type for the icon component
+  icon: LucideIcon
   popular: boolean
   color: string
   gradient: string

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 
 // Enable SSR for Hero to improve FCP/LCP - hero content renders immediately
@@ -28,6 +28,21 @@ const ProcessSection = dynamic(() => import('@sections/Process'), {
 const DevelopmentToolsSection = dynamic(() => import('@sections/DevelopmentTools'), {
   ssr: false,
   loading: () => <div className="h-96" />, // Placeholder to prevent layout shift
+})
+
+const TrustedBySection = dynamic(() => import('@sections/TrustedBy'), {
+  ssr: false,
+  loading: () => <div className="h-24" />,
+})
+
+const HomeTestimonialsSection = dynamic(() => import('@sections/HomeTestimonials'), {
+  ssr: false,
+  loading: () => <div className="h-96" />,
+})
+
+const NewsletterSignupSection = dynamic(() => import('@sections/NewsletterSignup'), {
+  ssr: false,
+  loading: () => <div className="h-48" />,
 })
 
 export default function HomePageClient() {
@@ -119,10 +134,13 @@ export default function HomePageClient() {
       }
     >
       <Hero />
+      <TrustedBySection />
       <FeaturedProjects />
+      <HomeTestimonialsSection />
       <FeaturesSection />
       <ProcessSection />
       <DevelopmentToolsSection />
+      <NewsletterSignupSection />
     </motion.main>
   )
 }

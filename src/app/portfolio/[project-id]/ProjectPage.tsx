@@ -15,10 +15,12 @@ import {
   BarChart3,
   Zap,
   TrendingUp,
+  Smartphone,
 } from 'lucide-react'
 import { ProjectData, categoryColors } from '@/data/portfolioProjects'
 import ImageCarousel from '@/components/portfolio/ImageCarousel'
 import SingleImageDisplay from '@/components/portfolio/SingleImageDisplay'
+import NutrifyBanner from '@sections/NutrifyBanner'
 
 const T_STD = { duration: 0.35, ease: 'easeOut' } as const
 const T_SMOOTH = { duration: 0.45, ease: 'easeOut' } as const
@@ -36,7 +38,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
     .filter((p) => p.trim() !== '')
 
   return (
-    <div className="min-h-screen bg-black text-white pt-16 sm:pt-20">
+    <div data-testid="project-page" className="min-h-screen bg-black text-white pt-16 sm:pt-20">
       {/* Back Button */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <Link
@@ -63,6 +65,10 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
               controls
               className="w-full h-full object-cover"
             />
+          </div>
+        ) : project.id === 'nutrify-ai' ? (
+          <div className="relative w-full aspect-[4/3] sm:aspect-video lg:aspect-[21/9] max-h-[70vh]">
+            <NutrifyBanner variant="hero" />
           </div>
         ) : (
           <div className="relative w-full aspect-[4/3] sm:aspect-video lg:aspect-[21/9] max-h-[70vh]">
@@ -95,9 +101,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
             {project.category}
           </span>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
-            {project.title}
-          </h1>
+          <h1 className="heading-section text-white">{project.title}</h1>
 
           <p className="text-lg text-white/70 max-w-3xl">{project.shortDescription}</p>
         </motion.div>
@@ -143,6 +147,33 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
               Live Demo
             </a>
           )}
+          {project.appStoreUrl && (
+            <a
+              href={project.appStoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/10 text-sm font-medium text-white hover:bg-white/20 transition-colors border border-white/10"
+            >
+              <Smartphone size={16} />
+              App Store
+            </a>
+          )}
+          {project.playStoreUrl && (
+            <a
+              href={project.playStoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/10 text-sm font-medium text-white hover:bg-white/20 transition-colors border border-white/10"
+            >
+              <Smartphone size={16} />
+              Google Play
+            </a>
+          )}
+          {project.currentNote && (
+            <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-amber-400/30 bg-amber-400/8 text-amber-300 text-sm font-medium">
+              {project.currentNote}
+            </span>
+          )}
         </motion.div>
 
         {/* Screenshots — no scroll animation, renders immediately */}
@@ -175,7 +206,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
 
         {/* Project Overview */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-4">Project Overview</h2>
+          <h2 className="heading-component text-white mb-4">Project Overview</h2>
           <div className="space-y-4">
             {descriptionParagraphs.map((para, i) => (
               <p key={i} className="text-white/70 leading-relaxed text-lg">
@@ -187,7 +218,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
 
         {/* Key Features */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-6">Key Features</h2>
+          <h2 className="heading-component text-white mb-6">Key Features</h2>
           <ul className="grid gap-3 sm:grid-cols-2">
             {project.keyFeatures.map((feature, i) => (
               <li key={i} className="flex items-start gap-3 text-white/80">
@@ -204,7 +235,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
 
         {/* Tech Stack */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-6">Tech Stack</h2>
+          <h2 className="heading-component text-white mb-6">Tech Stack</h2>
           <div className="flex flex-wrap gap-2">
             {project.technologies.map((tech) => (
               <span
@@ -219,7 +250,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
 
         {/* Platforms */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-6">Platforms</h2>
+          <h2 className="heading-component text-white mb-6">Platforms</h2>
           <div className="flex flex-wrap gap-2">
             {project.platforms.map((platform) => (
               <span
@@ -240,7 +271,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
         {/* Project Details Grid */}
         {(project.completionYear ?? project.projectDuration ?? project.teamSize) && (
           <section className="mb-16">
-            <h2 className="text-2xl font-bold mb-6">Project Details</h2>
+            <h2 className="heading-component text-white mb-6">Project Details</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {project.completionYear && (
                 <div className="p-5 rounded-xl bg-white/5 border border-white/10">
@@ -276,7 +307,7 @@ export default function ProjectPage({ project }: { project: ProjectData }) {
         {/* Metrics */}
         {project.metrics && (
           <section className="mb-16">
-            <h2 className="text-2xl font-bold mb-6">Metrics</h2>
+            <h2 className="heading-component text-white mb-6">Metrics</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {project.metrics.users && (
                 <div
