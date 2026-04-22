@@ -2,8 +2,16 @@ import Anthropic from '@anthropic-ai/sdk'
 import { supabaseAdmin } from './supabase'
 import { sendDigestEmail, type DigestCategory } from './newsletter-email'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-const FIRECRAWL_API_KEY = process.env.FIRECRAWL_API_KEY
+let _anthropic: Anthropic | null = null
+function getAnthropic(): Anthropic {
+  if (!_anthropic) {
+    const key = process.env.ANTHROPIC_API_KEY
+    if (!key) throw new Error('[newsletter-digest] ANTHROPIC_API_KEY is not set.')
+    _anthropic = new Anthropic({ apiKey: key })
+  }
+  return _anthropic
+}
+
 const SITE_URL = process.env.NEWSLETTER_SITE_URL ?? 'https://www.devxgroup.io'
 
 const EMAIL_FONT = `'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif`
@@ -41,13 +49,14 @@ interface DigestPayload {
 }
 
 async function searchFirecrawl(query: string, limit = 8): Promise<RawArticle[]> {
-  if (!FIRECRAWL_API_KEY) return []
+  const firecrawlKey = process.env.FIRECRAWL_API_KEY
+  if (!firecrawlKey) return []
 
   const res = await fetch('https://api.firecrawl.dev/v1/search', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
+      Authorization: `Bearer ${firecrawlKey}`,
     },
     body: JSON.stringify({ query, limit }),
   })
@@ -136,7 +145,7 @@ Use only these category names (skip any with no items): Model Releases, Develope
 Articles to evaluate:
 ${JSON.stringify(articles, null, 2)}`
 
-  const message = await anthropic.messages.create({
+  const message = await getAnthropic().messages.create({
     model: 'claude-haiku-4-5-20251001',
     max_tokens: 1024,
     messages: [{ role: 'user', content: prompt }],

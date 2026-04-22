@@ -1,6 +1,15 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function getResend(): Resend {
+  if (!_resend) {
+    const key = process.env.RESEND_API_KEY
+    if (!key) throw new Error('[newsletter-email] RESEND_API_KEY is not set.')
+    _resend = new Resend(key)
+  }
+  return _resend
+}
+
 const SITE_URL = process.env.NEWSLETTER_SITE_URL ?? 'https://www.devxgroup.io'
 // Use verified domain address once DNS is set up in Resend. Until then, onboarding@resend.dev works for testing.
 const FROM_ADDRESS = process.env.NEWSLETTER_FROM_EMAIL ?? 'DevX Group LLC <onboarding@resend.dev>'
@@ -27,7 +36,7 @@ async function send(options: {
   text: string
   html: string
 }): Promise<void> {
-  const { error } = await resend.emails.send({
+  const { error } = await getResend().emails.send({
     from: FROM_ADDRESS,
     ...options,
   })
