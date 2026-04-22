@@ -1,3 +1,31 @@
+## [1.17.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.16.1...v1.17.0) (2026-04-22)
+
+### Features
+
+* **a11y:** add reduced-motion support and ARIA improvements to testimonials and newsletter ([ca0d753](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/ca0d753e01f9c04f1562a510d4ba24929b324505))
+* add Nutrify AI, Trusted By, testimonials, newsletter & audit improvements ([44ea6bc](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/44ea6bc604650c88ec458ffbe76275c36c3a8b8a))
+* **featured-projects:** replace grid with draggable auto-scrolling carousel ([f5c058b](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/f5c058bf5d2c940e43e784ba3603aa53b5359bdd))
+* **features:** increase grid opacity and brightness, halve animation speed ([eb3b58f](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/eb3b58f99e011d397058384a828fb054ad921c87))
+* **newsletter:** add signup section and post-action confirmation pages ([1251e2f](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/1251e2fe06e7f477eb338f45463d45540442654e))
+* **newsletter:** add subscribe, confirm, unsubscribe, and send API routes ([eeedfc4](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/eeedfc40ded403e35d84c618f9fb2c4eeebb987e))
+* **newsletter:** add Supabase schema, core libs, and dependencies ([6b4bce2](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/6b4bce21bbf8e25efe8ae712da6ee6fc0e1060e5))
+* **nutrify:** add NutrifyBanner component with branded card and hero variants ([7b9050e](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/7b9050e0c5a79e5d09628b23f08bb713b0385d6d))
+* **nutrify:** science-first positioning, card highlights, TrustedBy entry ([f6285d3](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/f6285d36443180bf535c1d1e9da2a5832f97fe81))
+* **portfolio:** use NutrifyBanner for nutrify-ai hero instead of portrait screenshot ([3d6231c](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/3d6231c9db391194d2c4ed4f990b65a4a02aa4f2))
+* **trusted-by:** replace static grid with auto-rolling marquee, pause on hover ([9577597](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/9577597ef1a40da4beb1e69114ddac07fc28e265))
+
+### Bug Fixes
+
+* **featured-projects:** constrain section to viewport width ([24bb617](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/24bb6176881d4f565607433cbfafdd9414538c0b))
+* **featured-projects:** remove asymmetric spacer, normalize x on drag release to fix empty gaps ([2e8eb78](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/2e8eb781435da14c65fd82e9646ca101f4f975b7))
+* **featured-projects:** seamless drag loop via pointer events, fix github icon button sizing ([42f6be4](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/42f6be4124faaee92bf500103fedb030dc8764b7))
+* **featured-projects:** use 3-copy track and direct delta drag to eliminate empty-space seam ([13c365c](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/13c365c560d5f4ed0123ad73e65d4ebd884051e2))
+* guard Sentry init in try-catch to prevent 500s after Next.js 16.2 upgrade ([67ea339](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/67ea339ad0495009224e4ad2789484d7f4c44b46))
+* **infinity-logo:** slow down auto-rotate speed for subtler motion ([128977f](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/128977fd93b51bc77176ed6f088622d20fd94290))
+* **newsletter:** cast ease array to cubic bezier tuple to satisfy TS strict types ([9ce2b1d](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/9ce2b1dbe9ed3d09bc17b34d3ff737417054da4c))
+* **newsletter:** lazy-init Resend and Anthropic clients ([1b5f24b](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/1b5f24b76a8dc29d0cd90d384167aeb2dc7de238))
+* **seo:** set /home canonical to pageUrl instead of root ([3f72e40](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/3f72e40cb896096f53a7b1796be76a37f88aa5d7))
+
 ## [1.16.1](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.16.0...v1.16.1) (2026-03-07)
 
 ### Bug Fixes
