@@ -10,10 +10,23 @@ Disallow: /sentry-example-page
 Disallow: /test-error
 Disallow: /api/
 
-# Allow CSS, JS and assets for better crawling
-Allow: /_next/static/
+# Block build artifacts from indexing (Google renders them but shouldn't index them)
+Disallow: /_next/static/
 Allow: /favicon.ico
 Allow: /images/
 
+# AI crawlers (ChatGPT, Perplexity, Bing AI)
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
 # Sitemap location
-Sitemap: https://devxgroup.io/sitemap.xml
+Sitemap: https://www.devxgroup.io/sitemap.xml
