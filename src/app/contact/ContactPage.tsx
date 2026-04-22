@@ -775,7 +775,8 @@ export default function ContactPage() {
                 </div>
               </div>
               <p className="section-subtitle max-w-2xl text-center mt-0 mb-4 text-sm sm:text-base md:text-lg px-2">
-                Contact us to discuss your mission requirements and objectives.
+                Tell us about your web, mobile, or AI project. We reply within 24 hours with a
+                custom quote.
               </p>
             </div>
           </motion.div>

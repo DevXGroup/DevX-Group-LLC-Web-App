@@ -237,14 +237,14 @@ export default function Hero() {
                 }}
               >
                 <BlurText
-                  text="Senior software team shipping high-impact"
+                  text="Senior San Diego team shipping high-impact"
                   className="justify-center text-center whitespace-normal"
                   delay={40}
                   stepDuration={0.4}
                   once={true}
                 />
                 <BlurText
-                  text="web, mobile, and AI projects fast"
+                  text="web, mobile, and AI products fast"
                   className="justify-center text-center whitespace-normal"
                   delay={40}
                   startDelay={200}
