@@ -34,11 +34,11 @@ const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === 'tr
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Disable static optimization to avoid prerendering errors with Framer Motion context
-  output: 'standalone',
+  // Vercel handles standalone bundling automatically — do not set output: 'standalone'
+  // when deploying to Vercel (their docs explicitly recommend against it).
 
-  // Prevent Turbopack from bundling Node.js-specific packages into the server bundle.
-  // These packages rely on runtime module resolution and fail when inlined.
+  // Prevent the bundler from inlining Node.js-only packages that rely on
+  // runtime module resolution. Keeps them as external requires in the server bundle.
   serverExternalPackages: [
     'nodemailer',
     'resend',
@@ -58,8 +58,6 @@ const nextConfig = {
       '@react-three/drei',
     ],
   },
-  // Explicitly set the output file tracing root to silence lockfile warning
-  outputFileTracingRoot: path.join(process.cwd()),
   // Target modern browsers - avoid legacy polyfills
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false,
