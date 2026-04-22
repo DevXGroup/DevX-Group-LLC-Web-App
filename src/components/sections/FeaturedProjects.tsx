@@ -70,7 +70,7 @@ export default function FeaturedProjects() {
   }, [x])
 
   return (
-    <section ref={sectionRef} className="relative py-20 sm:py-28 overflow-hidden">
+    <section ref={sectionRef} className="relative w-full py-20 sm:py-28 overflow-hidden">
       {/* Ambient background */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
