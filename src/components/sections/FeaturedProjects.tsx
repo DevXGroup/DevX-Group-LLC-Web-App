@@ -18,8 +18,19 @@ const STRIDE = CARD_W + CARD_GAP
 const SPEED = 0.036 // px per ms → ~36 px/s
 const LOOP_WIDTH = featured.length * STRIDE
 
-// 3 copies: one full set of content on either side of the starting position
-const loopCards = [...featured, ...featured, ...featured]
+// 4 copies: with x wrapped into (-2·LW, -LW], the track's right edge is at
+// least 2·LW (≈3400px) past the viewport origin, covering any reasonable screen.
+// Copies are identical, so shifting x by LW is visually a no-op.
+const loopCards = [...featured, ...featured, ...featured, ...featured]
+
+// Map any x into the canonical (-2·LOOP_WIDTH, -LOOP_WIDTH] range.
+// Safe because all 4 copies are pixel-identical.
+const wrapX = (v: number) => {
+  let n = v
+  while (n > -LOOP_WIDTH) n -= LOOP_WIDTH
+  while (n <= -2 * LOOP_WIDTH) n += LOOP_WIDTH
+  return n
+}
 
 export default function FeaturedProjects() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -33,9 +44,7 @@ export default function FeaturedProjects() {
   useAnimationFrame((_, delta) => {
     if (paused || isDragging.current || !isInView) return
     const d = Math.min(delta, 80)
-    const next = x.get() - d * SPEED
-    // Wrap at the end of copy 2 — snaps back to equivalent position in copy 1
-    x.set(next <= -2 * LOOP_WIDTH ? next + LOOP_WIDTH : next)
+    x.set(wrapX(x.get() - d * SPEED))
   })
 
   const onPointerDown = useCallback(
@@ -51,9 +60,9 @@ export default function FeaturedProjects() {
     (e: React.PointerEvent) => {
       if (!isDragging.current || !dragStart.current) return
       const delta = e.clientX - dragStart.current.clientX
-      // Direct delta — no normalization, track has 3 copies so there's
-      // always content within a full copy-width of the start position
-      x.set(dragStart.current.originX + delta)
+      // Wrap every frame — copies are identical, so the snap is invisible and
+      // keeps the 4-copy buffer anchored around the viewport however far you pull.
+      x.set(wrapX(dragStart.current.originX + delta))
     },
     [x]
   )
@@ -61,12 +70,7 @@ export default function FeaturedProjects() {
   const onPointerUp = useCallback(() => {
     isDragging.current = false
     dragStart.current = null
-    // Re-anchor to the copy-2 range so auto-scroll re-enters the loop immediately.
-    // Copies are identical, so a LOOP_WIDTH shift is visually invisible.
-    let cur = x.get()
-    while (cur > -LOOP_WIDTH) cur -= LOOP_WIDTH
-    while (cur <= -2 * LOOP_WIDTH) cur += LOOP_WIDTH
-    x.set(cur)
+    x.set(wrapX(x.get()))
   }, [x])
 
   return (
