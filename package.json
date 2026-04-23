@@ -27,6 +27,8 @@
     "test": "pnpm jest",
     "test:watch": "pnpm jest --watch",
     "test:coverage": "pnpm jest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "size": "size-limit --config size-limit.config.cjs",
     "analyze": "ANALYZE=true pnpm next build",
     "update-readme": "node scripts/update-readme-version.mjs",
