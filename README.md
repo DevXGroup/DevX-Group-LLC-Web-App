@@ -357,10 +357,10 @@ NEXT_PUBLIC_SITE_URL=https://www.devxgroup.io
 ```env
 SMTP_HOST=smtp.example.com
 SMTP_PORT=587
-SMTP_USER=no-reply@devxgroup.io
+SMTP_USER=support@devxgroup.io
 SMTP_PASS=<app-password>
-CONTACT_FORWARD_TO=leads@devxgroup.io
-CONTACT_FROM_EMAIL=no-reply@devxgroup.io
+CONTACT_FORWARD_TO=support@devxgroup.io   # optional — falls back to support@devxgroup.io if unset
+CONTACT_FROM_EMAIL=support@devxgroup.io   # optional — defaults to SMTP_USER
 ```
 
 ### Newsletter (Supabase + Resend + Anthropic + Firecrawl)
