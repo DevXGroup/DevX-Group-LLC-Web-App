@@ -351,13 +351,13 @@ export default function Hero() {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.0, duration: 0.4 }}
-              className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-zinc-400/70 text-center px-2"
+              className="text-[10px] sm:text-[11px] md:text-[13px] font-mono uppercase tracking-widest text-zinc-400/70 md:text-zinc-300/90 text-center px-2"
             >
               Senior engineers with experience from Amazon, Qualcomm, and Viasat
             </motion.p>
           )}
           {shouldReduceMotion && (
-            <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-zinc-400/70 text-center px-2">
+            <p className="text-[10px] sm:text-[11px] md:text-[13px] font-mono uppercase tracking-widest text-zinc-400/70 md:text-zinc-300/90 text-center px-2">
               Senior engineers with experience from Amazon, Qualcomm, and Viasat
             </p>
           )}
