@@ -8,7 +8,9 @@ export default defineConfig({
   testMatch: ['**/integration/**/*.spec.ts', '**/qa/**/*.spec.ts'],
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // Only set `workers` in CI — passing `undefined` breaks under
+  // exactOptionalPropertyTypes, so we spread it in conditionally.
+  ...(process.env.CI ? { workers: 1 } : {}),
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL,
