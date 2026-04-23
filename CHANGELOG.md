@@ -1,3 +1,9 @@
+## [1.18.1](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.18.0...v1.18.1) (2026-04-23)
+
+### Bug Fixes
+
+* **hero:** bump social proof contrast on desktop for legibility ([bdf220a](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/bdf220ad01ad3aee93ccf45549217c40fac1eeb9))
+
 ## [1.18.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.17.3...v1.18.0) (2026-04-23)
 
 ### Features
