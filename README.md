@@ -1,191 +1,555 @@
-# DevX Group Website
+# DevX Group — Marketing Site
 
-![Version](https://img.shields.io/badge/version-1.17.1-blue?style=flat)
+![Version](https://img.shields.io/badge/version-1.17.2-blue?style=flat)
 ![Tech Stack](https://img.shields.io/badge/Built%20With-Next.js%2016.2.3%20%7C%20React%2019.2.1%20%7C%20Tailwind%204.1.13-blueviolet?style=flat&logo=next.js)
 ![Status](https://img.shields.io/badge/status-active-success?style=flat)
 
-Portfolio and capability site for DevX Group LLC, a San Diego-based software engineering company specializing in custom web applications, AI/ML integration, and IoT hardware solutions. We work with small businesses through large enterprises, and provide dedicated engineering teams for startups and software companies seeking long-term execution partners to deliver results.
+Production marketing surface for [DevX Group LLC](https://www.devxgroup.io). Engineered as a statically-leaning Next.js App Router site with surgical client-side boundaries, a hardened lead-capture funnel, and a scheduled content pipeline that generates and delivers the weekly newsletter autonomously.
 
-## Overview
+This is a real product, not a template. The codebase makes intentional tradeoffs across rendering strategy, animation cost, observability, and lead qualification — documented below.
 
-The application showcases DevX Group's software engineering capabilities, project portfolio, and engagement models—from project-based delivery to embedded team augmentation. Built with Next.js App Router, it delivers fully typed, high-performance pages with animation-rich interactions and enterprise-ready privacy and legal coverage.
+---
 
-- Deployable to any Next.js-compatible platform, with defaults optimized for Vercel.
-- Responsive layouts backed by Tailwind CSS theme tokens and IBM Plex typography.
-- Built for accessibility, analytics visibility, and measurable performance.
+## Contents
 
-## Key Features
+1. [System Overview](#system-overview)
+2. [Tech Stack](#tech-stack)
+3. [Rendering & Performance Strategy](#rendering--performance-strategy)
+4. [Lead Capture Funnel](#lead-capture-funnel)
+5. [Newsletter Pipeline](#newsletter-pipeline)
+6. [Testing Strategy](#testing-strategy)
+7. [Local Development](#local-development)
+8. [Environment](#environment)
+9. [Observability](#observability)
+10. [CI/CD & Release](#cicd--release)
+11. [Directory Layout](#directory-layout)
+12. [Scripts Reference](#scripts-reference)
+13. [Coding Standards](#coding-standards)
 
-- Next.js 15 App Router with route-level metadata and granular loading states.
-- React 19 + TypeScript strict mode for dependable authoring and runtime safety.
-- Tailwind CSS 4 design system with theme-green, theme-gold, and theme-purple palettes.
-- Framer Motion, GSAP, and React Three Fiber for high-impact animation and 3D experiences.
-- Calendly integration powering contact scheduling and lead capture flows.
-- Sentry, Vercel Analytics, and Speed Insights for monitoring and observability.
-- CCPA-compliant privacy policy and comprehensive terms of service content.
+---
+
+## System Overview
+
+```
+┌───────────────────────────────────────────────────────────────────────┐
+│                             Browser                                   │
+│   Server Components (SSR/SSG)  +  Client Islands (hero, forms, 3D)    │
+└───────────────────────────────────────────────────────────────────────┘
+            │                                    │
+            │ POST /api/contact                  │ POST /api/newsletter/subscribe
+            ▼                                    ▼
+   ┌──────────────────┐                ┌────────────────────────┐
+   │ Zod strict       │                │ Double opt-in flow     │
+   │ schema validator │                │ (confirm token → DB)   │
+   └──────────────────┘                └────────────────────────┘
+            │                                    │
+            ▼                                    ▼
+   ┌──────────────────┐                ┌────────────────────────┐
+   │ nodemailer SMTP  │                │ Supabase (subscribers) │
+   │ → sales inbox    │                │ + Resend (delivery)    │
+   └──────────────────┘                └────────────────────────┘
+            │                                    ▲
+            ▼                                    │
+   /contact/thank-you                    GitHub Actions cron
+   + Calendly embed                             │
+                                                ▼
+                                       ┌────────────────────────┐
+                                       │ Firecrawl → Anthropic  │
+                                       │ → draft → Resend send  │
+                                       └────────────────────────┘
+```
+
+Two independent backends:
+
+- **Contact**: minimal, synchronous, SMTP-delivered. Optimized for zero-loss lead capture with aggressive input validation and a thank-you redirect that doubles as a Calendly booking moment.
+- **Newsletter**: asynchronous pipeline. Subscriptions gated by double opt-in. Weekly content generated by a scheduled job that scrapes source material via Firecrawl, drafts with Anthropic, and dispatches via Resend.
+
+Separate transports are intentional: contact mail is low-volume and time-sensitive (sales response), so it stays on a direct SMTP path with inline failure reporting. Newsletter is high-volume and templated, so it uses Resend for deliverability analytics, suppression lists, and bounce handling.
+
+---
 
 ## Tech Stack
 
-### Core
+### Runtime
 
-- Framework: Next.js 16.2.3 (App Router) on React 19.2.1
-- Language: TypeScript (strict mode)
-- Package manager: pnpm >= 10.19
-- Runtime: Node.js >= 22.14 < 23
+| Layer | Choice | Why |
+|---|---|---|
+| Framework | **Next.js 16.2.3** (App Router) | Server components, streaming, route-level metadata, granular ISR |
+| Runtime | **Node.js ≥22.14 <23** | Required by Next 16, pinned to avoid regressions in ≥23 |
+| Language | **TypeScript (strict)** | `noUncheckedIndexedAccess` + strict null checks across `src/` |
+| Package manager | **pnpm ≥10.19** | Workspace-friendly, deterministic lockfile |
+| React | **19.2.1** | Server actions + use() for promise unwrapping |
 
-### UI & Interactions
+### UI & Motion
 
-- Styling: Tailwind CSS 4.1.13 with IBM Plex Sans and IBM Plex Mono
-- Components: Radix UI primitives, Lucide React icons
-- Motion & 3D: Framer Motion, GSAP, Three.js, React Three Fiber
-- Forms: React Hook Form + Zod validation
+- **Tailwind CSS 4.1.13** — token-based theme (green / gold / purple accents), no component library dependency
+- **Radix UI primitives** — accessible popovers, dialogs, accordions
+- **Framer Motion** — animation primitives + scroll-driven orchestration
+- **GSAP** — complex timelines (only where Framer Motion can't express intent cleanly)
+- **Three.js + React Three Fiber** — 3D hero backgrounds, animated blobs, infinity loader
+- **Lucide React** — icon system
+- **IBM Plex Sans / Mono + Playfair Display** — type pairing (editorial display + technical body)
 
-### Tooling & Integrations
+### Backend & Data
 
-- Testing: Jest + Testing Library, Playwright E2E suites
-- Monitoring: Sentry, Vercel Analytics, Vercel Speed Insights
-- Communications: Nodemailer transport, Calendly widget
+- **Zod** — runtime validation on every API boundary (`.strict()` schemas)
+- **React Hook Form** — client-side form state
+- **Supabase (PostgreSQL)** — newsletter subscribers, opt-in tokens, send logs
+- **Nodemailer (SMTP)** — contact form delivery
+- **Resend** — newsletter delivery (deliverability analytics, suppression lists)
+- **Anthropic SDK** — newsletter content generation
+- **Firecrawl** — source-material scraping for newsletter drafts
 
-## Architecture
+### Observability
 
-Source is organized for feature discoverability and shared layout consistency.
+- **Sentry** — error tracking + performance tracing
+- **Vercel Analytics** — page views, Core Web Vitals in production
+- **Vercel Speed Insights** — real-user LCP/CLS/INP
+- **GA4 + GTM** — marketing attribution (optional, env-gated)
+
+### Testing
+
+- **Jest + Testing Library** — unit + API route handler tests (jsdom for components, node for server code)
+- **Playwright** — e2e browser tests with auto-starting dev server
+- **size-limit** — bundle size regression detection
+
+---
+
+## Rendering & Performance Strategy
+
+### Server vs client boundary
+
+Default to **server components**. A file gains `'use client'` only if it uses state, effects, event handlers, or browser-only APIs. Heavy client islands are further isolated via `next/dynamic` with `ssr: false` inside their parent client component — this keeps the bundle split at a meaningful boundary without fighting Next 15's "no ssr:false in server components" constraint.
+
+```tsx
+// Inside a client component
+const HeavyChart = dynamic(() => import('./Chart'), { ssr: false })
+```
+
+### Route-level rendering overrides
+
+Some routes use `export const dynamic = 'force-dynamic'` to bypass static generation. This is **not** a performance anti-pattern here — it's a workaround for Framer Motion context errors during SSG of heavily-animated routes. The rendering tax is mitigated downstream by edge caching and the fact these routes are already dominated by client-only animation work.
+
+### Above-the-fold budget
+
+- **Critical CSS inlined** in `<head>` via `src/app/layout.tsx` → ensures first paint doesn't wait for `globals.css`
+- **Hero section server-rendered** → instant LCP candidate (logo + headline)
+- **3D + GSAP + Framer Motion hero effects** loaded via `dynamic(..., { ssr: false })` behind an `IntersectionObserver` or `requestIdleCallback` gate
+- **Typewriter and blur text** hydrate after paint; the static fallback is SEO-equivalent (`sr-only` copy mirrors the animated content)
+
+### Animation cost controls
+
+`usePerformanceOptimizedAnimation` inspects five signals before enabling heavy visuals:
+
+| Signal | Gate |
+|---|---|
+| `prefers-reduced-motion` | Skips animations wholesale |
+| Viewport width | Mobile drops particle counts, disables 3D hero backgrounds |
+| GPU / WebGL availability | Fallback gradient backgrounds |
+| CPU tier (approx) | Downgrades frame loop to `"demand"` |
+| Network type (`navigator.connection`) | Blocks heavy dynamic imports on 3G |
+
+Three.js canvases use `frameloop="demand"` where possible and `dpr={[1, 2]}` (not `[1, 3]`) to cap retina-level cost on high-DPR displays.
+
+### Performance targets
+
+| Metric | Target | Current status |
+|---|---|---|
+| LCP | ≤ 2.5s | tracked per-deploy via Speed Insights |
+| CLS | ≤ 0.1 | font-display strategy + fixed-aspect hero |
+| JS bundle (gzipped, homepage) | < 200 KB | enforced by `size-limit` |
+| First Paint (element-level) | < 100ms desktop / < 300ms mobile | `tests/audit/first_paint_audit.spec.ts` |
+
+### Resource hints
+
+- DNS prefetch + preconnect for Calendly and Vercel Analytics domains
+- `priority={false}` on all below-fold images, AVIF/WebP from Next's built-in optimizer
+- `max-age=31536000, immutable` on versioned assets
+
+---
+
+## Lead Capture Funnel
+
+The contact form is the single revenue-driving surface on this site, so it gets hardened treatment end to end.
+
+### Frontend qualification
 
 ```
-src/
-├─ app/                       # App Router routes, layouts, and metadata
-│  ├─ page.tsx                # Homepage
-│  ├─ about/                  # About DevX Group
-│  ├─ portfolio/              # Case studies and showcase
-│  ├─ pricing/                # Pricing tiers
-│  ├─ services/               # Service verticals (e.g., creative animation sections)
-│  ├─ contact/                # Contact form + Calendly integration
-│  ├─ privacy/                # CCPA-compliant privacy policy
-│  └─ terms/                  # Terms of service
-├─ common/                    # Global chrome (navbar, footer)
-├─ components/                # UI primitives, animations, 3D, sections, services, etc.
-├─ hooks/                     # Reusable React hooks
-├─ lib/                       # Utilities and helpers
-├─ data/                      # Structured content and copy
-├─ styles/                    # Supplemental styling artifacts
-└─ types/                     # Shared TypeScript definitions
-
-tests/
-├─ components/                # Jest component specs
-├─ integration/               # Playwright integration flows
-└─ qa/                        # QA automation and regression scripts
+name (req) ─┐
+email (req) ┤
+company     ┤─► POST /api/contact
+projectType ┤   (all new fields optional, friction-minimized)
+budget      ┤
+timeline    ┤
+message (req)
 ```
 
-Path aliases (`@/*`, `@animations/*`, `@layout/*`, `@sections/*`, `@3d/*`) keep imports concise.
+Five optional qualification fields (company, projectType, budget, timeline in addition to the required name/email/message) let sales pre-qualify without a back-and-forth email. Fields are typed enums on the server — unknown values reject with 400.
 
-## Getting Started
+### API layer (`src/app/api/contact/route.ts`)
+
+```ts
+const contactSchema = z.object({
+  source: z.enum(['footer', 'contact-page', 'unknown']),
+  email: z.string().email(),
+  message: z.string().min(1).max(5000),
+  budget: z.enum(['Under $10k','$10k – $25k','$25k – $50k','$50k – $100k','$100k+','Not sure yet']).optional(),
+  // ...
+}).strict()
+```
+
+- **`.strict()`** — unknown keys reject. Closes off schema-drift bugs where client/server fields silently diverge.
+- **Empty-string coercion** — optional fields sent as `""` coerce to `undefined` so the email template doesn't render `Budget: ` with a blank value.
+- **`isEmailConfigured()` short-circuit** — returns 503 (not 500) when SMTP env is missing, so clients can display a proper "try again later" message instead of a crash.
+
+### Delivery (`src/lib/email.ts`)
+
+- Transporter built **once at module load** from SMTP env, null-guarded for missing config
+- `replyTo` set to the lead's email so sales can hit reply directly
+- **HTML-escaped user input** — all user-supplied fields run through `escapeHtml` before rendering into the email body
+- **Conditional sections** — optional fields only render when present (no blank labels)
+
+### Post-submit (`/contact/thank-you`)
+
+- `router.push('/contact/thank-you')` on success, not an inline success message
+- `noindex` in metadata — this URL is only reachable post-conversion, shouldn't pollute SERPs
+- Calendly embedded inline with `utm_source=thank_you_page` so bookings attribute correctly
+- The redirect itself is an analytics event (trackable as a distinct URL hit)
+
+### UTM attribution
+
+Every CTA that links to Calendly carries a `utm_source` / `utm_campaign` pair:
+
+| Surface | UTM |
+|---|---|
+| Hero primary CTA | `utm_source=hero&utm_campaign=cta` |
+| Pricing — Starter tier | `utm_source=pricing&utm_campaign=starter` |
+| Pricing — Professional | `utm_source=pricing&utm_campaign=professional` |
+| Pricing — Enterprise | `utm_source=pricing&utm_campaign=enterprise` |
+| Footer CTA | `utm_source=footer` |
+| Mobile sticky bar | `utm_source=mobile_sticky` |
+| Thank-you embed | `utm_source=thank_you_page` |
+
+---
+
+## Newsletter Pipeline
+
+```
+GitHub Actions (cron: weekly)
+    │
+    ▼
+POST /api/newsletter/send   (protected by CRON_SECRET bearer)
+    │
+    ├─► Firecrawl  — scrape source material
+    ├─► Anthropic  — draft issue from sources
+    ├─► Supabase   — fetch confirmed subscribers
+    └─► Resend     — batch send with per-recipient unsubscribe token
+```
+
+Subscription flow is double opt-in:
+
+```
+POST /api/newsletter/subscribe
+    │ writes { email, token, confirmed=false } to Supabase
+    ▼
+Resend transactional email → "confirm your subscription" link
+    │
+    ▼
+GET /api/newsletter/confirm?token=…
+    │ flips confirmed=true in Supabase
+    ▼
+/newsletter/confirmed  (user-facing)
+```
+
+Unsubscribe is a single-click token-authenticated flow (CAN-SPAM compliant, no login required):
+
+```
+GET /api/newsletter/unsubscribe?token=…  →  /newsletter/unsubscribed
+```
+
+The cron endpoint authenticates via a shared secret (`CRON_SECRET` env), verified against an `Authorization: Bearer <secret>` header. GitHub Actions injects this via repository secrets.
+
+---
+
+## Testing Strategy
+
+Small, focused, trigger-driven. **Silent-breakage surfaces** (contact API, email rendering, form submit flow) are covered. Visual polish is manual.
+
+### Test pyramid
+
+```
+┌─────────────────────┐  Playwright (tests/integration/)
+│       e2e (2)       │  pnpm test:e2e  — ~8s, Chromium headless
+├─────────────────────┤
+│      API (9)        │  Jest, @jest-environment node
+├─────────────────────┤  pnpm test  — 39 tests, ~1s
+│  Unit + Lib (28)    │
+└─────────────────────┘
+```
+
+### Trigger-driven run guide
+
+| If you touched… | Run |
+|---|---|
+| `src/app/api/**` | `pnpm test` |
+| `src/lib/email.ts` or email templates | `pnpm test` |
+| `src/app/contact/**` | `pnpm test && pnpm test:e2e` |
+| Zod schemas in API routes | `pnpm test` |
+| Hero, Pricing, animations, 3D | Manual eyeball |
+| Before any PR | `pnpm lint && pnpm test` |
+| Before shipping form/API to prod | `pnpm lint && pnpm test && pnpm test:e2e` |
+
+### Critical flows covered
+
+- **`POST /api/contact`** — valid / missing email / malformed email / invalid enum / unknown keys (strict) / 503 unconfigured / malformed JSON / empty-string coercion
+- **`sendContactEmail`** — required-only, all fields, HTML escaping, conditional rendering
+- **Contact form e2e** — valid submit → `/contact/thank-you` with heading; missing required field → no navigation
+
+### Writing new tests
+
+- **API routes** — `tests/api/<route>.test.ts`, `@jest-environment node`, mock `@/lib/email`, call `POST` with a `Request` object. No HTTP server needed.
+- **Server libraries that read env at load time** — set `process.env.X` *before* import. Jest hoists imports above plain statements; use a deferred `require` inside `beforeAll` to ensure env applies. The `email.ts` test demonstrates this pattern.
+- **E2E** — `tests/integration/<flow>.spec.ts`, mock API responses with `page.route()` so tests don't depend on SMTP/external services.
+
+---
+
+## Local Development
 
 ### Prerequisites
 
-- Node.js >= 20.11 and < 23
-- pnpm >= 10.19 (enable via `corepack enable pnpm` if needed)
+- Node.js `>=22.14 <23`
+- pnpm `>=10.19` (`corepack enable pnpm` if not installed)
 
-### Installation
+### Setup
 
 ```bash
-git clone https://github.com/DevXGroup/DevX-WebApp.git
-cd DevX-WebApp
+git clone https://github.com/DevXGroup/DevX-Group-LLC-Web-App.git
+cd DevX-Group-LLC-Web-App
 pnpm install
-```
-
-### Local Development
-
-```bash
+cp .env.local.example .env.local   # then fill in values
 pnpm dev
 ```
 
-The development server runs on http://localhost:3002 with hot-module reloading.
+Dev server runs on **http://localhost:3002** with Turbopack + hot reload.
 
-## Development Scripts
+### Pnpm's Playwright browsers
 
-- `pnpm dev` – start the Next.js development server (port 3002).
-- `pnpm lint` – run ESLint (Next.js `core-web-vitals` preset).
-- `pnpm test` / `pnpm test:watch` / `pnpm test:coverage` – execute Jest suites.
-- `pnpm build` – create an optimized production build.
-- `pnpm start` – serve the production bundle.
-- `pnpm size` – audit bundle size limits.
-- `pnpm analyze` – generate bundle analysis visualizations.
-- `pnpm update-readme` – automatically sync README version badges from `package.json` (run after version bumps).
+E2E tests require the matching Chromium build:
 
-## Environment Configuration
+```bash
+pnpm exec playwright install chromium
+```
 
-Create a `.env.local` file at the repository root for secrets and environment overrides. Use the `NEXT_PUBLIC_` prefix for variables that must be exposed to the browser.
+---
+
+## Environment
+
+All secrets live in `.env.local` (gitignored). Production is configured via Vercel dashboard.
+
+### Required
 
 ```env
 NEXT_PUBLIC_SITE_URL=https://www.devxgroup.io
-SENTRY_AUTH_TOKEN=your_token_here
-EMAIL_SMTP_USER=your_username
-EMAIL_SMTP_PASSWORD=your_password
 ```
 
-Keep credentials out of version control and configure hosting platforms with matching environment variables.
+### Contact form (SMTP)
 
-## Testing & Quality
+```env
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=no-reply@devxgroup.io
+SMTP_PASS=<app-password>
+CONTACT_FORWARD_TO=leads@devxgroup.io
+CONTACT_FROM_EMAIL=no-reply@devxgroup.io
+```
 
-- **Pre-commit hooks** automatically enforce code quality before commits using Husky and lint-staged:
-  - Prettier formats all staged files
-  - Next.js ESLint checks source files in `src/`
-  - No manual formatting needed—hooks handle it automatically
-- Run `pnpm lint` before opening pull requests to enforce code quality.
-- Use `pnpm test` for component tests and `pnpm test:coverage` for coverage tracking.
-- Playwright scenarios in `tests/integration/`, `tests/qa/`, and `tests/audit/` validate critical journeys—update or add specs when flows change.
-- Respect server/client boundaries: default to server components and use `"use client"` only when required.
-- Maintain accessibility (ARIA, focus management, reduced motion) to keep Jest and browser tests green.
+### Newsletter (Supabase + Resend + Anthropic + Firecrawl)
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://<project>.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<anon-key>
+SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+RESEND_API_KEY=re_<key>
+ANTHROPIC_API_KEY=sk-ant-<key>
+FIRECRAWL_API_KEY=fc-<key>
+NEWSLETTER_FROM_EMAIL=newsletter@devxgroup.io
+NEWSLETTER_SITE_URL=https://www.devxgroup.io
+CRON_SECRET=<shared-secret-for-github-actions>
+```
+
+### Monitoring (optional)
+
+```env
+SENTRY_AUTH_TOKEN=<token>
+NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS=true
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXX
+NEXT_PUBLIC_GTM_ID=GTM-XXXXXX
+```
+
+`NEXT_PUBLIC_*` vars are exposed to the browser bundle. Everything else stays server-side.
+
+---
+
+## Observability
+
+- **Sentry** — error tracking with release-tagged sourcemaps uploaded on build
+- **Vercel Analytics** — page views, top referrers
+- **Vercel Speed Insights** — real-user Core Web Vitals, p75 by device + geography
+- **`usePerformanceMetrics` hook** — internal instrumentation: FPS, input latency, layout shift tracking (dev-mode)
+- **`GET /api/version`** — returns current build version for uptime / deploy verification
+
+---
+
+## CI/CD & Release
+
+### CI pipeline (`.github/workflows/ci.yml`)
+
+Runs on every push to `main` and every PR:
+
+1. Checkout + install (pnpm, frozen lockfile)
+2. Sync README version badges (`pnpm update-readme`)
+3. Prettier format check
+4. ESLint
+5. `pnpm test` (Jest — unit + API, ~1s)
+6. Status pings to Vercel for deploy gating
+
+The commit marker `[skip ci]` bypasses the pipeline for chore/release commits (used by semantic-release).
+
+### Newsletter cron (`.github/workflows/newsletter-cron.yml`)
+
+Scheduled GitHub Action that hits `/api/newsletter/send` with the shared `CRON_SECRET`. Decouples scheduling from Vercel cron quotas and keeps the trigger auditable in git history.
+
+### Release (semantic-release)
+
+Merges to `main` trigger automated versioning based on conventional commits:
+
+- `fix:` → patch
+- `feat:` → minor
+- `BREAKING CHANGE:` in footer → major
+
+Generates `CHANGELOG.md`, tags a release, publishes to GitHub Releases. README badges sync to the new version automatically.
+
+### Deployment
+
+Vercel auto-deploys on merge to `main` and produces preview URLs per PR. Self-hosting is supported — the project has no Vercel-specific primitives:
+
+```bash
+pnpm build && pnpm start
+```
+
+---
+
+## Directory Layout
+
+```
+src/
+├─ app/                           App Router: routes, layouts, metadata
+│  ├─ layout.tsx                  Root: fonts, analytics, sticky mobile CTA, critical CSS
+│  ├─ home/                       Home page (sections composed in HomePageClient)
+│  ├─ about/ about/AboutPage.tsx  Team + company narrative
+│  ├─ services/                   Service verticals, creative-animation sections
+│  ├─ portfolio/                  Case studies, driven from `src/data/portfolioProjects.ts`
+│  ├─ pricing/                    Three-tier cards with per-tier UTM
+│  ├─ contact/
+│  │  ├─ ContactPage.tsx          Form + Calendly inline embed
+│  │  └─ thank-you/               Post-submit confirmation + booking moment
+│  ├─ newsletter/                 confirmed / unsubscribed landing pages
+│  └─ api/
+│     ├─ contact/                 POST — Zod-validated lead capture
+│     ├─ newsletter/              subscribe / confirm / unsubscribe / send
+│     └─ version/                 GET — deploy verification
+├─ common/                        Navbar, FooterClient, global chrome
+├─ components/
+│  ├─ 3d/                         Three.js scenes (AnimatedBlob, BlackHole3D, InfinityLoader)
+│  ├─ animations/                 Reusable motion primitives (BlurText, TextType, Lightning)
+│  ├─ sections/                   Page-level sections (Hero, Features, Process, FeaturedProjects)
+│  ├─ layout/                     ConditionalLayout, StickyMobileCTA, ClientOnly, ErrorBoundary
+│  ├─ hero/                       Hero-only backgrounds (StarField, ShootingStars)
+│  └─ services/                   Service-specific components
+├─ hooks/                         Custom React hooks
+├─ lib/                           Server & client utilities (email, og, performance-monitor)
+├─ data/                          Structured content (portfolioProjects)
+├─ styles/                        Supplemental CSS
+└─ types/                         Shared TypeScript declarations
+
+tests/
+├─ api/                           API route handler tests (Jest, node env)
+├─ lib/                           Library unit tests
+├─ components/                    React component tests (Jest, jsdom)
+├─ integration/                   Playwright e2e (runs via pnpm test:e2e)
+├─ qa/                            Cross-browser QA specs
+└─ audit/                         Performance audits (first-paint regression)
+```
+
+### Path aliases
+
+| Alias | Points to |
+|---|---|
+| `@/*` | `src/*` |
+| `@animations/*` | `src/components/animations/*` |
+| `@layout/*` | `src/components/layout/*` |
+| `@sections/*` | `src/components/sections/*` |
+| `@3d/*` | `src/components/3d/*` |
+
+---
+
+## Scripts Reference
+
+```bash
+# Development
+pnpm dev              # Next dev server on :3002 with Turbopack
+pnpm dev:poll         # Same but with WATCHPACK polling (for networked FS / Docker)
+
+# Quality
+pnpm lint             # Prettier check + ESLint
+pnpm lint:fix         # Auto-fix formatting + lint
+
+# Testing
+pnpm test             # Jest — unit + API (~1s, runs in CI)
+pnpm test:watch       # Jest watch
+pnpm test:coverage    # Jest with coverage report
+pnpm test:e2e         # Playwright e2e (~8s, auto-starts dev server)
+pnpm test:e2e:ui      # Playwright UI mode for debugging
+
+# Build / deploy
+pnpm build            # Production build
+pnpm start            # Serve production bundle
+pnpm analyze          # Build + bundle analyzer HTML report
+pnpm size             # size-limit budget enforcement
+
+# Release / automation
+pnpm release          # semantic-release (CI-invoked)
+pnpm update-readme    # Sync version badges from package.json (CI hook)
+```
+
+---
 
 ## Coding Standards
 
-- Strict TypeScript across the codebase; prefer explicit public interfaces.
-- File naming: components in `PascalCase.tsx`, hooks in `use-*.ts`.
-- Formatting enforced by Prettier (2 spaces, single quotes, no semicolons) via pre-commit hooks.
-- Leverage shared path aliases instead of deep relative imports.
-- Follow conventional commits (`feat:`, `fix:`, `refactor:`, `chore:`, `docs:`).
-- Optimize performance with dynamic imports for heavy, browser-only modules.
+- **TypeScript strict mode** across `src/`. `noUncheckedIndexedAccess` is on — tuple / array access requires explicit null checks.
+- **Functional components only.** Named exports preferred (Next App Router page/layout files excepted — they need default exports).
+- **File naming.** Components `PascalCase.tsx`, hooks `use-kebab-case.ts`, utilities `kebab-case.ts`.
+- **Imports.** React → Next → third-party → local (alphabetized within group). Use path aliases, never deep `../../../` relatives.
+- **Formatting.** Prettier (2-space, single quote, no semicolon) enforced by lint-staged on commit.
+- **Commits.** Conventional commits — `type(scope): description`. Semantic-release consumes this verbatim for versioning.
+- **Comments.** Only when a reader would be surprised by the code (a non-obvious workaround, an intentional ordering constraint, a subtle invariant). No descriptive "what this does" comments.
 
-### Pre-commit Quality Checks
+### Pre-commit hooks (Husky + lint-staged)
 
-Git hooks automatically run when you commit changes:
+On every commit:
 
-1. **Prettier** - Auto-formats all staged files (`.js`, `.jsx`, `.ts`, `.tsx`, `.json`, `.css`, `.scss`, `.md`)
-2. **Next.js ESLint** - Lints and fixes issues in source files under `src/`
+1. Prettier formats staged files
+2. ESLint auto-fixes source files under `src/`
 
-If you need to bypass hooks (not recommended), use `git commit --no-verify`.
+`git commit --no-verify` bypasses — use only for emergency rollbacks, never to skip lint failures.
 
-## Documentation
-
-Comprehensive project documentation is available in the [docs/](docs/) directory:
-
-- **[Code Submission Workflow](docs/guides/code-submission-workflow.md)** - How to submit PRs with semantic versioning
-- **[CI/CD Setup](docs/operations/ci-cd-setup.md)** - GitHub Actions and semantic-release configuration
-- **[Deployment Commands](docs/operations/deployment-commands.md)** - Skip CI/Vercel deployment tags (`[skip ci]`, `[skip vercel]`)
-- **[Accessibility Testing](docs/guides/accessibility-testing.md)** - WCAG compliance testing
-
-See [docs/README.md](docs/README.md) for complete documentation index.
-
-## Deployment
-
-```bash
-pnpm build
-pnpm start
-```
-
-The project targets Vercel out of the box but remains portable to any Next.js-compatible host. Ensure production environments mirror `.env.local` secrets and review analytics/error monitoring dashboards after release.
-
-## Support
-
-**DevX Group LLC**  
-San Diego, California  
-Website: https://www.devxgroup.io  
-Contact: Use the website contact form or Calendly links provided in-app for consultations
+---
 
 ## License
 
-Copyright (c) 2025 DEVX Group LLC. All rights reserved.
+Copyright © 2026 DevX Group LLC. All rights reserved.
 
 ## Maintainers
 
-- Max Sheikhizadeh (Principal Contributor)
-- Ali Sheikhizadeh (Contributor)
+- **Max Sheikhizadeh** — Principal / CTO
+- **Ali Sheikhizadeh** — Contributor
