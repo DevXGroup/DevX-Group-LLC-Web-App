@@ -24,6 +24,31 @@ const contactSchema = z
       .trim()
       .min(1, 'Message is required')
       .max(5000, 'Message is too long'),
+    company: z
+      .string()
+      .trim()
+      .max(160)
+      .optional()
+      .or(z.literal('').transform(() => undefined)),
+    projectType: z
+      .enum([
+        'Web App',
+        'Mobile App',
+        'AI / Automation',
+        'MVP / Prototype',
+        'Enterprise Software',
+        'Other',
+      ])
+      .optional()
+      .or(z.literal('').transform(() => undefined)),
+    budget: z
+      .enum(['Under $10k', '$10k – $25k', '$25k – $50k', '$50k – $100k', '$100k+', 'Not sure yet'])
+      .optional()
+      .or(z.literal('').transform(() => undefined)),
+    timeline: z
+      .enum(['ASAP', '1–3 months', '3–6 months', '6+ months', 'Flexible'])
+      .optional()
+      .or(z.literal('').transform(() => undefined)),
   })
   .strict()
 
@@ -71,6 +96,10 @@ export async function POST(request: Request) {
       message: parsed.data.message,
       source: parsed.data.source,
       ...(parsed.data.name ? { name: parsed.data.name } : {}),
+      ...(parsed.data.company ? { company: parsed.data.company } : {}),
+      ...(parsed.data.projectType ? { projectType: parsed.data.projectType } : {}),
+      ...(parsed.data.budget ? { budget: parsed.data.budget } : {}),
+      ...(parsed.data.timeline ? { timeline: parsed.data.timeline } : {}),
     }
 
     await sendContactEmail(contactPayload)

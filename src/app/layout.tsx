@@ -6,6 +6,7 @@ import type { ReactNode } from 'react'
 import './globals.css'
 import type { Metadata } from 'next'
 import ConditionalLayout from '@/components/layout/ConditionalLayout'
+import { StickyMobileCTA } from '@/components/layout/StickyMobileCTA'
 import { BrowserCompatibilityDetector } from '@/components/layout/BrowserCompatibilityDetector'
 import { DevToolsErrorSuppressor } from '@/components/layout/DevToolsErrorSuppressor'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
@@ -204,22 +205,22 @@ const devtoolsVersionPatchScript = `
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'DevX Group - Your Vision, Engineered | Web, Mobile & AI Projects',
+    default: 'DevX Group | San Diego Software Team for Web, Mobile, and AI Products',
     template: '%s | DevX Group',
   },
   description:
-    'Senior software team shipping high-impact web, mobile, and AI projects fast. AI automation, agentic AI solutions, rapid MVP launches, and stunning UI/UX with proven results and transparent pricing.',
+    'San Diego software team building production web apps, iOS and Android apps, and AI agents. Senior engineers, transparent pricing, delivery in 4 to 12 weeks.',
   keywords: [
+    'San Diego software development',
     'senior software team',
-    'AI automation',
-    'agentic AI solutions',
-    'rapid MVP launches',
-    'web development',
-    'mobile apps',
-    'AI projects',
+    'web app development',
+    'mobile app development',
+    'AI agents',
     'RAG systems',
-    'intelligent workflows',
-    'San Diego',
+    'custom software',
+    'MVP development',
+    'product engineering',
+    'startup development partner',
   ],
   authors: [{ name: 'DevX Group LLC' }],
   creator: 'DevX Group LLC',
@@ -240,23 +241,23 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: siteUrl,
     siteName: 'DevX Group',
-    title: 'DevX Group - Your Vision, Engineered | Web, Mobile & AI Projects',
+    title: 'DevX Group | San Diego Software Team for Web, Mobile, and AI Products',
     description:
-      'Senior software team shipping high-impact web, mobile, and AI projects fast. Fast delivery, proven record, transparent pricing.',
+      'San Diego software team building web apps, mobile apps, and AI agents. Senior engineers and transparent pricing with delivery in 4 to 12 weeks.',
     images: [
       {
         url: defaultOgImage,
         width: 1200,
         height: 630,
-        alt: 'DevX Group - Your Vision, Engineered',
+        alt: 'DevX Group, San Diego software team',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'DevX Group - Your Vision, Engineered',
+    title: 'DevX Group | San Diego Software Team',
     description:
-      'Senior software team shipping high-impact web, mobile, and AI projects fast. Fast delivery, proven record, transparent pricing.',
+      'Senior team building web, mobile, and AI products. Transparent pricing, delivery in 4 to 12 weeks.',
     images: [defaultTwitterImage],
     creator: '@devxgroup',
     site: '@devxgroup',
@@ -425,6 +426,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div style={{ backgroundColor: '#000000' }} suppressHydrationWarning>
             <ConditionalLayout>{children}</ConditionalLayout>
             <ScrollToTop />
+            <StickyMobileCTA />
           </div>
         </ErrorBoundary>
         {/* Load Vercel Analytics only when explicitly enabled to avoid local 404s */}

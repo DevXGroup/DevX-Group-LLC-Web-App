@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback, type ChangeEvent, type FormEvent } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion, useReducedMotion, useInView, AnimatePresence } from 'framer-motion'
 import {
   Phone,
@@ -17,6 +18,10 @@ import {
   MessageCircle,
   X,
   Copy,
+  Building2,
+  Layers,
+  DollarSign,
+  Clock,
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import BlurText from '@/components/animations/BlurText'
@@ -173,11 +178,16 @@ Budget: $45,000 - $55,000
 I'd love to discuss this project further and see how DevX Group can help bring this vision to life. Looking forward to hearing from you!"`
 
 export default function ContactPage() {
+  const router = useRouter()
   const [formState, setFormState] = useState({
     name: '',
     email: '',
     message: '',
     agreeToTerms: false,
+    company: '',
+    projectType: '',
+    budget: '',
+    timeline: '',
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -534,7 +544,9 @@ export default function ContactPage() {
 
   const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target
     setFormState((prev) => ({ ...prev, [name]: value }))
 
@@ -613,17 +625,23 @@ export default function ContactPage() {
     setSubmitError(null)
 
     try {
+      const body: Record<string, string> = {
+        source: 'contact-page',
+        name: formState.name.trim(),
+        email: formState.email.trim(),
+        message: formState.message.trim(),
+      }
+      if (formState.company.trim()) body.company = formState.company.trim()
+      if (formState.projectType) body.projectType = formState.projectType
+      if (formState.budget) body.budget = formState.budget
+      if (formState.timeline) body.timeline = formState.timeline
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          source: 'contact-page',
-          name: formState.name.trim(),
-          email: formState.email.trim(),
-          message: formState.message.trim(),
-        }),
+        body: JSON.stringify(body),
       })
 
       if (!response.ok) {
@@ -654,13 +672,12 @@ export default function ContactPage() {
         return
       }
 
-      setIsSubmitted(true)
       setShowConfetti(true)
 
-      // Reset form after showing success message
+      // Brief confetti moment then navigate to thank-you page
       setTimeout(() => {
-        setFormState({ name: '', email: '', message: '', agreeToTerms: false })
-      }, 2000)
+        router.push('/contact/thank-you')
+      }, 400)
     } catch (error) {
       console.error('Contact form submission error:', error)
       setSubmitError('We could not send your message. Please email support@devxgroup.io directly.')
@@ -775,7 +792,8 @@ export default function ContactPage() {
                 </div>
               </div>
               <p className="section-subtitle max-w-2xl text-center mt-0 mb-4 text-sm sm:text-base md:text-lg px-2">
-                Contact us to discuss your mission requirements and objectives.
+                Tell us about your web, mobile, or AI project. We reply within 24 hours with a
+                custom quote.
               </p>
             </div>
           </motion.div>
@@ -1030,6 +1048,128 @@ export default function ContactPage() {
                         )}
                       </div>
                     </div>
+                    {/* Company */}
+                    <div>
+                      <label
+                        htmlFor="company"
+                        className="block text-sm font-medium text-foreground/80 mb-2 flex items-center gap-2"
+                      >
+                        <Building2 className="w-4 h-4 text-foreground/80" />
+                        Company
+                        <span className="text-foreground/40 font-normal">(optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="company"
+                        name="company"
+                        value={formState.company}
+                        onChange={handleChange}
+                        autoComplete="organization"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white text-foreground shadow-inner transition-colors duration-300"
+                        placeholder="Your company or organisation"
+                      />
+                    </div>
+
+                    {/* Project Type + Budget */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label
+                          htmlFor="projectType"
+                          className="block text-sm font-medium text-foreground/80 mb-2 flex items-center gap-2"
+                        >
+                          <Layers className="w-4 h-4 text-foreground/80" />
+                          Project Type
+                          <span className="text-foreground/40 font-normal">(optional)</span>
+                        </label>
+                        <select
+                          id="projectType"
+                          name="projectType"
+                          value={formState.projectType}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white text-foreground shadow-inner transition-colors duration-300 appearance-none"
+                        >
+                          <option value="" disabled className="bg-zinc-900 text-foreground/50">
+                            Select project type
+                          </option>
+                          {[
+                            'Web App',
+                            'Mobile App',
+                            'AI / Automation',
+                            'MVP / Prototype',
+                            'Enterprise Software',
+                            'Other',
+                          ].map((opt) => (
+                            <option key={opt} value={opt} className="bg-zinc-900">
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="budget"
+                          className="block text-sm font-medium text-foreground/80 mb-2 flex items-center gap-2"
+                        >
+                          <DollarSign className="w-4 h-4 text-foreground/80" />
+                          Budget
+                          <span className="text-foreground/40 font-normal">(optional)</span>
+                        </label>
+                        <select
+                          id="budget"
+                          name="budget"
+                          value={formState.budget}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white text-foreground shadow-inner transition-colors duration-300 appearance-none"
+                        >
+                          <option value="" disabled className="bg-zinc-900 text-foreground/50">
+                            Select budget range
+                          </option>
+                          {[
+                            'Under $10k',
+                            '$10k – $25k',
+                            '$25k – $50k',
+                            '$50k – $100k',
+                            '$100k+',
+                            'Not sure yet',
+                          ].map((opt) => (
+                            <option key={opt} value={opt} className="bg-zinc-900">
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Timeline */}
+                    <div>
+                      <label
+                        htmlFor="timeline"
+                        className="block text-sm font-medium text-foreground/80 mb-2 flex items-center gap-2"
+                      >
+                        <Clock className="w-4 h-4 text-foreground/80" />
+                        Timeline
+                        <span className="text-foreground/40 font-normal">(optional)</span>
+                      </label>
+                      <select
+                        id="timeline"
+                        name="timeline"
+                        value={formState.timeline}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white text-foreground shadow-inner transition-colors duration-300 appearance-none"
+                      >
+                        <option value="" disabled className="bg-zinc-900 text-foreground/50">
+                          Select timeline
+                        </option>
+                        {['ASAP', '1–3 months', '3–6 months', '6+ months', 'Flexible'].map(
+                          (opt) => (
+                            <option key={opt} value={opt} className="bg-zinc-900">
+                              {opt}
+                            </option>
+                          )
+                        )}
+                      </select>
+                    </div>
+
                     {submitError && (
                       <motion.p
                         initial={{ opacity: 0 }}
@@ -1121,28 +1261,7 @@ export default function ContactPage() {
                       )}
                     </div>
 
-                    <div className="flex justify-between items-center">
-                      {/* Success Message */}
-                      <div className="flex-1 mr-4">
-                        {isSubmitted && (
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.5, ease: 'easeOut' }}
-                            className="flex items-center gap-2 text-[#4CD787]"
-                          >
-                            <CheckCircle className="w-5 h-5" />
-                            <div className="text-sm">
-                              <span className="font-semibold">Thank you for your message!</span>
-                              <br />
-                              <span className="text-foreground/70">
-                                Please allow 24hrs for follow up email.
-                              </span>
-                            </div>
-                          </motion.div>
-                        )}
-                      </div>
-
+                    <div className="flex justify-end items-center">
                       {/* Submit Button */}
                       <div style={{ transform: 'translateY(-20px)' }}>
                         <StarBorder

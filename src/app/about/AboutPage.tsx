@@ -524,9 +524,9 @@ export default function AboutPage() {
           />
         </div>
 
-        <div className="container px-3 sm:px-[21px] relative z-10 mt-6 sm:mt-10">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16">
+        <div className="container mx-auto px-3 sm:px-[21px] relative z-10 mt-6 sm:mt-10">
+          <div className="max-w-6xl xl:max-w-7xl 2xl:max-w-[1400px] mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
               {/* Title and content - Left side */}
               <AnimatedSection className="lg:order-0 flex flex-col justify-center text-left items-start">
                 <h1 className="-mb-4 sm:-mb-6 w-full">

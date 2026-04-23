@@ -29,31 +29,25 @@ const twitterImage = createTwitterImageUrl(
 )
 
 export const metadata: Metadata = {
-  title: 'Software Development Services | Web Apps, Mobile Apps, AI & IoT Solutions',
+  title: 'Custom Software Development Services | Web, Mobile, AI Agents | DevX Group',
   description:
-    'Comprehensive software development services including web applications, mobile apps, AI/ML solutions, Agentic AI, RAG implementation, IoT hardware integration, and digital transformation. Expert developers delivering scalable solutions.',
+    'Senior team shipping custom web apps, native iOS and Android apps, AI agents, RAG systems, and cloud platforms. Based in San Diego, working with startups and enterprise.',
   keywords: [
-    'software development services',
-    'web applications',
-    'mobile apps',
-    'AI solutions',
-    'ML development',
-    'IoT integration',
-    'digital transformation',
-    'custom software',
-    'agentic AI',
-    'RAG',
-    'retrieval augmented generation',
+    'custom software development',
+    'web application development',
+    'mobile app development',
     'AI agents',
+    'RAG systems',
     'workflow automation',
-    'n8n',
-    'make',
-    'zapier',
+    'IoT integration',
+    'cloud platforms',
+    'San Diego software team',
+    'product engineering',
   ],
   openGraph: {
-    title: 'Software Development Services | Web Apps, Mobile Apps, AI & IoT Solutions',
+    title: 'Custom Software Development Services | Web, Mobile, AI Agents | DevX Group',
     description:
-      'Comprehensive software development services including web applications, mobile apps, AI/ML solutions, IoT hardware integration, and digital transformation.',
+      'Senior team building custom web apps, native mobile apps, AI agents, and cloud platforms. Based in San Diego.',
     url: pageUrl,
     siteName: 'DevX Group',
     images: [
@@ -69,9 +63,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Software Development Services',
+    title: 'Custom Software Development Services | DevX Group',
     description:
-      'Comprehensive software development services including web apps, mobile apps, AI/ML solutions, and IoT integration.',
+      'Senior team building web apps, mobile apps, AI agents, and cloud platforms. Based in San Diego.',
     images: [twitterImage],
   },
   alternates: {
