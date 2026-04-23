@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence, useReducedMotion, type Variants } from 'framer-motion'
 
 const HIDDEN_ROUTES = ['/', '/contact', '/contact/thank-you']
-const SCROLL_THRESHOLD = 200
 
 export function StickyMobileCTA() {
   const pathname = usePathname()
@@ -21,13 +20,21 @@ export function StickyMobileCTA() {
       return
     }
 
+    // Show only after the user has scrolled past most of the first viewport so
+    // the bar never overlaps an above-the-fold CTA (e.g. the hero's primary
+    // Schedule-Free-Consultation button on /home).
     const onScroll = () => {
-      setVisible(window.scrollY > SCROLL_THRESHOLD)
+      const threshold = window.innerHeight * 0.9
+      setVisible(window.scrollY > threshold)
     }
 
     window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
     onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
   }, [isHiddenRoute, pathname])
 
   const slideVariants: Variants = shouldReduceMotion
