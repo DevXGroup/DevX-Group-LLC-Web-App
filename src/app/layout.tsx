@@ -6,13 +6,7 @@ import type { ReactNode } from 'react'
 import './globals.css'
 import type { Metadata } from 'next'
 import ConditionalLayout from '@/components/layout/ConditionalLayout'
-import dynamic from 'next/dynamic'
-
-const StickyMobileCTA = dynamic(
-  () =>
-    import('@/components/layout/StickyMobileCTA').then((mod) => ({ default: mod.StickyMobileCTA })),
-  { ssr: false }
-)
+import { StickyMobileCTA } from '@/components/layout/StickyMobileCTA'
 import { BrowserCompatibilityDetector } from '@/components/layout/BrowserCompatibilityDetector'
 import { DevToolsErrorSuppressor } from '@/components/layout/DevToolsErrorSuppressor'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
