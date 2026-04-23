@@ -59,14 +59,14 @@ export function StickyMobileCTA() {
     <AnimatePresence>
       {staticVisible && (
         <motion.div
-          className="fixed bottom-0 left-0 right-0 z-[200] md:hidden bg-black/80 backdrop-blur-md border-t border-white/10 pb-[env(safe-area-inset-bottom)]"
+          className="fixed bottom-0 inset-x-0 z-[9000] md:hidden bg-black/80 backdrop-blur-md border-t border-white/10 pb-[env(safe-area-inset-bottom)]"
           variants={slideVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
           data-testid="sticky-mobile-cta"
         >
-          <div className="flex items-center gap-3 px-4 py-3 h-16">
+          <div className="mx-auto max-w-md flex items-center gap-3 px-4 py-3 h-16">
             <Link
               href="https://calendly.com/a-sheikhizadeh/devx-group-llc-representative?utm_source=mobile_sticky"
               target="_blank"

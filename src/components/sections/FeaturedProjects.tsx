@@ -49,6 +49,10 @@ export default function FeaturedProjects() {
 
   const onPointerDown = useCallback(
     (e: React.PointerEvent) => {
+      // Don't hijack pointer events that originate on a link/button — pointer
+      // capture would otherwise prevent the click from reaching the target.
+      const target = e.target as HTMLElement | null
+      if (target?.closest('a, button')) return
       isDragging.current = true
       dragStart.current = { clientX: e.clientX, originX: x.get() }
       ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
