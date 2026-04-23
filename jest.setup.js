@@ -1,6 +1,9 @@
 // Learn more: https://github.com/testing-library/jest-dom
 require('@testing-library/jest-dom')
 
+// Browser-only shims — skipped when a test opts into `@jest-environment node`.
+const hasWindow = typeof window !== 'undefined'
+
 // Mock IntersectionObserver
 class IntersectionObserver {
   observe = jest.fn()
@@ -8,11 +11,13 @@ class IntersectionObserver {
   disconnect = jest.fn()
 }
 
-Object.defineProperty(window, 'IntersectionObserver', {
-  writable: true,
-  configurable: true,
-  value: IntersectionObserver,
-})
+if (hasWindow) {
+  Object.defineProperty(window, 'IntersectionObserver', {
+    writable: true,
+    configurable: true,
+    value: IntersectionObserver,
+  })
+}
 
 Object.defineProperty(global, 'IntersectionObserver', {
   writable: true,
@@ -26,11 +31,13 @@ class ResizeObserver {
   disconnect = jest.fn()
 }
 
-Object.defineProperty(window, 'ResizeObserver', {
-  writable: true,
-  configurable: true,
-  value: ResizeObserver,
-})
+if (hasWindow) {
+  Object.defineProperty(window, 'ResizeObserver', {
+    writable: true,
+    configurable: true,
+    value: ResizeObserver,
+  })
+}
 
 Object.defineProperty(global, 'ResizeObserver', {
   writable: true,
@@ -38,6 +45,6 @@ Object.defineProperty(global, 'ResizeObserver', {
   value: ResizeObserver,
 })
 
-if (!HTMLCanvasElement.prototype.getContext) {
+if (hasWindow && !HTMLCanvasElement.prototype.getContext) {
   HTMLCanvasElement.prototype.getContext = jest.fn(() => ({}))
 }
