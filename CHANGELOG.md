@@ -1,3 +1,9 @@
+## [1.18.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.17.3...v1.18.0) (2026-04-23)
+
+### Features
+
+* **conversion:** lead-gen improvements — hero CTA, pricing, expanded contact form, thank-you page ([#80](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/issues/80)) ([9142604](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/9142604d2b4fa262d21cf459fc268fab7255a58d))
+
 ## [1.17.3](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.17.2...v1.17.3) (2026-04-22)
 
 ### Bug Fixes
