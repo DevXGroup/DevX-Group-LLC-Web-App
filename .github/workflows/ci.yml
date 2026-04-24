@@ -121,6 +121,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
           token: ${{ secrets.SEMANTIC_RELEASE_TOKEN || github.token }}
 
