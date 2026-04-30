@@ -1,3 +1,9 @@
+## [1.18.3](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.18.2...v1.18.3) (2026-04-30)
+
+### Bug Fixes
+
+* **newsletter:** never 500 on confirm or unsubscribe — log and redirect to status page ([82d8523](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/82d852354d687a3d62bdbad11c7b3c699a9ef78c))
+
 ## [1.18.2](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.18.1...v1.18.2) (2026-04-30)
 
 ### Bug Fixes
