@@ -10,7 +10,12 @@ function getResend(): Resend {
   return _resend
 }
 
-const SITE_URL = process.env.NEWSLETTER_SITE_URL ?? 'https://www.devxgroup.io'
+function resolveSiteUrl(baseUrl?: string): string {
+  if (baseUrl) return baseUrl.replace(/\/$/, '')
+  const env = process.env.NEWSLETTER_SITE_URL?.trim()
+  if (env) return env.replace(/\/$/, '')
+  return 'https://www.devxgroup.io'
+}
 // Use verified domain address once DNS is set up in Resend. Until then, onboarding@resend.dev works for testing.
 const FROM_ADDRESS = process.env.NEWSLETTER_FROM_EMAIL ?? 'DevX Group LLC <onboarding@resend.dev>'
 
@@ -43,8 +48,13 @@ async function send(options: {
   if (error) throw new Error(`Resend error: ${error.message}`)
 }
 
-export async function sendConfirmationEmail(email: string, token: string): Promise<void> {
-  const confirmUrl = `${SITE_URL}/api/newsletter/confirm?token=${token}`
+export async function sendConfirmationEmail(
+  email: string,
+  token: string,
+  baseUrl?: string
+): Promise<void> {
+  const siteUrl = resolveSiteUrl(baseUrl)
+  const confirmUrl = `${siteUrl}/api/newsletter/confirm?token=${token}`
 
   await send({
     to: email,
@@ -74,29 +84,29 @@ export async function sendConfirmationEmail(email: string, token: string): Promi
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="background:#111113;border:1px solid #27272a;border-radius:12px;overflow:hidden;max-width:600px;width:100%">
         <tr>
-          <td style="padding:32px 40px 24px;border-bottom:1px solid #27272a">
-            <span style="color:#4CD787;font-size:14px;font-family:monospace;letter-spacing:0.1em;text-transform:uppercase;font-weight:600">DevX Group LLC &mdash; Newsletter</span>
+          <td style="padding:36px 44px 28px;border-bottom:1px solid #27272a">
+            <span style="color:#4CD787;font-size:18px;font-family:monospace;letter-spacing:0.1em;text-transform:uppercase;font-weight:600">DevX Group LLC &mdash; Newsletter</span>
           </td>
         </tr>
         <tr>
-          <td style="padding:32px 40px">
-            <h1 style="margin:0 0 16px;font-size:22px;font-weight:700;color:#ffffff;font-family:${EMAIL_FONT};line-height:1.3">Confirm your subscription</h1>
-            <p style="margin:0 0 24px;color:#a1a1aa;font-size:15px;font-family:${EMAIL_FONT};line-height:1.65">
-              One click and you're in. Every Friday you'll get the shortest, most actionable AI and dev insights — real patterns from shipping products, agentic workflows, and MVPs.
+          <td style="padding:40px 44px">
+            <h1 style="margin:0 0 22px;font-size:34px;font-weight:700;color:#ffffff;font-family:${EMAIL_FONT};line-height:1.25">Confirm your subscription</h1>
+            <p style="margin:0 0 32px;color:#d4d4d8;font-size:20px;font-family:${EMAIL_FONT};line-height:1.6">
+              One click and you're in. Every Friday you'll get the shortest, most actionable AI and dev insights, real patterns from shipping products, agentic workflows, and MVPs.
             </p>
             <a href="${confirmUrl}"
-              style="display:inline-block;background:#4CD787;color:#000000;text-decoration:none;font-weight:700;font-size:15px;font-family:${EMAIL_FONT};padding:14px 28px;border-radius:8px;letter-spacing:0.01em">
+              style="display:inline-block;background:#4CD787;color:#000000;text-decoration:none;font-weight:700;font-size:20px;font-family:${EMAIL_FONT};padding:18px 36px;border-radius:10px;letter-spacing:0.01em">
               Confirm Subscription
             </a>
-            <p style="margin:24px 0 0;color:#71717a;font-size:13px;font-family:${EMAIL_FONT};line-height:1.5">
+            <p style="margin:32px 0 0;color:#a1a1aa;font-size:17px;font-family:${EMAIL_FONT};line-height:1.6">
               Or copy this link: <span style="color:#4CD787;word-break:break-all">${confirmUrl}</span><br>
               Link expires in 48 hours. If you didn't sign up, ignore this.
             </p>
           </td>
         </tr>
         <tr>
-          <td style="padding:20px 40px;border-top:1px solid #27272a">
-            <p style="margin:0;color:#52525b;font-size:12px;font-family:${EMAIL_FONT};line-height:1.7">No spam. Unsubscribe anytime. DevX Group LLC &middot; <a href="https://www.devxgroup.io" style="color:#71717a;text-decoration:underline">devxgroup.io</a></p>
+          <td style="padding:24px 44px;border-top:1px solid #27272a">
+            <p style="margin:0;color:#71717a;font-size:15px;font-family:${EMAIL_FONT};line-height:1.7">No spam. Unsubscribe anytime. DevX Group LLC &middot; <a href="https://www.devxgroup.io" style="color:#a1a1aa;text-decoration:underline">devxgroup.io</a></p>
           </td>
         </tr>
       </table>
@@ -107,8 +117,13 @@ export async function sendConfirmationEmail(email: string, token: string): Promi
   })
 }
 
-export async function sendWelcomeEmail(email: string, unsubscribeToken: string): Promise<void> {
-  const unsubscribeUrl = `${SITE_URL}/api/newsletter/unsubscribe?token=${unsubscribeToken}`
+export async function sendWelcomeEmail(
+  email: string,
+  unsubscribeToken: string,
+  baseUrl?: string
+): Promise<void> {
+  const siteUrl = resolveSiteUrl(baseUrl)
+  const unsubscribeUrl = `${siteUrl}/api/newsletter/unsubscribe?token=${unsubscribeToken}`
 
   await send({
     to: email,
@@ -187,7 +202,7 @@ export async function sendDigestEmail(
   categories: DigestCategory[],
   dateLabel: string
 ): Promise<void> {
-  const unsubscribeUrl = `${SITE_URL}/api/newsletter/unsubscribe?token=${unsubscribeToken}`
+  const unsubscribeUrl = `${resolveSiteUrl()}/api/newsletter/unsubscribe?token=${unsubscribeToken}`
 
   const categorySections = categories
     .map((cat) => {

@@ -71,12 +71,12 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Failed to subscribe. Try again.' }, { status: 500 })
       }
 
-      await sendConfirmationEmail(email, updated.confirmation_token)
+      await sendConfirmationEmail(email, updated.confirmation_token, req.nextUrl.origin)
       return NextResponse.json({ ok: true })
     }
 
     // Unconfirmed: resend confirmation
-    await sendConfirmationEmail(email, existing.confirmation_token)
+    await sendConfirmationEmail(email, existing.confirmation_token, req.nextUrl.origin)
     return NextResponse.json({ ok: true })
   }
 
@@ -91,6 +91,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to subscribe. Try again.' }, { status: 500 })
   }
 
-  await sendConfirmationEmail(email, inserted.confirmation_token)
+  await sendConfirmationEmail(email, inserted.confirmation_token, req.nextUrl.origin)
   return NextResponse.json({ ok: true })
 }

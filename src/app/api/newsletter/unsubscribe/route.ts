@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.devxgroup.io'
-
 export async function GET(req: NextRequest) {
+  const origin = req.nextUrl.origin
   const token = req.nextUrl.searchParams.get('token')
 
   if (!token || !isSupabaseConfigured()) {
-    return NextResponse.redirect(`${SITE_URL}/newsletter/unsubscribed?status=invalid`)
+    return NextResponse.redirect(`${origin}/newsletter/unsubscribed?status=invalid`)
   }
 
   const { data: subscriber } = await supabaseAdmin
@@ -17,11 +16,11 @@ export async function GET(req: NextRequest) {
     .maybeSingle()
 
   if (!subscriber) {
-    return NextResponse.redirect(`${SITE_URL}/newsletter/unsubscribed?status=invalid`)
+    return NextResponse.redirect(`${origin}/newsletter/unsubscribed?status=invalid`)
   }
 
   if (subscriber.unsubscribed_at) {
-    return NextResponse.redirect(`${SITE_URL}/newsletter/unsubscribed?status=already`)
+    return NextResponse.redirect(`${origin}/newsletter/unsubscribed?status=already`)
   }
 
   await supabaseAdmin
@@ -29,5 +28,5 @@ export async function GET(req: NextRequest) {
     .update({ unsubscribed_at: new Date().toISOString() })
     .eq('id', subscriber.id)
 
-  return NextResponse.redirect(`${SITE_URL}/newsletter/unsubscribed?status=success`)
+  return NextResponse.redirect(`${origin}/newsletter/unsubscribed?status=success`)
 }

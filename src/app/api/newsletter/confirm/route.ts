@@ -2,13 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase'
 import { sendWelcomeEmail } from '@/lib/newsletter-email'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.devxgroup.io'
-
 export async function GET(req: NextRequest) {
+  const origin = req.nextUrl.origin
   const token = req.nextUrl.searchParams.get('token')
 
   if (!token || !isSupabaseConfigured()) {
-    return NextResponse.redirect(`${SITE_URL}/newsletter/confirmed?status=invalid`)
+    return NextResponse.redirect(`${origin}/newsletter/confirmed?status=invalid`)
   }
 
   const { data: subscriber } = await supabaseAdmin
@@ -18,11 +17,11 @@ export async function GET(req: NextRequest) {
     .maybeSingle()
 
   if (!subscriber) {
-    return NextResponse.redirect(`${SITE_URL}/newsletter/confirmed?status=invalid`)
+    return NextResponse.redirect(`${origin}/newsletter/confirmed?status=invalid`)
   }
 
   if (subscriber.confirmed) {
-    return NextResponse.redirect(`${SITE_URL}/newsletter/confirmed?status=already`)
+    return NextResponse.redirect(`${origin}/newsletter/confirmed?status=already`)
   }
 
   const { error } = await supabaseAdmin
@@ -31,10 +30,14 @@ export async function GET(req: NextRequest) {
     .eq('id', subscriber.id)
 
   if (error) {
-    return NextResponse.redirect(`${SITE_URL}/newsletter/confirmed?status=error`)
+    return NextResponse.redirect(`${origin}/newsletter/confirmed?status=error`)
   }
 
-  await sendWelcomeEmail(subscriber.email, subscriber.confirmation_token)
+  try {
+    await sendWelcomeEmail(subscriber.email, subscriber.confirmation_token, origin)
+  } catch (err) {
+    console.error('[newsletter/confirm] welcome email failed', err)
+  }
 
-  return NextResponse.redirect(`${SITE_URL}/newsletter/confirmed?status=success`)
+  return NextResponse.redirect(`${origin}/newsletter/confirmed?status=success`)
 }
