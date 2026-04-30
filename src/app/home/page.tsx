@@ -1,9 +1,7 @@
 import { Metadata } from 'next'
 import HomePageClient from './HomePageClient'
+import HeroStatic from '@sections/HeroStatic'
 import { createOgImageUrl, createTwitterImageUrl, getSiteUrl } from '@/lib/og'
-
-// Force dynamic rendering to avoid Framer Motion context issues during static generation
-export const dynamic = 'force-dynamic'
 
 const siteUrl = getSiteUrl()
 const pagePath = '/home'
@@ -126,6 +124,15 @@ export default function Home() {
           team delivers high-impact projects fast. We combine deep engineering expertise with
           collaborative leadership to turn your vision into reality.
         </p>
+      </div>
+
+      {/* Static SSR hero acts as the LCP element. HomePageClient removes it after hydration so the interactive Hero takes over. */}
+      <div
+        id="hero-static-fallback"
+        className="absolute left-0 right-0 top-0 z-[60] pointer-events-none"
+        aria-hidden="true"
+      >
+        <HeroStatic />
       </div>
 
       <HomePageClient />
