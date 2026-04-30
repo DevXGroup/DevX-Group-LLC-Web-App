@@ -1,3 +1,9 @@
+## [1.18.2](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.18.1...v1.18.2) (2026-04-30)
+
+### Bug Fixes
+
+* **newsletter:** derive email URLs from request origin and harden confirm flow ([69005b4](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/69005b4777f7d734ecd71491d8419adbf787ab08))
+
 ## [1.18.1](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.18.0...v1.18.1) (2026-04-23)
 
 ### Bug Fixes
