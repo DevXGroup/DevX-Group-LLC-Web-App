@@ -1,6 +1,6 @@
 {
   "name": "devx-group-web-app",
-  "version": "1.18.3",
+  "version": "1.18.4",
   "private": true,
   "sideEffects": [
     "*.css",

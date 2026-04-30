@@ -1,3 +1,9 @@
+## [1.18.4](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.18.3...v1.18.4) (2026-04-30)
+
+### Bug Fixes
+
+* **newsletter:** wrap subscribe in try/catch and surface supabase errors to logs ([26c781a](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/26c781a9ad27a721030d271ecfeb57ffc8667d04))
+
 ## [1.18.3](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.18.2...v1.18.3) (2026-04-30)
 
 ### Bug Fixes
