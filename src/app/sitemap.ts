@@ -13,7 +13,11 @@ const staticRoutes = [
   { path: '/pricing', priority: 0.8, changeFrequency: 'weekly' as const },
   { path: '/contact', priority: 0.8, changeFrequency: 'monthly' as const },
   { path: '/privacy', priority: 0.3, changeFrequency: 'yearly' as const },
+  { path: '/privacy/nutrify-ai', priority: 0.4, changeFrequency: 'yearly' as const },
+  { path: '/privacy/transcribr', priority: 0.4, changeFrequency: 'yearly' as const },
   { path: '/terms', priority: 0.3, changeFrequency: 'yearly' as const },
+  { path: '/terms/nutrify-ai', priority: 0.4, changeFrequency: 'yearly' as const },
+  { path: '/terms/transcribr', priority: 0.4, changeFrequency: 'yearly' as const },
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {
