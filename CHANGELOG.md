@@ -1,3 +1,11 @@
+## [1.19.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.18.4...v1.19.0) (2026-05-01)
+
+### Features
+
+* **legal:** add shared LegalAppAddendumLayout component ([48320a9](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/48320a9c96e5c9257f33c6f871728f7bcfc692aa))
+* **legal:** per-app privacy and terms for Nutrify.AI ([ba6be91](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/ba6be91526871fb3c646a9681181264ea4411ce1))
+* **legal:** per-app privacy and terms for Transcribr ([d971f86](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/d971f86116ff948e025568e78c758d5e8167e0cf))
+
 ## [1.18.4](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.18.3...v1.18.4) (2026-04-30)
 
 ### Bug Fixes
