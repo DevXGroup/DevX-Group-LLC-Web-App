@@ -43,11 +43,11 @@ export default function Error({
       </div>
 
       <div className="text-center space-y-8 relative z-10 max-w-4xl mx-auto px-4">
-        {/* Fuzzy Error Code */}
-        <div className="w-full flex justify-center px-4 sm:px-8 md:px-12 overflow-visible">
-          <div className="w-full max-w-full flex justify-center overflow-visible">
+        {/* Fuzzy Error Code — sized to leave breathing room for the fuzz noise so the final R never clips */}
+        <div className="w-full flex justify-center px-6 sm:px-10 md:px-14 overflow-visible">
+          <div className="flex justify-center overflow-visible max-w-full">
             <FuzzyText
-              fontSize="clamp(3rem, 10vw, 10rem)"
+              fontSize="clamp(2.5rem, 8vw, 7.5rem)"
               fontWeight={900}
               fontFamily="'IBM Plex Mono', monospace"
               color="#ef4444"

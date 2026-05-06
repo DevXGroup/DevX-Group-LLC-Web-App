@@ -345,22 +345,6 @@ export default function Hero() {
         }}
       >
         <div className="flex flex-col items-center gap-3 sm:gap-4 relative z-[100]">
-          {/* Social proof — understated, above CTAs */}
-          {!shouldReduceMotion && (
-            <motion.p
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.0, duration: 0.4 }}
-              className="text-[10px] sm:text-[11px] md:text-[13px] font-mono uppercase tracking-widest text-zinc-400/70 md:text-zinc-300/90 text-center px-2"
-            >
-              Senior engineers with experience from Amazon, Qualcomm, and Viasat
-            </motion.p>
-          )}
-          {shouldReduceMotion && (
-            <p className="text-[10px] sm:text-[11px] md:text-[13px] font-mono uppercase tracking-widest text-zinc-400/70 md:text-zinc-300/90 text-center px-2">
-              Senior engineers with experience from Amazon, Qualcomm, and Viasat
-            </p>
-          )}
           {/* Primary CTA */}
           <motion.div
             variants={buttonVariants}
