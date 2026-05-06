@@ -258,7 +258,7 @@ export default function NutrifyBanner({ variant = 'card' }: NutrifyBannerProps) 
           }}
         >
           <Image
-            src="/images/portfolio/screenshots/nutrify-ai/labs.png"
+            src="/images/portfolio/screenshots/nutrify-ai/labs.webp"
             alt="Nutrify.AI biomarker labs screen"
             fill
             className="object-cover object-top"
@@ -281,7 +281,7 @@ export default function NutrifyBanner({ variant = 'card' }: NutrifyBannerProps) 
           }}
         >
           <Image
-            src="/images/portfolio/screenshots/nutrify-ai/today.png"
+            src="/images/portfolio/screenshots/nutrify-ai/today.webp"
             alt="Nutrify.AI today dashboard"
             fill
             className="object-cover object-top"
@@ -306,7 +306,7 @@ export default function NutrifyBanner({ variant = 'card' }: NutrifyBannerProps) 
             }}
           >
             <Image
-              src="/images/portfolio/screenshots/nutrify-ai/onboarding.png"
+              src="/images/portfolio/screenshots/nutrify-ai/onboarding.webp"
               alt="Nutrify.AI onboarding goal selection"
               fill
               className="object-cover object-top"
