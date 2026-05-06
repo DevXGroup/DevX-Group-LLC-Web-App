@@ -1,13 +1,12 @@
 'use client'
 
 import { motion, useAnimationFrame, useInView, useMotionValue } from 'framer-motion'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useRef, useState, useCallback } from 'react'
 import { ArrowRight, Check, ExternalLink, Github, Smartphone, Star } from 'lucide-react'
-import { categoryColors, portfolioProjects } from '@/data/portfolioProjects'
+import { categoryColors, portfolioProjects, type ProjectData } from '@/data/portfolioProjects'
 import BlurText from '@animations/BlurText'
-import NutrifyBanner from '@sections/NutrifyBanner'
+import DeviceMockup from '@/components/portfolio/DeviceMockup'
 
 const featured = portfolioProjects.filter((p) => p.isFeatured)
 
@@ -16,7 +15,37 @@ const CARD_W = 400
 const CARD_GAP = 28
 const STRIDE = CARD_W + CARD_GAP
 const SPEED = 0.036 // px per ms → ~36 px/s
+const HOVER_SPEED_FACTOR = 0.25 // hover keeps the loop alive at a quarter speed
 const LOOP_WIDTH = featured.length * STRIDE
+
+const MOBILE_PLATFORMS = ['iOS', 'Android', 'Mobile App']
+const NATIVE_DESKTOP_PLATFORMS = ['macOS', 'Windows', 'Linux']
+const WEB_PLATFORMS = ['Web', 'Website', 'PWA', 'PWA-ready', 'Admin Dashboard', 'API']
+
+function pickMockup(platforms: string[]): 'phone' | 'monitor' | 'desktop' {
+  const isMobile = platforms.some((p) => MOBILE_PLATFORMS.includes(p))
+  const isNative = platforms.some((p) => NATIVE_DESKTOP_PLATFORMS.includes(p))
+  const isWeb = platforms.some((p) => WEB_PLATFORMS.includes(p))
+  // Native desktop apps (Transcribr, etc.) get the iMac-style standalone screen
+  if (isNative && !isMobile) return 'desktop'
+  // Pure mobile gets the phone
+  if (isMobile && !isWeb && !isNative) return 'phone'
+  // Mixed: phone wins (more visually distinct)
+  if (isMobile) return 'phone'
+  // Web-only gets the browser-window monitor frame
+  return 'monitor'
+}
+
+function buildScreens(project: ProjectData) {
+  const { screenshots, screenshotAlts, banner, bannerAlt } = project.images
+  if (screenshots?.length) {
+    return screenshots.map((src, idx) => ({
+      src,
+      alt: screenshotAlts?.[idx] || bannerAlt || project.title,
+    }))
+  }
+  return [{ src: banner, alt: bannerAlt || project.title }]
+}
 
 // 4 copies: with x wrapped into (-2·LW, -LW], the track's right edge is at
 // least 2·LW (≈3400px) past the viewport origin, covering any reasonable screen.
@@ -35,16 +64,17 @@ const wrapX = (v: number) => {
 export default function FeaturedProjects() {
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
-  const [paused, setPaused] = useState(false)
+  const [hovered, setHovered] = useState(false)
   const isDragging = useRef(false)
   const dragStart = useRef<{ clientX: number; originX: number } | null>(null)
   // Start in the middle copy so there's a full copy-width of content in both directions
   const x = useMotionValue(-LOOP_WIDTH)
 
   useAnimationFrame((_, delta) => {
-    if (paused || isDragging.current || !isInView) return
+    if (isDragging.current || !isInView) return
     const d = Math.min(delta, 80)
-    x.set(wrapX(x.get() - d * SPEED))
+    const speed = hovered ? SPEED * HOVER_SPEED_FACTOR : SPEED
+    x.set(wrapX(x.get() - d * speed))
   })
 
   const onPointerDown = useCallback(
@@ -101,7 +131,7 @@ export default function FeaturedProjects() {
               Featured Work
             </div>
             <BlurText
-              text="Open-source & client projects"
+              text="Our latest projects"
               className="justify-center text-center text-white mb-4 section-title-hero font-editorial"
               delay={50}
               startDelay={150}
@@ -109,8 +139,8 @@ export default function FeaturedProjects() {
               once={true}
             />
             <p className="subtitle text-white/60 max-w-xl mx-auto">
-              Built by DevX Group — shipped products demonstrating our depth across AI, web, mobile,
-              and real-time systems.
+              Real apps we built and shipped. Web, mobile, and AI products that are live or close to
+              it.
             </p>
           </motion.div>
         </div>
@@ -118,9 +148,9 @@ export default function FeaturedProjects() {
         {/* ── Scroll track ─────────────────────────────────────────── */}
         <div
           className="relative cursor-grab active:cursor-grabbing"
-          onMouseEnter={() => setPaused(true)}
+          onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => {
-            setPaused(false)
+            setHovered(false)
             onPointerUp()
           }}
           onPointerDown={onPointerDown}
@@ -156,85 +186,37 @@ export default function FeaturedProjects() {
                     }}
                   />
 
-                  {/* ── Banner ──────────────────────────────────── */}
-                  <div className="relative aspect-video overflow-hidden bg-zinc-900">
-                    {project.id === 'nutrify-ai' ? (
-                      // Framer Motion variant propagates from card → banner for reliable grayscale
-                      <motion.div
-                        className="w-full h-full origin-center"
-                        variants={{
-                          rest: { filter: 'grayscale(100%)', scale: 1 },
-                          hover: { filter: 'grayscale(0%)', scale: 1.03 },
-                        }}
-                        transition={{ duration: 0.5, ease: 'easeOut' }}
-                      >
-                        <NutrifyBanner variant="card" />
-                      </motion.div>
-                    ) : (
-                      <Image
-                        src={project.images.banner}
-                        alt={project.images.bannerAlt || `${project.title} banner`}
-                        fill
-                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-[1.03]"
-                        sizes="400px"
-                      />
-                    )}
-
-                    {/* Bottom fade for image cards */}
-                    {project.id !== 'nutrify-ai' && (
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    )}
-
-                    {/* Top scrim — keeps pills legible */}
-                    <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/70 via-black/30 to-transparent z-10" />
-
-                    {/* Category badge */}
-                    <div className="absolute top-3 left-3 z-20">
-                      <span
-                        className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-xl border"
-                        style={{
-                          backgroundColor: `${categoryColor}30`,
-                          borderColor: `${categoryColor}55`,
-                          color: categoryColor,
-                        }}
-                      >
-                        {project.category}
-                      </span>
-                    </div>
-
-                    {/* Top-right badges */}
-                    <div className="absolute top-3 right-3 flex flex-col gap-1.5 items-end z-20">
-                      {project.githubUrl && (
-                        <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-xl border border-white/25 bg-black/60 text-white/85">
-                          Open Source
-                        </span>
-                      )}
-                      {project.platforms?.includes('iOS') &&
-                        !project.platforms?.includes('Android') && (
-                          <span
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-xl border"
-                            style={{
-                              backgroundColor: `${categoryColor}30`,
-                              borderColor: `${categoryColor}55`,
-                              color: categoryColor,
-                            }}
-                          >
-                            <Smartphone size={9} />
-                            iOS First
-                          </span>
-                        )}
-                      {project.currentNote && (
-                        <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-xl border border-amber-400/40 bg-amber-400/20 text-amber-300">
-                          {project.currentNote.includes('App Store')
-                            ? '🍎 Coming to App Store'
-                            : project.currentNote}
-                        </span>
-                      )}
-                    </div>
+                  {/* ── Device mockup stage ─────────────────────── */}
+                  <div
+                    className="relative h-[260px] overflow-hidden"
+                    style={{
+                      background: `radial-gradient(120% 90% at 50% 100%, ${categoryColor}10 0%, transparent 60%), #0a0c10`,
+                    }}
+                  >
+                    {/* Slideshow keeps rotating regardless of carousel hover state — the light
+                        show is the point of the card, so don't freeze it when the user inspects */}
+                    <DeviceMockup
+                      variant={pickMockup(project.platforms || [])}
+                      screens={buildScreens(project)}
+                      accent={categoryColor}
+                    />
                   </div>
 
                   {/* ── Card content ─────────────────────────── */}
                   <div className="flex flex-col flex-1 p-5">
+                    <div className="flex items-center gap-2 mb-2 text-[11px] font-semibold uppercase tracking-[0.12em]">
+                      <span
+                        className="inline-block w-1.5 h-1.5 rounded-full"
+                        style={{ backgroundColor: categoryColor }}
+                      />
+                      <span style={{ color: categoryColor }}>{project.category}</span>
+                      {project.githubUrl && (
+                        <>
+                          <span className="text-white/20">•</span>
+                          <span className="text-white/60">Open Source</span>
+                        </>
+                      )}
+                    </div>
                     <h3 className="heading-component text-white leading-tight mb-2">
                       {project.title}
                     </h3>

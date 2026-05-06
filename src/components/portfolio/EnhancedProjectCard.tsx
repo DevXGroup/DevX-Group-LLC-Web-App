@@ -17,6 +17,32 @@ import {
   Monitor,
 } from 'lucide-react'
 import { ProjectData, categoryColors } from '@/data/portfolioProjects'
+import DeviceMockup from '@/components/portfolio/DeviceMockup'
+
+const MOBILE_PLATFORMS = ['iOS', 'Android', 'Mobile App']
+const NATIVE_DESKTOP_PLATFORMS = ['macOS', 'Windows', 'Linux']
+const WEB_PLATFORMS = ['Web', 'Website', 'PWA', 'PWA-ready', 'Admin Dashboard', 'API']
+
+function pickMockup(platforms: string[]): 'phone' | 'monitor' | 'desktop' {
+  const isMobile = platforms.some((p) => MOBILE_PLATFORMS.includes(p))
+  const isNative = platforms.some((p) => NATIVE_DESKTOP_PLATFORMS.includes(p))
+  const isWeb = platforms.some((p) => WEB_PLATFORMS.includes(p))
+  if (isNative && !isMobile) return 'desktop'
+  if (isMobile && !isWeb && !isNative) return 'phone'
+  if (isMobile) return 'phone'
+  return 'monitor'
+}
+
+function buildScreens(project: ProjectData) {
+  const { screenshots, screenshotAlts, banner, bannerAlt } = project.images
+  if (screenshots?.length) {
+    return screenshots.map((src, idx) => ({
+      src,
+      alt: screenshotAlts?.[idx] || bannerAlt || project.title,
+    }))
+  }
+  return [{ src: banner, alt: bannerAlt || project.title }]
+}
 
 interface EnhancedProjectCardProps {
   project: ProjectData
@@ -96,8 +122,18 @@ const EnhancedProjectCard = ({ project, index }: EnhancedProjectCardProps) => {
 
       {/* Main Content Container */}
       <div className="relative z-10 h-full flex flex-col">
-        {/* Image Section */}
-        <div className="relative overflow-hidden h-64 lg:h-72 xl:h-80">
+        {/* Image Section — featured projects get a device mockup with auto-rotating screens;
+            older projects keep the legacy banner image with a floating category pill */}
+        <div
+          className="relative overflow-hidden h-64 lg:h-72 xl:h-80"
+          style={
+            project.isFeatured
+              ? {
+                  background: `radial-gradient(120% 90% at 50% 100%, ${categoryColor}10 0%, transparent 60%), #0a0c10`,
+                }
+              : undefined
+          }
+        >
           <div
             className="relative w-full h-full transition-transform duration-400 ease-out group-hover:scale-[1.02]"
             style={{ willChange: 'transform' }}
@@ -115,6 +151,12 @@ const EnhancedProjectCard = ({ project, index }: EnhancedProjectCardProps) => {
               >
                 <source src={project.videoUrl} type="video/mp4" />
               </video>
+            ) : project.isFeatured ? (
+              <DeviceMockup
+                variant={pickMockup(project.platforms || [])}
+                screens={buildScreens(project)}
+                accent={categoryColor}
+              />
             ) : (
               <Image
                 src={project.images.banner}
@@ -128,22 +170,25 @@ const EnhancedProjectCard = ({ project, index }: EnhancedProjectCardProps) => {
               />
             )}
 
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20" />
-
-            {/* Category Badge */}
-            <div className="absolute top-4 left-4 z-10">
-              <div
-                className="px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-md border-2 shadow-lg text-white"
-                style={{
-                  backgroundColor: `${categoryColor}40`,
-                  borderColor: `${categoryColor}80`,
-                  textShadow: '0 1px 3px rgba(0,0,0,0.8)',
-                }}
-              >
-                {project.category}
-              </div>
-            </div>
+            {/* Gradient overlay + category pill — only for legacy banner cards.
+                Featured cards rely on the mockup itself plus the eyebrow row below the title. */}
+            {!project.isFeatured && (
+              <>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20" />
+                <div className="absolute top-4 left-4 z-10">
+                  <div
+                    className="px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-md border-2 shadow-lg text-white"
+                    style={{
+                      backgroundColor: `${categoryColor}40`,
+                      borderColor: `${categoryColor}80`,
+                      textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                    }}
+                  >
+                    {project.category}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -153,6 +198,21 @@ const EnhancedProjectCard = ({ project, index }: EnhancedProjectCardProps) => {
           <div className="space-y-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
+                {project.isFeatured && (
+                  <div className="flex items-center gap-2 mb-2 text-[11px] font-semibold uppercase tracking-[0.12em]">
+                    <span
+                      className="inline-block w-1.5 h-1.5 rounded-full"
+                      style={{ backgroundColor: categoryColor }}
+                    />
+                    <span style={{ color: categoryColor }}>{project.category}</span>
+                    {project.githubUrl && (
+                      <>
+                        <span className="text-white/20">•</span>
+                        <span className="text-white/60">Open Source</span>
+                      </>
+                    )}
+                  </div>
+                )}
                 <motion.h3
                   className="font-bold text-white leading-tight text-lg sm:text-xl 2xl:text-2xl text-left"
                   whileHover={{ color: categoryColor }}
