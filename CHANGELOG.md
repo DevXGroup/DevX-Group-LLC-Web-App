@@ -1,3 +1,19 @@
+## [1.20.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.19.0...v1.20.0) (2026-05-06)
+
+### Features
+
+* **home,portfolio:** mockup-based featured cards with hover-slow carousel and eyebrow chrome ([388a1fa](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/388a1fa77dac7b06bfad02c9b1aa6e023261cb74))
+* **portfolio:** add DeviceMockup component with phone, monitor, and desktop variants ([eb4ae5c](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/eb4ae5c57a093f5c8e4ba90578d5c6b5d1cc2fd8))
+* **portfolio:** add nutrilogical.co project and real screens for miremadi/interview-prep ([57a5243](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/57a5243d3a41547b2b5d648e3150b805eac891c1)), closes [#34D399](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/issues/34D399)
+
+### Bug Fixes
+
+* **hero,error:** drop misleading social proof line and fix ERROR R-letter clipping ([3755c8b](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/3755c8b0bb415e95d462da567878c932d791a93d))
+
+### Performance Improvements
+
+* **portfolio:** switch nutrify-ai and transcribr screenshots to WebP ([568645d](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/568645d0f7da6331e7641a474ed0f645db7f9bcc))
+
 ## [1.19.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.18.4...v1.19.0) (2026-05-01)
 
 ### Features
