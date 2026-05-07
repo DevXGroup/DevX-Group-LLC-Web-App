@@ -1,3 +1,9 @@
+## [1.22.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.21.0...v1.22.0) (2026-05-07)
+
+### Features
+
+* **portfolio:** use real Nutrify.AI iOS screenshots in cards ([c6dd0bc](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/c6dd0bce82e3f926528ead468ba61ed948df7ecf))
+
 ## [1.21.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.20.0...v1.21.0) (2026-05-07)
 
 ### Features
