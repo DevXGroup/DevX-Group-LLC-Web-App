@@ -6,6 +6,23 @@ interface NutrifyBannerProps {
   variant?: 'card' | 'hero'
 }
 
+const TAGS = ['Labs', 'Chat', 'Nutrition', 'Sleep', 'Exercise']
+
+const SCREENS = {
+  back: {
+    src: '/images/portfolio/screenshots/nutrify-ai/labs.webp',
+    alt: 'Nutrify.AI Labs & Biomarkers screen with biomarker reference ranges',
+  },
+  front: {
+    src: '/images/portfolio/screenshots/nutrify-ai/myday.webp',
+    alt: 'Nutrify.AI My Day dashboard with daily progress ring and Nightly Actions',
+  },
+  third: {
+    src: '/images/portfolio/screenshots/nutrify-ai/chat.webp',
+    alt: 'Nutrify.AI in-app chat with the Gemini-powered health coach',
+  },
+} as const
+
 export default function NutrifyBanner({ variant = 'card' }: NutrifyBannerProps) {
   const isHero = variant === 'hero'
 
@@ -51,7 +68,12 @@ export default function NutrifyBanner({ variant = 'card' }: NutrifyBannerProps) 
       {/* Brand identity */}
       <div
         className="absolute z-10"
-        style={{ left: isHero ? 48 : 18, top: '50%', transform: 'translateY(-50%)' }}
+        style={{
+          left: isHero ? 48 : 18,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          maxWidth: isHero ? 280 : 160,
+        }}
       >
         {/* Logo + name */}
         <div
@@ -59,7 +81,7 @@ export default function NutrifyBanner({ variant = 'card' }: NutrifyBannerProps) 
             display: 'flex',
             alignItems: 'center',
             gap: isHero ? 10 : 7,
-            marginBottom: isHero ? 8 : 5,
+            marginBottom: isHero ? 12 : 7,
           }}
         >
           <div
@@ -110,127 +132,63 @@ export default function NutrifyBanner({ variant = 'card' }: NutrifyBannerProps) 
 
         <p
           style={{
-            color: 'rgba(255,255,255,0.27)',
+            color: 'rgba(255,255,255,0.32)',
             fontSize: isHero ? 9 : 7,
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
-            marginBottom: isHero ? 22 : 13,
+            marginBottom: isHero ? 18 : 10,
           }}
         >
-          Premium Health Assistant
+          AI Health Coach · iOS
         </p>
 
-        {/* Score ring */}
-        <div style={{ marginBottom: isHero ? 18 : 12 }}>
-          <div style={{ position: 'relative', width: isHero ? 62 : 44, height: isHero ? 62 : 44 }}>
-            <svg
-              viewBox="0 0 64 64"
-              style={{ width: '100%', height: '100%', transform: 'rotate(-90deg)' }}
-            >
-              <circle
-                cx="32"
-                cy="32"
-                r="26"
-                fill="none"
-                stroke="rgba(52,211,153,0.12)"
-                strokeWidth="5.5"
-              />
-              <circle
-                cx="32"
-                cy="32"
-                r="26"
-                fill="none"
-                stroke="#34D399"
-                strokeWidth="5.5"
-                strokeLinecap="round"
-                strokeDasharray="163.4"
-                strokeDashoffset="41"
-              />
-            </svg>
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <span
-                style={{
-                  color: '#34D399',
-                  fontSize: isHero ? 15 : 11,
-                  fontWeight: 700,
-                  lineHeight: 1,
-                }}
-              >
-                75
-              </span>
-              <span
-                style={{
-                  color: 'rgba(255,255,255,0.35)',
-                  fontSize: isHero ? 7 : 5.5,
-                  lineHeight: 1,
-                  marginTop: 2,
-                  letterSpacing: '0.1em',
-                }}
-              >
-                SCORE
-              </span>
-            </div>
-          </div>
-        </div>
+        {/* Headline (hero only) */}
+        {isHero && (
+          <h2
+            style={{
+              color: 'rgba(255,255,255,0.92)',
+              fontSize: 22,
+              fontWeight: 600,
+              lineHeight: 1.18,
+              letterSpacing: '-0.01em',
+              marginBottom: 16,
+            }}
+          >
+            Built on real labs, sleep and nutrition.
+          </h2>
+        )}
 
-        {/* Metric chips */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: isHero ? 7 : 5 }}>
-          {[
-            { icon: '🔥', val: '1,200', unit: 'KCAL' },
-            { icon: '💧', val: '1.5L', unit: 'WATER' },
-          ].map(({ icon, val, unit }) => (
-            <div
-              key={unit}
+        {/* Module tags */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: isHero ? 6 : 4,
+            maxWidth: isHero ? 240 : 130,
+          }}
+        >
+          {TAGS.slice(0, isHero ? TAGS.length : 4).map((tag) => (
+            <span
+              key={tag}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: isHero ? 8 : 5,
-                padding: isHero ? '5px 10px' : '3px 7px',
-                borderRadius: 8,
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                width: 'fit-content',
+                padding: isHero ? '4px 9px' : '2.5px 6px',
+                borderRadius: 999,
+                background: 'rgba(52,211,153,0.08)',
+                border: '1px solid rgba(52,211,153,0.18)',
+                color: 'rgba(229,255,239,0.78)',
+                fontSize: isHero ? 10 : 7.5,
+                fontWeight: 600,
+                letterSpacing: '0.02em',
+                whiteSpace: 'nowrap',
               }}
             >
-              <span style={{ fontSize: isHero ? 12 : 9 }}>{icon}</span>
-              <div>
-                <div
-                  style={{
-                    color: 'rgba(255,255,255,0.85)',
-                    fontSize: isHero ? 11 : 8,
-                    fontWeight: 700,
-                    lineHeight: 1,
-                  }}
-                >
-                  {val}
-                </div>
-                <div
-                  style={{
-                    color: 'rgba(255,255,255,0.3)',
-                    fontSize: isHero ? 7 : 6,
-                    lineHeight: 1,
-                    marginTop: 1.5,
-                    letterSpacing: '0.1em',
-                  }}
-                >
-                  {unit}
-                </div>
-              </div>
-            </div>
+              {tag}
+            </span>
           ))}
         </div>
       </div>
 
-      {/* Phone mockups */}
+      {/* Phone mockups — real screenshots */}
       <div
         className="absolute z-10"
         style={{
@@ -242,7 +200,7 @@ export default function NutrifyBanner({ variant = 'card' }: NutrifyBannerProps) 
           gap: isHero ? 14 : 7,
         }}
       >
-        {/* Back phone — labs screen */}
+        {/* Back phone — Labs */}
         <div
           style={{
             position: 'relative',
@@ -258,15 +216,15 @@ export default function NutrifyBanner({ variant = 'card' }: NutrifyBannerProps) 
           }}
         >
           <Image
-            src="/images/portfolio/screenshots/nutrify-ai/labs.webp"
-            alt="Nutrify.AI biomarker labs screen"
+            src={SCREENS.back.src}
+            alt={SCREENS.back.alt}
             fill
             className="object-cover object-top"
             sizes={isHero ? '112px' : '78px'}
           />
         </div>
 
-        {/* Front phone — today screen */}
+        {/* Front phone — My Day */}
         <div
           style={{
             position: 'relative',
@@ -281,15 +239,15 @@ export default function NutrifyBanner({ variant = 'card' }: NutrifyBannerProps) 
           }}
         >
           <Image
-            src="/images/portfolio/screenshots/nutrify-ai/today.webp"
-            alt="Nutrify.AI today dashboard"
+            src={SCREENS.front.src}
+            alt={SCREENS.front.alt}
             fill
             className="object-cover object-top"
             sizes={isHero ? '126px' : '89px'}
           />
         </div>
 
-        {/* Third phone — hero only (onboarding) */}
+        {/* Third phone — Chat (hero only) */}
         {isHero && (
           <div
             style={{
@@ -306,8 +264,8 @@ export default function NutrifyBanner({ variant = 'card' }: NutrifyBannerProps) 
             }}
           >
             <Image
-              src="/images/portfolio/screenshots/nutrify-ai/onboarding.webp"
-              alt="Nutrify.AI onboarding goal selection"
+              src={SCREENS.third.src}
+              alt={SCREENS.third.alt}
               fill
               className="object-cover object-top"
               sizes="106px"
