@@ -1,3 +1,9 @@
+## [1.21.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.20.0...v1.21.0) (2026-05-07)
+
+### Features
+
+* **portfolio:** refresh transcribr entry as Transcribr Flow ([3038f97](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/commit/3038f9749552b9203701f4c7332bd36d0ee5f13b))
+
 ## [1.20.0](https://github.com/DevXGroup/DevX-Group-LLC-Web-App/compare/v1.19.0...v1.20.0) (2026-05-06)
 
 ### Features
